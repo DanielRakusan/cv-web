@@ -92,6 +92,61 @@
       pointer-events: none;
     }
 
+    .topbar {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nameplate {
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      color: #ffffff;
+      font-size: 0.95rem;
+      letter-spacing: 0.6px;
+      backdrop-filter: blur(8px);
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      padding: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: #050505;
+    }
+
     .wrap {
       position: relative;
       z-index: 2;
@@ -207,6 +262,19 @@
     .tiny-corners span:nth-child(2) { bottom: 26px; left: 26px; border-right: none; border-top: none; }
 
     @media (max-width: 700px) {
+      .topbar {
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nameplate,
+      .lang-switch {
+        align-self: center;
+      }
+
       .panel {
         min-height: auto;
         padding: 36px 24px;
@@ -228,6 +296,14 @@
   <div class="background-grid"></div>
   <div class="glow"></div>
 
+  <header class="topbar">
+    <div class="nameplate">Daniel Rakušan</div>
+    <div class="lang-switch" aria-label="Language switcher">
+      <button class="lang-btn active" id="btn-cz">CZ</button>
+      <button class="lang-btn" id="btn-en">EN</button>
+    </div>
+  </header>
+
   <div class="wrap">
     <main class="panel">
       <div class="tiny-corners">
@@ -236,17 +312,18 @@
       </div>
 
       <section class="content">
-        <div class="badge">Vítej</div>
-        <h1>Na webu se<br>právě pracuje</h1>
+        <div class="badge" id="badge">Vítej</div>
+        <h1 id="title">Na webu se<br>právě pracuje</h1>
         <div class="line"></div>
-        <p>
+        <p id="description">
           Připravuji nový osobní web a portfolio. Brzy tu budou projekty,
           technologie, ukázky práce a stručné informace o mně.
         </p>
-        <div class="status-box">Stránka je momentálně ve vývoji</div>
+        <div class="status-box" id="status">Stránka je momentálně ve vývoji</div>
       </section>
     </main>
   </div>
+
   <script>
     const starsContainer = document.getElementById('stars');
     const starCount = 90;
@@ -268,6 +345,57 @@
       star.style.animationDelay = '-' + (Math.random() * 12) + 's, -' + (Math.random() * 5) + 's';
 
       starsContainer.appendChild(star);
+    }
+
+    const translations = {
+      cz: {
+        lang: 'cs',
+        titleTag: 'Web se připravuje',
+        badge: 'Vítej',
+        title: 'Na webu se<br>právě pracuje',
+        description: 'Připravuji nový osobní web a portfolio. Brzy tu budou projekty, technologie, ukázky práce a stručné informace o mně.',
+        status: 'Stránka je momentálně ve vývoji'
+      },
+      en: {
+        lang: 'en',
+        titleTag: 'Website in progress',
+        badge: 'Welcome',
+        title: 'The website is<br>currently being built',
+        description: 'I am preparing a new personal website and portfolio. Soon you will find projects, technologies, work samples and brief information about me here.',
+        status: 'The page is currently under development'
+      }
+    };
+
+    const btnCz = document.getElementById('btn-cz');
+    const btnEn = document.getElementById('btn-en');
+    const badge = document.getElementById('badge');
+    const title = document.getElementById('title');
+    const description = document.getElementById('description');
+    const status = document.getElementById('status');
+
+    function setLanguage(language) {
+      const t = translations[language];
+      document.documentElement.lang = t.lang;
+      document.title = t.titleTag;
+      badge.textContent = t.badge;
+      title.innerHTML = t.title;
+      description.textContent = t.description;
+      status.textContent = t.status;
+
+      btnCz.classList.toggle('active', language === 'cz');
+      btnEn.classList.toggle('active', language === 'en');
+
+      const newPath = language === 'cz' ? '/cz' : '/en';
+      window.history.replaceState({}, '', newPath);
+    }
+
+    btnCz.addEventListener('click', () => setLanguage('cz'));
+    btnEn.addEventListener('click', () => setLanguage('en'));
+
+    if (window.location.pathname.toLowerCase().endsWith('/en')) {
+      setLanguage('en');
+    } else {
+      setLanguage('cz');
     }
   </script>
 </body>
