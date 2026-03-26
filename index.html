@@ -385,18 +385,26 @@
       btnCz.classList.toggle('active', language === 'cz');
       btnEn.classList.toggle('active', language === 'en');
 
-      const newPath = language === 'cz' ? '/cz' : '/en';
-      window.history.replaceState({}, '', newPath);
+      const newHash = language === 'cz' ? '#/cz' : '#/en';
+      window.history.replaceState({}, '', newHash);
     }
 
     btnCz.addEventListener('click', () => setLanguage('cz'));
     btnEn.addEventListener('click', () => setLanguage('en'));
 
-    if (window.location.pathname.toLowerCase().endsWith('/en')) {
+    if (window.location.hash.toLowerCase() === '#/en') {
       setLanguage('en');
     } else {
       setLanguage('cz');
     }
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash.toLowerCase() === '#/en') {
+        setLanguage('en');
+      } else {
+        setLanguage('cz');
+      }
+    });
   </script>
 </body>
 </html>
