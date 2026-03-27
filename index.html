@@ -16,12 +16,13 @@
       background: #050505;
       color: #ffffff;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
     }
 
     .stars {
-      position: absolute;
+      position: fixed;
       inset: 0;
       overflow: hidden;
       z-index: 0;
@@ -69,7 +70,7 @@
     }
 
     .background-grid {
-      position: absolute;
+      position: fixed;
       inset: 0;
       background-image:
         linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
@@ -80,7 +81,7 @@
     }
 
     .glow {
-      position: absolute;
+      position: fixed;
       width: 520px;
       height: 520px;
       border-radius: 50%;
@@ -105,6 +106,8 @@
     }
 
     .nameplate {
+      display: inline-flex;
+      align-items: center;
       padding: 12px 16px;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 14px;
@@ -113,6 +116,65 @@
       font-size: 0.95rem;
       letter-spacing: 0.6px;
       backdrop-filter: blur(8px);
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nameplate.is-link:hover,
+    .nameplate.is-link:focus-visible {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .github-popover {
+      position: relative;
+    }
+
+    .github-popover::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      transform: translateX(-50%);
+      width: min(420px, calc(100vw - 48px));
+      height: 14px;
+    }
+
+    .github-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      color: #ffffff;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .github-icon {
+      width: 15px;
+      height: 15px;
+      display: block;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    .github-trigger:hover,
+    .github-trigger:focus-visible,
+    .github-popover.is-open .github-trigger {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .lang-switch {
@@ -151,6 +213,7 @@
       position: relative;
       z-index: 2;
       min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -282,6 +345,103 @@
       letter-spacing: 0.4px;
     }
 
+    .content-tools {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+      z-index: 4;
+    }
+
+    .public-profile {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      width: min(460px, calc(100vw - 48px));
+      max-height: min(360px, calc(100svh - 180px));
+      margin: 0;
+      padding: 24px 22px 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      background: rgba(10,10,10,0.9);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, 4px);
+      pointer-events: none;
+      overflow-y: auto;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    }
+
+    .public-heading {
+      color: rgba(255,255,255,0.68);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .public-bio {
+      max-width: 28ch;
+      margin: 0 auto 20px;
+      text-align: center;
+      white-space: pre-line;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .public-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .public-item {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+    }
+
+    .public-item:hover {
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .public-item-label {
+      color: rgba(255,255,255,0.56);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: left;
+    }
+
+    .public-item-value {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .github-popover:hover .public-profile,
+    .github-popover:focus-within .public-profile,
+    .github-popover.is-open .public-profile {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+      pointer-events: auto;
+    }
+
     .tiny-corners span {
       position: absolute;
       width: 12px;
@@ -291,6 +451,22 @@
 
     .tiny-corners span:nth-child(1) { top: 26px; right: 26px; border-left: none; border-bottom: none; }
     .tiny-corners span:nth-child(2) { bottom: 26px; left: 26px; border-right: none; border-top: none; }
+
+    @media (max-height: 820px) {
+      .wrap {
+        min-height: auto;
+        align-items: flex-start;
+        padding-top: 112px;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      .content {
+        padding-top: 8px;
+      }
+    }
 
     @media (max-width: 700px) {
       .topbar {
@@ -317,6 +493,11 @@
       .lang-btn {
         padding: 9px 13px;
         font-size: 0.8rem;
+      }
+
+      .github-trigger {
+        padding: 9px 12px;
+        font-size: 0.72rem;
       }
 
       .wrap {
@@ -359,6 +540,33 @@
         font-size: 0.95rem;
         padding: 12px 16px;
       }
+
+      .content-tools {
+        margin-top: 16px;
+      }
+
+      .public-profile {
+        width: min(320px, calc(100vw - 28px));
+        max-height: min(55svh, 340px);
+        padding: 16px 14px;
+        border-radius: 18px;
+      }
+
+      .public-heading {
+        font-size: 0.74rem;
+        margin-bottom: 14px;
+      }
+
+      .public-bio {
+        margin-bottom: 16px;
+      }
+
+      .public-item {
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+      }
     }
   </style>
 </head>
@@ -368,7 +576,7 @@
   <div class="glow"></div>
 
   <header class="topbar">
-    <div class="nameplate">Daniel Rakušan</div>
+    <a class="nameplate" id="nameplate">Daniel Rakušan</a>
     <div class="lang-switch" aria-label="Language switcher">
       <button class="lang-btn active" id="btn-cz">CZ</button>
       <button class="lang-btn" id="btn-en">EN</button>
@@ -385,6 +593,7 @@
       <section class="content">
         <div class="avatar-shell">
           <img
+            id="avatar"
             class="avatar"
             src="https://github.com/DanielRakusan.png?size=320"
             alt="Profilová fotka Daniela Rakušana z GitHubu"
@@ -403,6 +612,21 @@
           technologie, ukázky práce a stručné informace o mně.
         </p>
         <div class="status-box" id="status">Stránka je momentálně ve vývoji</div>
+        <div class="content-tools">
+          <div class="github-popover" id="github-popover">
+            <button class="github-trigger" id="github-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="public-profile" hidden>
+              <svg class="github-icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.5 7.5 0 0 1 8 4.84c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>
+              </svg>
+              <span>GitHub</span>
+            </button>
+            <section class="public-profile" id="public-profile" role="dialog" aria-label="GitHub" hidden>
+              <div class="public-heading" id="public-heading">Veřejné informace z GitHubu</div>
+              <p class="public-bio" id="public-bio" hidden></p>
+              <div class="public-list" id="public-list"></div>
+            </section>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -437,7 +661,17 @@
         badge: 'Vítej',
         title: 'Na webu se<br>právě pracuje',
         description: 'Připravuji nový osobní web a portfolio. Brzy tu budou projekty, technologie, ukázky práce a stručné informace o mně.',
-        status: 'Stránka je momentálně ve vývoji'
+        status: 'Stránka je momentálně ve vývoji',
+        publicHeading: 'Veřejné informace z GitHubu',
+        avatarAlt: 'Profilová fotka {name} z GitHubu',
+        labels: {
+          github: 'GitHub',
+          location: 'Lokace',
+          email: 'E-mail',
+          website: 'Web',
+          company: 'Firma',
+          social: 'Sítě'
+        }
       },
       en: {
         lang: 'en',
@@ -445,7 +679,17 @@
         badge: 'Welcome',
         title: 'Website<br>in progress',
         description: 'I am preparing a new personal website and portfolio. Soon you will find projects, technologies, work samples and brief information about me here.',
-        status: 'The page is currently under development'
+        status: 'The page is currently under development',
+        publicHeading: 'Public GitHub details',
+        avatarAlt: '{name} GitHub profile photo',
+        labels: {
+          github: 'GitHub',
+          location: 'Location',
+          email: 'Email',
+          website: 'Website',
+          company: 'Company',
+          social: 'Social'
+        }
       }
     };
 
@@ -455,8 +699,152 @@
     const title = document.getElementById('title');
     const description = document.getElementById('description');
     const status = document.getElementById('status');
+    const nameplate = document.getElementById('nameplate');
+    const avatar = document.getElementById('avatar');
+    const githubPopover = document.getElementById('github-popover');
+    const githubTrigger = document.getElementById('github-trigger');
+    const publicProfile = document.getElementById('public-profile');
+    const publicHeading = document.getElementById('public-heading');
+    const publicBio = document.getElementById('public-bio');
+    const publicList = document.getElementById('public-list');
+    const githubUsername = 'DanielRakusan';
+    let currentLanguage = 'cz';
+    let currentGithubProfile = null;
+
+    function normalizeUrl(value) {
+      if (!value) {
+        return '';
+      }
+
+      return /^https?:\/\//i.test(value) ? value : 'https://' + value;
+    }
+
+    function createPublicItem(label, value, href) {
+      const element = href ? document.createElement('a') : document.createElement('div');
+
+      element.className = 'public-item';
+      if (href) {
+        element.href = href;
+        element.target = '_blank';
+        element.rel = 'noreferrer';
+      }
+
+      const labelElement = document.createElement('span');
+      labelElement.className = 'public-item-label';
+      labelElement.textContent = label;
+
+      const valueElement = document.createElement('span');
+      valueElement.className = 'public-item-value';
+      valueElement.textContent = value;
+
+      element.appendChild(labelElement);
+      element.appendChild(valueElement);
+
+      return element;
+    }
+
+    function setGithubPopoverOpen(isOpen) {
+      githubPopover.classList.toggle('is-open', isOpen);
+      githubTrigger.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function renderGithubProfile() {
+      if (!currentGithubProfile) {
+        githubTrigger.hidden = true;
+        publicProfile.hidden = true;
+        setGithubPopoverOpen(false);
+        return;
+      }
+
+      const t = translations[currentLanguage];
+      const profile = currentGithubProfile;
+      const displayName = (profile.name || profile.login || githubUsername).trim();
+      const items = [];
+      const blogValue = (profile.blog || '').trim();
+      const blogUrl = normalizeUrl(blogValue);
+
+      nameplate.textContent = displayName;
+      if (profile.email) {
+        nameplate.href = 'mailto:' + profile.email;
+        nameplate.classList.add('is-link');
+        nameplate.title = profile.email;
+        nameplate.setAttribute('aria-label', profile.email);
+      } else {
+        nameplate.removeAttribute('href');
+        nameplate.classList.remove('is-link');
+        nameplate.removeAttribute('title');
+        nameplate.removeAttribute('aria-label');
+      }
+
+      avatar.src = profile.avatar_url || avatar.src;
+      avatar.alt = t.avatarAlt.replace('{name}', displayName);
+      publicHeading.textContent = t.publicHeading;
+
+      publicBio.textContent = (profile.bio || '').trim();
+      publicBio.hidden = publicBio.textContent.length === 0;
+
+      items.push(createPublicItem(
+        t.labels.github,
+        '@' + (profile.login || githubUsername),
+        profile.html_url || ('https://github.com/' + githubUsername)
+      ));
+
+      if (profile.location) {
+        items.push(createPublicItem(t.labels.location, profile.location));
+      }
+
+      if (profile.email) {
+        items.push(createPublicItem(t.labels.email, profile.email, 'mailto:' + profile.email));
+      }
+
+      if (blogUrl) {
+        items.push(createPublicItem(t.labels.website, blogValue, blogUrl));
+      }
+
+      if (profile.company) {
+        items.push(createPublicItem(t.labels.company, profile.company));
+      }
+
+      if (profile.twitter_username) {
+        items.push(createPublicItem(
+          t.labels.social,
+          '@' + profile.twitter_username,
+          'https://x.com/' + profile.twitter_username
+        ));
+      }
+
+      publicList.replaceChildren(...items);
+      const hasVisibleContent = items.length > 0 || !publicBio.hidden;
+
+      githubTrigger.hidden = !hasVisibleContent;
+      publicProfile.hidden = !hasVisibleContent;
+
+      if (!hasVisibleContent) {
+        setGithubPopoverOpen(false);
+      }
+    }
+
+    async function loadGithubProfile() {
+      try {
+        const response = await fetch('https://api.github.com/users/' + githubUsername, {
+          headers: {
+            Accept: 'application/vnd.github+json'
+          }
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        currentGithubProfile = await response.json();
+        renderGithubProfile();
+      } catch (error) {
+        console.error('GitHub profile load failed:', error);
+      }
+    }
 
     function setLanguage(language) {
+      currentLanguage = language;
       const t = translations[language];
       document.documentElement.lang = t.lang;
       document.title = t.titleTag;
@@ -464,6 +852,7 @@
       title.innerHTML = t.title;
       description.textContent = t.description;
       status.textContent = t.status;
+      renderGithubProfile();
 
       btnCz.classList.toggle('active', language === 'cz');
       btnEn.classList.toggle('active', language === 'en');
@@ -474,6 +863,9 @@
 
     btnCz.addEventListener('click', () => setLanguage('cz'));
     btnEn.addEventListener('click', () => setLanguage('en'));
+    githubTrigger.addEventListener('click', () => {
+      setGithubPopoverOpen(!githubPopover.classList.contains('is-open'));
+    });
 
     if (window.location.hash.toLowerCase() === '#/en') {
       setLanguage('en');
@@ -488,6 +880,21 @@
         setLanguage('cz');
       }
     });
+
+    document.addEventListener('click', (event) => {
+      if (!githubPopover.contains(event.target)) {
+        setGithubPopoverOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        setGithubPopoverOpen(false);
+        githubTrigger.blur();
+      }
+    });
+
+    loadGithubProfile();
   </script>
 </body>
 </html>
