@@ -92,8 +92,8 @@ export const content = {
         tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
       },
       growing: {
-        label: "// pracuji s · přidávám",
-        sub: "Projekty, experimentování, integrace do stacku",
+        label: "// znám · zlepšuji se",
+        sub: "Aktivně používám v projektech, posouvám dál",
         tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
       },
       base: {
@@ -378,8 +378,8 @@ export const content = {
         tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
       },
       growing: {
-        label: "// working with · adding",
-        sub: "Projects, experimentation, stack integration",
+        label: "// know it · getting better",
+        sub: "Actively using in projects, pushing further",
         tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
       },
       base: {
