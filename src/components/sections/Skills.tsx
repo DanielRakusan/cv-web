@@ -9,7 +9,7 @@ export function Skills() {
 
   return (
     <SectionWrapper id="dovednosti">
-      <SectionHeader label={t.skills.sectionLabel} heading={t.skills.heading} />
+      <SectionHeader keyword={`// ${t.skills.sectionLabel.toLowerCase()}`} heading={t.skills.heading} />
 
       <div className="space-y-8">
         {t.skills.groups.map((group, gi) => (

@@ -6,9 +6,7 @@ import { useContent } from "@/hooks/useContent";
 import { siteConfig } from "@/config/site";
 import type { GitHubProfile } from "@/lib/github";
 
-type NavbarProps = {
-  profile: GitHubProfile | null;
-};
+type NavbarProps = { profile: GitHubProfile | null };
 
 export function Navbar({ profile }: NavbarProps) {
   const { lang, setLang } = useLanguage();
@@ -24,217 +22,184 @@ export function Navbar({ profile }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setPopoverOpen(false);
-    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setPopoverOpen(false); };
     const onClick = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-        setPopoverOpen(false);
-      }
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) setPopoverOpen(false);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onClick);
-    };
+    return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onClick); };
   }, []);
-
-  const displayName = profile?.name ?? profile?.login ?? "Daniel Rakušan";
 
   function normalizeUrl(val: string | null | undefined) {
     if (!val) return "";
     return /^https?:\/\//i.test(val) ? val : "https://" + val;
   }
 
-  const profileItems = profile
-    ? [
-        { label: t.github.publicInfo.split(" ")[0], value: "@" + profile.login, href: profile.html_url },
-        profile.location ? { label: t.github.location, value: profile.location } : null,
-        profile.email ? { label: t.github.email, value: profile.email, href: "mailto:" + profile.email } : null,
-        profile.blog ? { label: t.github.website, value: profile.blog, href: normalizeUrl(profile.blog) } : null,
-        profile.company ? { label: t.github.company, value: profile.company } : null,
-        profile.twitter_username
-          ? { label: t.github.social, value: "@" + profile.twitter_username, href: "https://x.com/" + profile.twitter_username }
-          : null,
-      ].filter(Boolean)
-    : [];
+  const profileItems = profile ? [
+    { label: "GitHub", value: "@" + profile.login, href: profile.html_url },
+    profile.location ? { label: t.github.location, value: profile.location } : null,
+    profile.email ? { label: t.github.email, value: profile.email, href: "mailto:" + profile.email } : null,
+    profile.blog ? { label: t.github.website, value: profile.blog, href: normalizeUrl(profile.blog) } : null,
+    profile.company ? { label: t.github.company, value: profile.company } : null,
+  ].filter(Boolean) : [];
+
+  const navLinks = [
+    { href: "#oMne", label: lang === "cz" ? "proč já" : "why me" },
+    { href: "#dovednosti", label: lang === "cz" ? "dovednosti" : "skills" },
+    { href: "#zkusenosti", label: lang === "cz" ? "zkušenosti" : "experience" },
+    { href: "#certifikaty", label: lang === "cz" ? "certifikáty" : "certs" },
+    { href: "#projekty", label: lang === "cz" ? "projekty" : "projects" },
+    { href: "#kontakt", label: lang === "cz" ? "kontakt" : "contact" },
+  ];
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 transition-all duration-300"
       style={{
-        padding: scrolled ? "10px 24px" : "16px 24px",
-        background: scrolled ? "rgba(5,5,5,0.85)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+        padding: ".85rem 5vw",
+        background: scrolled ? "rgba(2,2,10,.85)" : "rgba(2,2,10,.6)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: `1px solid ${scrolled ? "var(--b0)" : "transparent"}`,
       }}
     >
-      <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
-        {/* Avatar + jméno */}
-        <div className="flex items-center gap-3">
-          <div
-            className="rounded-full overflow-hidden flex-shrink-0 border transition-all duration-200"
-            style={{
-              width: 34,
-              height: 34,
-              borderColor: "var(--border)",
-              background: "var(--surface)",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={profile?.avatar_url ?? `https://github.com/${siteConfig.githubUsername}.png?size=68`}
-              alt={t.github.avatarAlt.replace("{name}", displayName)}
-              width={34}
-              height={34}
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-          <span
-            className="text-sm font-semibold tracking-wide hidden sm:block"
-            style={{ color: "var(--text)" }}
-          >
-            {displayName}
-          </span>
-        </div>
+      {/* Logo */}
+      <a
+        href="#oMne"
+        className="font-mono flex-shrink-0"
+        style={{ fontSize: ".78rem", color: "var(--cyan)", textDecoration: "none", letterSpacing: ".06em" }}
+      >
+        dr.rakusan_
+      </a>
 
-        {/* Nav links — desktop */}
-        <nav className="hidden md:flex items-center gap-1">
-          {(["oMne", "dovednosti", "zkusenosti", "certifikaty", "projekty", "kontakt"] as const).map((key) => (
-            <a
-              key={key}
-              href={`#${key}`}
-              className="px-3 py-1.5 rounded-lg text-sm transition-all duration-150"
-              style={{ color: "var(--text-muted)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text)";
-                (e.currentTarget as HTMLElement).style.background = "var(--surface-hover)";
+      {/* Nav links */}
+      <nav className="hidden md:flex items-center gap-6">
+        {navLinks.map((l) => (
+          <a
+            key={l.href}
+            href={l.href}
+            className="font-mono transition-colors duration-150"
+            style={{ fontSize: ".65rem", color: "var(--sub)", textDecoration: "none", letterSpacing: ".05em" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--cyan)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--sub)")}
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
+
+      {/* Right: GitHub popover + lang switch + CTA */}
+      <div className="flex items-center gap-3">
+        {/* GitHub popover */}
+        {profileItems.length > 0 && (
+          <div ref={popoverRef} className="relative hidden sm:block">
+            <button
+              type="button"
+              onClick={() => setPopoverOpen(v => !v)}
+              aria-expanded={popoverOpen}
+              className="font-mono flex items-center gap-1.5 transition-all duration-150"
+              style={{
+                fontSize: ".68rem",
+                padding: ".4rem .95rem",
+                border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
+                borderRadius: 4,
+                color: popoverOpen ? "var(--cyan)" : "var(--sub)",
+                background: "transparent",
+                cursor: "pointer",
+                letterSpacing: ".03em",
               }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-                (e.currentTarget as HTMLElement).style.background = "transparent";
+              onMouseEnter={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b2)"; e.currentTarget.style.color = "var(--txt)"; } }}
+              onMouseLeave={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; } }}
+            >
+              <GitHubIcon className="w-3.5 h-3.5" />
+              GitHub
+            </button>
+            {popoverOpen && (
+              <div
+                className="absolute right-0 top-full mt-2 rounded-xl border p-4 z-50"
+                style={{
+                  width: "min(300px, calc(100vw - 32px))",
+                  background: "rgba(4,4,16,.96)",
+                  borderColor: "var(--b1)",
+                  backdropFilter: "blur(16px)",
+                  boxShadow: "0 20px 60px rgba(0,0,0,.6)",
+                }}
+              >
+                <p className="font-mono text-center mb-3" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".1em", textTransform: "uppercase" }}>
+                  {t.github.publicInfo}
+                </p>
+                {profile?.bio && (
+                  <p className="text-center text-xs mb-3" style={{ color: "var(--sub)", lineHeight: 1.6, fontSize: ".8rem" }}>{profile.bio}</p>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  {profileItems.map((item, i) => {
+                    if (!item) return null;
+                    const Tag = item.href ? "a" : "div";
+                    return (
+                      <Tag
+                        key={i}
+                        {...(item.href ? { href: item.href, target: "_blank", rel: "noreferrer" } : {})}
+                        className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg border transition-all duration-150"
+                        style={{ borderColor: "var(--b0)", background: "var(--s1)", textDecoration: "none" }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,.3)"; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b0)"; }}
+                      >
+                        <span className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".08em", textTransform: "uppercase" }}>{item.label}</span>
+                        <span style={{ fontSize: ".78rem", color: "var(--txt)", fontWeight: 500 }}>{item.value}</span>
+                      </Tag>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Lang switch */}
+        <div
+          className="flex rounded-full p-1"
+          style={{ border: "1px solid var(--b1)", background: "var(--s1)" }}
+        >
+          {(["cz", "en"] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setLang(l)}
+              className="font-mono px-3 py-1.5 rounded-full transition-all duration-150"
+              style={{
+                fontSize: ".72rem",
+                fontWeight: 700,
+                background: lang === l ? "#ffffff" : "transparent",
+                color: lang === l ? "#02020a" : "var(--sub)",
+                border: "none",
+                cursor: "pointer",
+                letterSpacing: ".04em",
               }}
             >
-              {t.nav[key]}
-            </a>
+              {l.toUpperCase()}
+            </button>
           ))}
-        </nav>
-
-        {/* Pravá strana */}
-        <div className="flex items-center gap-2">
-          {/* GitHub popover */}
-          {profileItems.length > 0 && (
-            <div ref={popoverRef} className="relative">
-              <button
-                type="button"
-                onClick={() => setPopoverOpen((v) => !v)}
-                aria-expanded={popoverOpen}
-                className="flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-150 border"
-                style={{
-                  borderColor: popoverOpen ? "var(--accent-border)" : "var(--border)",
-                  background: popoverOpen ? "var(--accent-glow)" : "var(--surface)",
-                  color: popoverOpen ? "var(--accent)" : "var(--text)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!popoverOpen) {
-                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hover)";
-                    (e.currentTarget as HTMLElement).style.background = "var(--surface-hover)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!popoverOpen) {
-                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                    (e.currentTarget as HTMLElement).style.background = "var(--surface)";
-                  }
-                }}
-              >
-                <GitHubIcon className="w-3.5 h-3.5" />
-                <span>GitHub</span>
-              </button>
-
-              {popoverOpen && (
-                <div
-                  className="absolute right-0 top-full mt-2 rounded-2xl border p-5 z-50"
-                  style={{
-                    width: "min(340px, calc(100vw - 32px))",
-                    background: "rgba(8,8,8,0.95)",
-                    borderColor: "var(--border)",
-                    backdropFilter: "blur(12px)",
-                    boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-                  }}
-                >
-                  <p
-                    className="text-center text-xs font-bold tracking-widest uppercase mb-4"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {t.github.publicInfo}
-                  </p>
-                  {profile?.bio && (
-                    <p className="text-center text-sm mb-4" style={{ color: "var(--text-muted)", lineHeight: 1.6 }}>
-                      {profile.bio}
-                    </p>
-                  )}
-                  <div className="flex flex-col gap-2">
-                    {profileItems.map((item, i) => {
-                      if (!item) return null;
-                      const Tag = item.href ? "a" : "div";
-                      return (
-                        <Tag
-                          key={i}
-                          {...(item.href ? { href: item.href, target: "_blank", rel: "noreferrer" } : {})}
-                          className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all duration-150"
-                          style={{
-                            borderColor: "var(--border)",
-                            background: "var(--surface)",
-                            textDecoration: "none",
-                          }}
-                          onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.borderColor = "var(--accent-border)";
-                            (e.currentTarget as HTMLElement).style.background = "var(--accent-glow)";
-                          }}
-                          onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                            (e.currentTarget as HTMLElement).style.background = "var(--surface)";
-                          }}
-                        >
-                          <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--text-faint)" }}>
-                            {item.label}
-                          </span>
-                          <span className="text-sm font-semibold text-right" style={{ color: "var(--text)" }}>
-                            {item.value}
-                          </span>
-                        </Tag>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Language switch */}
-          <div
-            className="flex rounded-full border p-1"
-            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-          >
-            {(["cz", "en"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                className="px-3 py-1.5 rounded-full text-sm font-bold tracking-wide transition-all duration-150"
-                style={{
-                  background: lang === l ? "#ffffff" : "transparent",
-                  color: lang === l ? "#050505" : "var(--text-muted)",
-                }}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
         </div>
+
+        {/* CTA button */}
+        <a
+          href="#kontakt"
+          className="font-mono hidden md:inline-block transition-all duration-150"
+          style={{
+            fontSize: ".68rem",
+            padding: ".4rem .95rem",
+            border: "1px solid var(--cyan)",
+            borderRadius: 4,
+            color: "var(--cyan)",
+            textDecoration: "none",
+            letterSpacing: ".03em",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "var(--cyan)"; e.currentTarget.style.color = "#02020a"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--cyan)"; }}
+        >
+          {lang === "cz" ? "Napište mi →" : "Get in touch →"}
+        </a>
       </div>
     </header>
   );

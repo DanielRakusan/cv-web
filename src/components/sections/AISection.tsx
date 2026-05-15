@@ -9,7 +9,7 @@ export function AISection() {
 
   return (
     <SectionWrapper id="ai">
-      <SectionHeader label={t.aiSection.sectionLabel} heading={t.aiSection.heading} />
+      <SectionHeader keyword={`// ${t.aiSection.sectionLabel.toLowerCase()}`} heading={t.aiSection.heading} />
 
       <p className="mb-12 text-base leading-relaxed" style={{ color: "var(--text-muted)", maxWidth: "56ch" }}>
         {t.aiSection.description}

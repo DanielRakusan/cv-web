@@ -13,41 +13,50 @@ export function SectionWrapper({ id, children, className = "" }: Props) {
   return (
     <motion.section
       id={id}
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-      className={`px-6 py-24 ${className}`}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      className={`${className}`}
+      style={{ padding: "5rem 5vw", maxWidth: 1060, margin: "0 auto" }}
     >
-      <div className="max-w-4xl mx-auto">{children}</div>
+      {children}
     </motion.section>
   );
 }
 
 type SectionHeaderProps = {
-  label: string;
-  heading: string;
+  keyword: string;   // e.g. "// proč mě najmout"
+  heading: string;   // e.g. "Co dostanete"
+  sub?: string;
 };
 
-export function SectionHeader({ label, heading }: SectionHeaderProps) {
+export function SectionHeader({ keyword, heading, sub }: SectionHeaderProps) {
   return (
-    <div className="mb-14">
+    <div style={{ marginBottom: "2.6rem" }}>
       <div
-        className="text-xs font-bold tracking-widest uppercase mb-3"
-        style={{ color: "var(--accent)" }}
+        className="font-mono"
+        style={{ fontSize: ".6rem", color: "var(--green)", letterSpacing: ".15em", textTransform: "uppercase", marginBottom: ".4rem" }}
       >
-        {label}
+        {keyword}
       </div>
       <h2
-        className="font-extrabold leading-none"
+        className="font-bold"
         style={{
-          fontSize: "clamp(2rem, 5vw, 3.2rem)",
-          letterSpacing: "-0.025em",
-          color: "var(--text)",
+          fontSize: "clamp(1.4rem, 3vw, 2rem)",
+          color: "#fff",
+          letterSpacing: "-.01em",
+          lineHeight: 1.2,
         }}
       >
         {heading}
       </h2>
+      <div style={{ width: 30, height: 2, background: "var(--cyan)", marginTop: ".65rem" }} />
+      {sub && (
+        <p style={{ fontSize: ".9rem", color: "var(--sub)", marginTop: ".7rem", maxWidth: 560, lineHeight: 1.7 }}>
+          {sub}
+        </p>
+      )}
     </div>
   );
 }

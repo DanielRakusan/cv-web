@@ -144,7 +144,7 @@ export function Terminal() {
 
   return (
     <SectionWrapper id="projekty">
-      <SectionHeader label={t.terminal.sectionLabel} heading={t.terminal.heading} />
+      <SectionHeader keyword={`// ${t.terminal.sectionLabel.toLowerCase()}`} heading={t.terminal.heading} />
 
       <p className="mb-8 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
         {t.terminal.description}

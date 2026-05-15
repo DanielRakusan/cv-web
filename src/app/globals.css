@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #050505;
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-hover: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.16);
-  --text: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --text-faint: rgba(255, 255, 255, 0.35);
-  --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.15);
-  --accent-border: rgba(59, 130, 246, 0.35);
+  --bg:     #02020a;
+  --s1:     rgba(255,255,255,.032);
+  --s2:     rgba(255,255,255,.055);
+  --b0:     rgba(255,255,255,.05);
+  --b1:     rgba(255,255,255,.08);
+  --b2:     rgba(255,255,255,.15);
+  --cyan:   #22d3ee;
+  --green:  #4ade80;
+  --violet: #a78bfa;
+  --amber:  #fbbf24;
+  --txt:    #e2e8f0;
+  --sub:    #94a3b8;
+  --dim:    #475569;
+
+  /* aliases used in existing components */
+  --surface:      var(--s1);
+  --surface-hover: var(--s2);
+  --border:       var(--b1);
+  --border-hover: var(--b2);
+  --text:         var(--txt);
+  --text-muted:   var(--sub);
+  --text-faint:   var(--dim);
+  --accent:       var(--cyan);
+  --accent-glow:  rgba(34,211,238,.12);
+  --accent-border: rgba(34,211,238,.3);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 @layer base {
-  * {
+  *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -29,50 +43,79 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 72px;
 }
 
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-geist-sans, "Inter", system-ui, sans-serif);
-  min-height: 100vh;
+  color: var(--txt);
+  font-family: var(--font-sans, "Space Grotesk", system-ui, sans-serif);
+  line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar { width: 6px; }
+/* monospace utility */
+.font-mono {
+  font-family: var(--font-mono, "Fira Code", monospace) !important;
+}
+
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+::-webkit-scrollbar-thumb { background: var(--b1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--b2); }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--cyan);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(34,211,238,.25);
   color: #fff;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink {
-  animation: blink 1s step-end infinite;
-}
-
+/* ── starfield animations ── */
 @keyframes float-star {
   from { transform: translateY(0px); }
   to   { transform: translateY(-120px); }
 }
-
 @keyframes pulse-star {
   0%, 100% { opacity: 0.2; }
   50%       { opacity: 1; }
+}
+
+/* ── cursor blink (terminal) ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink { animation: blink 1s step-end infinite; }
+
+/* ── pulse (availability dot) ── */
+@keyframes pulse-dot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:.22; transform:scale(.48); }
+}
+
+/* ── photo frame corner decorations ── */
+.photo-frame::before,
+.photo-frame::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--cyan);
+  border-style: solid;
+  pointer-events: none;
+}
+.photo-frame::before {
+  top: -2px; left: -2px;
+  border-width: 2px 0 0 2px;
+}
+.photo-frame::after {
+  bottom: -2px; right: -2px;
+  border-width: 0 2px 2px 0;
 }

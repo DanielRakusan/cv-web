@@ -9,7 +9,7 @@ export function MasterPlan() {
 
   return (
     <SectionWrapper id="plan">
-      <SectionHeader label={t.masterPlan.sectionLabel} heading={t.masterPlan.heading} />
+      <SectionHeader keyword={`// ${t.masterPlan.sectionLabel.toLowerCase()}`} heading={t.masterPlan.heading} />
 
       <p className="mb-12 text-base leading-relaxed" style={{ color: "var(--text-muted)", maxWidth: "56ch" }}>
         {t.masterPlan.description}

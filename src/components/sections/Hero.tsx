@@ -14,9 +14,9 @@ const ease = [0.22, 1, 0.36, 1] as const;
 function FadeUp({ delay, children, className }: { delay: number; children: React.ReactNode; className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.6, ease }}
+      transition={{ delay, duration: 0.55, ease }}
       className={className}
     >
       {children}
@@ -32,192 +32,259 @@ export function Hero({ profile }: HeroProps) {
   return (
     <section
       id="oMne"
-      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16"
+      className="relative z-10 min-h-screen flex items-center"
+      style={{ padding: "88px 5vw 3rem", maxWidth: 1060, margin: "0 auto" }}
     >
-      {/* Corner decorations */}
-      <div aria-hidden="true" className="absolute inset-6 pointer-events-none">
-        <span className="absolute top-0 left-0 w-20 h-20 border-t border-l" style={{ borderColor: "var(--border)" }} />
-        <span className="absolute bottom-0 right-0 w-20 h-20 border-b border-r" style={{ borderColor: "var(--border)" }} />
-      </div>
-
-      <div className="relative z-10 max-w-4xl w-full mx-auto">
-        {/* Desktop: 2-column | Mobile: single column centered */}
-        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-
-          {/* Right column (desktop) / bottom (mobile): text */}
-          <div className="flex flex-col items-center text-center md:items-start md:text-left gap-7 flex-1 order-2 md:order-2">
-
-            <FadeUp delay={0.1}>
-              <span
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase border"
-                style={{
-                  borderColor: "rgba(34,197,94,0.3)",
-                  background: "rgba(34,197,94,0.06)",
-                  color: "rgba(134,239,172,0.9)",
-                }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                {t.hero.badge}
-              </span>
-            </FadeUp>
-
-            <FadeUp delay={0.2} className="space-y-2">
-              <div className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--accent)" }}>
-                {t.hero.role}
-                <span className="ml-2" style={{ color: "var(--text-faint)" }}>{t.hero.subRole}</span>
-              </div>
-              <h1
-                className="font-extrabold leading-none uppercase"
-                style={{
-                  fontSize: "clamp(2.4rem, 7vw, 5rem)",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 0.92,
-                }}
-              >
-                {t.hero.tagline.split("\n").map((line, i) => (
-                  <span key={i} className="block">{line}</span>
-                ))}
-              </h1>
-            </FadeUp>
-
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ delay: 0.3, duration: 0.5, ease }}
-              className="w-20 h-px origin-left hidden md:block"
-              style={{ background: "linear-gradient(to right, var(--border), transparent)" }}
-            />
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ delay: 0.3, duration: 0.5, ease }}
-              className="w-20 h-px md:hidden"
-              style={{ background: "linear-gradient(to right, transparent, var(--border), transparent)" }}
-            />
-
-            <FadeUp delay={0.35}>
-              <p className="text-lg leading-relaxed" style={{ color: "var(--text-muted)", maxWidth: "44ch" }}>
-                {t.hero.description}
-              </p>
-            </FadeUp>
-
-            {/* CTA buttons */}
-            <FadeUp delay={0.45}>
-              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                <a
-                  href={`mailto:${siteConfig.social.email}`}
-                  className="px-6 py-3 rounded-xl text-sm font-bold tracking-wide border transition-all duration-150"
-                  style={{ background: "#ffffff", color: "#050505", borderColor: "transparent" }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = "rgba(255,255,255,0.88)";
-                    el.style.transform = "translateY(-1px)";
-                    el.style.boxShadow = "0 8px 24px rgba(255,255,255,0.12)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = "#ffffff";
-                    el.style.transform = "translateY(0)";
-                    el.style.boxShadow = "none";
-                  }}
-                >
-                  {t.hero.ctaContact}
-                </a>
-                <a
-                  href={siteConfig.social.linkedin}
-                  target="_blank" rel="noreferrer"
-                  className="px-6 py-3 rounded-xl text-sm font-bold tracking-wide border transition-all duration-150"
-                  style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--text)" }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--accent-border)";
-                    el.style.background = "var(--accent-glow)";
-                    el.style.color = "var(--accent)";
-                    el.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--border)";
-                    el.style.background = "var(--surface)";
-                    el.style.color = "var(--text)";
-                    el.style.transform = "translateY(0)";
-                  }}
-                >
-                  {t.hero.ctaLinkedin}
-                </a>
-                <a
-                  href={siteConfig.social.github}
-                  target="_blank" rel="noreferrer"
-                  className="px-6 py-3 rounded-xl text-sm font-bold tracking-wide border transition-all duration-150"
-                  style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--text)" }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--border-hover)";
-                    el.style.background = "var(--surface-hover)";
-                    el.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--border)";
-                    el.style.background = "var(--surface)";
-                    el.style.transform = "translateY(0)";
-                  }}
-                >
-                  {t.hero.ctaGithub}
-                </a>
-              </div>
-            </FadeUp>
-          </div>
-
-          {/* Left column (desktop) / top (mobile): avatar */}
-          <FadeUp delay={0} className="flex-shrink-0 order-1 md:order-1">
-            <div className="relative">
+      {/* 2-col grid: photo left | text right */}
+      <div
+        className="w-full grid items-center gap-16"
+        style={{ gridTemplateColumns: "220px 1fr" }}
+      >
+        {/* ── LEFT: Photo ── */}
+        <FadeUp delay={0}>
+          <div className="flex flex-col items-center gap-4">
+            {/* Square photo with cyan corner frame */}
+            <div className="relative" style={{ width: 210, height: 210 }}>
               <div
-                className="rounded-full p-1.5 border"
-                style={{
-                  borderColor: "rgba(255,255,255,0.14)",
-                  background: "radial-gradient(circle at top, rgba(255,255,255,0.16), rgba(255,255,255,0.04) 65%)",
-                  boxShadow: "0 14px 36px rgba(0,0,0,0.35), 0 0 0 8px rgba(255,255,255,0.02)",
-                  width: 172,
-                  height: 172,
-                }}
+                className="relative overflow-hidden group"
+                style={{ width: 210, height: 210, borderRadius: 10 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={avatarUrl}
                   alt={t.github.avatarAlt.replace("{name}", displayName)}
-                  width={156}
-                  height={156}
-                  className="rounded-full object-cover w-full h-full border"
-                  style={{ borderColor: "rgba(255,255,255,0.12)" }}
+                  width={210}
+                  height={210}
+                  className="w-full h-full object-cover block transition-all duration-300"
+                  style={{ filter: "grayscale(8%)" }}
                   referrerPolicy="no-referrer"
                 />
+                {/* Hover overlay */}
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-4"
+                  style={{ background: "rgba(2,2,10,0.82)" }}
+                >
+                  <a
+                    href={`mailto:${siteConfig.social.email}`}
+                    className="font-mono text-xs py-2 px-4 rounded w-full text-center font-bold transition-colors duration-150"
+                    style={{ background: "var(--cyan)", color: "#02020a", letterSpacing: ".04em" }}
+                  >
+                    {t.hero.ctaContact} ↗
+                  </a>
+                  <a
+                    href={siteConfig.social.github}
+                    target="_blank" rel="noreferrer"
+                    className="font-mono text-xs py-1.5 px-4 rounded w-full text-center border transition-all duration-150"
+                    style={{ background: "rgba(255,255,255,.08)", color: "#fff", borderColor: "rgba(255,255,255,.22)" }}
+                  >
+                    GitHub
+                  </a>
+                  <a
+                    href={siteConfig.social.linkedin}
+                    target="_blank" rel="noreferrer"
+                    className="font-mono text-xs py-1.5 px-4 rounded w-full text-center border transition-all duration-150"
+                    style={{ background: "rgba(255,255,255,.08)", color: "#fff", borderColor: "rgba(255,255,255,.22)" }}
+                  >
+                    LinkedIn
+                  </a>
+                </div>
               </div>
-              {/* Availability dot */}
+              {/* Cyan corner frame */}
+              <div className="photo-frame absolute inset-0 pointer-events-none" style={{ inset: -3 }} />
+            </div>
+
+            {/* Availability badge below photo */}
+            <div
+              className="font-mono inline-flex items-center gap-2"
+              style={{
+                fontSize: ".6rem",
+                padding: "4px 14px",
+                border: "1px solid rgba(74,222,128,.24)",
+                borderRadius: 100,
+                color: "var(--green)",
+                background: "rgba(74,222,128,.06)",
+                letterSpacing: ".04em",
+                whiteSpace: "nowrap",
+              }}
+            >
               <span
-                className="absolute bottom-3 right-3 w-4 h-4 rounded-full border-2"
-                style={{ background: "#22c55e", borderColor: "#050505", boxShadow: "0 0 8px rgba(34,197,94,0.6)" }}
-                aria-label="Available"
+                style={{
+                  width: 6, height: 6, borderRadius: "50%",
+                  background: "var(--green)",
+                  animation: "pulse-dot 2.2s ease-in-out infinite",
+                  flexShrink: 0,
+                }}
               />
+              {t.hero.badge}
+            </div>
+          </div>
+        </FadeUp>
+
+        {/* ── RIGHT: Text ── */}
+        <div className="flex flex-col gap-5">
+          {/* Eyebrow */}
+          <FadeUp delay={0.1}>
+            <div
+              className="font-mono flex items-center gap-3 uppercase"
+              style={{ fontSize: ".63rem", color: "var(--green)", letterSpacing: ".13em" }}
+            >
+              <span style={{ width: 18, height: 1, background: "var(--green)", flexShrink: 0 }} />
+              Praha · Junior Python Developer · {t.hero.badge.split("·")[0].trim()}
+            </div>
+          </FadeUp>
+
+          {/* Name H1 */}
+          <FadeUp delay={0.18}>
+            <h1
+              className="font-bold leading-tight"
+              style={{
+                fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
+                letterSpacing: "-.02em",
+                color: "#fff",
+                lineHeight: 1.05,
+              }}
+            >
+              Daniel<br />
+              <span style={{ color: "var(--cyan)" }}>Rakušan</span>
+            </h1>
+          </FadeUp>
+
+          {/* Role in monospace */}
+          <FadeUp delay={0.25}>
+            <div
+              className="font-mono"
+              style={{ fontSize: "clamp(.65rem, 1.5vw, .8rem)", color: "var(--dim)", letterSpacing: ".04em" }}
+            >
+              {t.hero.role.toLowerCase().replace(/ /g, " · ")} · AI-assisted dev
+            </div>
+          </FadeUp>
+
+          {/* Pitch */}
+          <FadeUp delay={0.32}>
+            <p
+              className="font-semibold"
+              style={{ fontSize: "clamp(.95rem, 2vw, 1.1rem)", color: "var(--txt)", lineHeight: 1.55, maxWidth: 480 }}
+            >
+              {t.hero.pitch}
+            </p>
+          </FadeUp>
+
+          {/* Body */}
+          <FadeUp delay={0.38}>
+            <p style={{ fontSize: ".9rem", color: "var(--sub)", lineHeight: 1.85, maxWidth: 470 }}>
+              {t.hero.description}
+            </p>
+          </FadeUp>
+
+          {/* Tech pills */}
+          <FadeUp delay={0.44}>
+            <div className="flex flex-wrap gap-1.5">
+              {t.hero.pills.map((pill, i) => (
+                <span
+                  key={i}
+                  className="font-mono"
+                  style={{
+                    fontSize: ".58rem",
+                    padding: "2px 9px",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    letterSpacing: ".03em",
+                    color: pill.color === "cyan" ? "var(--cyan)"
+                      : pill.color === "green" ? "var(--green)"
+                      : pill.color === "violet" ? "var(--violet)"
+                      : "var(--amber)",
+                    borderColor: pill.color === "cyan" ? "rgba(34,211,238,.28)"
+                      : pill.color === "green" ? "rgba(74,222,128,.28)"
+                      : pill.color === "violet" ? "rgba(167,139,250,.28)"
+                      : "rgba(251,191,36,.28)",
+                  }}
+                >
+                  {pill.label}
+                </span>
+              ))}
+            </div>
+          </FadeUp>
+
+          {/* CTA buttons */}
+          <FadeUp delay={0.5}>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href={`mailto:${siteConfig.social.email}`}
+                className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
+                style={{
+                  fontSize: ".7rem",
+                  padding: ".54rem 1.18rem",
+                  borderRadius: 4,
+                  background: "var(--cyan)",
+                  color: "#02020a",
+                  border: "1px solid var(--cyan)",
+                  fontWeight: 600,
+                  letterSpacing: ".03em",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = "#67e8f9")}
+                onMouseLeave={e => (e.currentTarget.style.background = "var(--cyan)")}
+              >
+                {t.hero.ctaContact} ↗
+              </a>
+              <a
+                href={siteConfig.social.github}
+                target="_blank" rel="noreferrer"
+                className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
+                style={{
+                  fontSize: ".7rem",
+                  padding: ".54rem 1.18rem",
+                  borderRadius: 4,
+                  background: "transparent",
+                  color: "var(--sub)",
+                  border: "1px solid var(--b1)",
+                  letterSpacing: ".03em",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--cyan)"; e.currentTarget.style.color = "var(--cyan)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; }}
+              >
+                GitHub
+              </a>
+              <a
+                href={siteConfig.social.linkedin}
+                target="_blank" rel="noreferrer"
+                className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
+                style={{
+                  fontSize: ".7rem",
+                  padding: ".54rem 1.18rem",
+                  borderRadius: 4,
+                  background: "transparent",
+                  color: "var(--sub)",
+                  border: "1px solid var(--b1)",
+                  letterSpacing: ".03em",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--cyan)"; e.currentTarget.style.color = "var(--cyan)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; }}
+              >
+                LinkedIn
+              </a>
             </div>
           </FadeUp>
         </div>
-
-        {/* Scroll hint */}
-        <FadeUp delay={0.6}>
-          <div className="flex flex-col items-center gap-2 mt-14" style={{ color: "var(--text-faint)" }}>
-            <span className="text-xs font-semibold tracking-widest uppercase">{t.hero.scrollHint}</span>
-            <motion.div
-              animate={{ y: [0, 5, 0] }}
-              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </motion.div>
-          </div>
-        </FadeUp>
       </div>
+
+      {/* Scroll hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono"
+        style={{ fontSize: ".58rem", color: "var(--dim)", letterSpacing: ".1em" }}
+      >
+        <span className="uppercase">{t.hero.scrollHint}</span>
+        <motion.div animate={{ y: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

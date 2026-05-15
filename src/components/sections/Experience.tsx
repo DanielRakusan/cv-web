@@ -9,7 +9,7 @@ export function Experience() {
 
   return (
     <SectionWrapper id="zkusenosti">
-      <SectionHeader label={t.experience.sectionLabel} heading={t.experience.heading} />
+      <SectionHeader keyword={`// ${t.experience.sectionLabel.toLowerCase()}`} heading={t.experience.heading} />
 
       <div className="relative">
         {/* Vertikální linka */}

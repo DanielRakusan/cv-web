@@ -11,7 +11,7 @@ export function WhyMe() {
 
   return (
     <SectionWrapper id="whyMe">
-      <SectionHeader label={t.whyMe.sectionLabel} heading={t.whyMe.heading} />
+      <SectionHeader keyword={`// ${t.whyMe.sectionLabel.toLowerCase()}`} heading={t.whyMe.heading} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {t.whyMe.cards.map((card, i) => (

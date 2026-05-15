@@ -9,7 +9,7 @@ export function VibeCoding() {
 
   return (
     <SectionWrapper id="vibecoding">
-      <SectionHeader label={t.vibeSection.sectionLabel} heading={t.vibeSection.heading} />
+      <SectionHeader keyword={`// ${t.vibeSection.sectionLabel.toLowerCase()}`} heading={t.vibeSection.heading} />
 
       <p className="mb-10 text-base leading-relaxed" style={{ color: "var(--text-muted)", maxWidth: "56ch" }}>
         {t.vibeSection.description}
