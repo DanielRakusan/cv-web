@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
-const icons = ["⚡", "🔧", "📚", "🧠"];
+const icons = ["🐍", "🔧", "⚡", "🤖"];
 
 export function WhyMe() {
   const t = useContent();

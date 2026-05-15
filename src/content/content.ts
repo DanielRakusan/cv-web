@@ -28,9 +28,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Přecházím z IT supportu\ndo světa vývoje.",
-      pitch: "Junior developer, který přemýšlí jako uživatel — a kóduje, dokud to funguje.",
+      pitch: "Python backend developer s IT backgroundem — rozumím systémům zevnitř, stavím je zvenčí.",
       description:
-        "Z IT podpory přímo do kódu. Každý den jsem viděl, kde software selhává — teď tuhle perspektivu přenáším do Pythonu, Djanga a čistého backendu. Certifikáty hotové, projekty na GitHubu, AI jako nástroj — ne berlička.",
+        "Z IT podpory přímo do backendu. Roky v terénu mi ukázaly, kde software selhává a proč — teď tuhle perspektivu přenáším do Pythonu, Djanga a databázové logiky. Debugguji, stavím, iteruji. GitHub jako deník práce.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
@@ -52,20 +52,20 @@ export const content = {
       heading: "Co přináším",
       cards: [
         {
-          title: "Python směr",
-          body: "Cíleně se rozvíjím v Pythonu, Djangu, SQLite a webových základech přes ITnetwork, projekty a certifikáty.",
+          title: "Backend thinking",
+          body: "Pracuji s Python backendem, Djangem a SQLite. Přemýšlím v pojmech views, modelů, databázových dotazů a serverové logiky — ne jen v prohlížeči.",
         },
         {
-          title: "Technický základ",
-          body: "Reálné zkušenosti s hardwarem, Windows, macOS, obnovou systémů a každodenním troubleshootingem.",
+          title: "Troubleshooting mindset",
+          body: "Roky IT supportu mě naučily systematicky hledat root cause. Tahle perspektiva teď funguje při debuggování kódu — hledám příčinu, ne záplatu.",
         },
         {
-          title: "Disciplína učení",
-          body: "Strukturované studium, certifikáty, GitHub workflow a každodenní zlepšování včetně angličtiny přes Duolingo.",
+          title: "Aktivní builder",
+          body: "Nestuduju jen teorii. Stavím projekty, nasazuji, ladím a iteruji. Python terminál na tomto webu běží na reálném backend serveru.",
         },
         {
-          title: "Developer mindset",
-          body: "Baví mě pochopit, jak věci fungují. Řeším problémy krok za krokem a zlepšuji se pravidelnou praxí.",
+          title: "AI-augmented workflow",
+          body: "AI používám jako součást dev toolkitu — rychlejší debugging, code review, research. Vím, co generuji a proč. Výsledek řídím já.",
         },
       ],
     },
@@ -74,12 +74,12 @@ export const content = {
       sectionLabel: "Silné stránky",
       heading: "Co o mně platí",
       items: [
-        "Přechod do vývoje podpořený ITnetwork, certifikáty a projekty",
-        "Troubleshooting Windows, macOS, hardware, recovery a konfigurace",
-        "Základy Pythonu, OOP, Djanga, SQLite a JavaScriptu",
-        "Znalost příkazové řádky, API základů, JSON a request-response modelu",
-        "Zájem o Python test automation, kvalitu softwaru a debugging",
-        "Otevřen full-time junior příležitostem v Praze",
+        "Python, Django, SQLite — backend stack v reálném použití: modely, views, databázové dotazy",
+        "IT support background: diagnostika hardware, Windows/macOS systémy, recovery, troubleshooting",
+        "Chápám request-response model, API logiku, JSON a tok dat mezi frontendem a backendem",
+        "Debugguji systematicky — traceback analýza, izolace problému, iterativní oprava",
+        "AI jako součást workflow: prompt engineering, code review s AI, multi-model přístup",
+        "Hledám junior Python/backend pozici v Praze — ihned k dispozici, připraven nastoupit",
       ],
     },
 
@@ -87,13 +87,13 @@ export const content = {
       sectionLabel: "Dovednosti",
       heading: "Co umím",
       active: {
-        label: "// aktivně používám",
-        sub: "Denní praxe, projekty, certifikáty",
+        label: "// aktivně stavím s",
+        sub: "Denní praxe, reálné projekty, GitHub",
         tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
       },
       growing: {
-        label: "// rozvíjím",
-        sub: "Kurzy, projekty, každodenní učení",
+        label: "// pracuji s · přidávám",
+        sub: "Projekty, experimentování, integrace do stacku",
         tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
       },
       base: {
@@ -108,16 +108,16 @@ export const content = {
       heading: "Profesní historie",
       items: [
         {
-          role: "Python Web Development",
-          company: "ITnetwork · Projekty · Certifikáty",
+          role: "Python Backend Development",
+          company: "Vlastní projekty · ITnetwork · GitHub",
           period: "2025 – nyní",
           location: "Praha",
           tags: ["Python", "Django", "SQLite", "JavaScript", "React", "OOP"],
           bullets: [
-            "Python a webový vývoj přes ITnetwork, projekty, certifikáty a průběžné samostudium.",
-            "Rozvíjím dovednosti v OOP, Djangu, SQLite, JavaScriptu, Reactu, HTML a webovém designu.",
-            "Vytvářím porozumění backendové logice, zpracování dat a request-response modelu.",
-            "Využívám AI nástroje jako podporu při učení, výzkumu a debuggingu.",
+            "Stavím Python aplikace s důrazem na backend logiku — Django MVC, OOP architektura, SQLite databáze.",
+            "Implementuji serverovou logiku: request-response flow, databázové modely, admin rozhraní, URL routing.",
+            "Debugguji systematicky: analýza tracebacků, izolace root cause, iterativní opravy.",
+            "Používám AI jako součást workflow — code review, research, refactoring. Kód vždy rozumím a kontroluji.",
           ],
         },
         {
@@ -176,9 +176,9 @@ export const content = {
 
     terminal: {
       sectionLabel: "Python projekty",
-      heading: "Spusť můj kód",
+      heading: "Live backend demo",
       description:
-        "Interaktivní terminál připojený k Python backendu na Render.com. Vyber projekt, spusť ho a zadávej vstup jako v reálném terminálu.",
+        "Reálný Python backend nasazený na Render.com. Vyber projekt, spusť ho a interaguj s ním přímo — stejně jako v terminálu. Tohle není demo. Je to kód, který skutečně běží.",
       waking: "Backend se probouzí",
       wakingDetail: "Render.com free tier spí po nečinnosti. Může to trvat 20–30 sekund.",
       ready: "Backend je připraven",
@@ -208,12 +208,12 @@ export const content = {
 
     vibeSection: {
       sectionLabel: "Vibe Coding",
-      heading: "Kóduju s AI",
+      heading: "AI jako nástroj, ne autor",
       description:
-        "Vibe coding je přístup, kdy AI stojí po tvém boku jako spoluprogramátor. Nepíšeš každý řádek sám — říkáš, co chceš, AI navrhuje, ty kontroluješ, řídíš a rozhoduješ. Výsledek záleží na tom, jestli tomu rozumíš.",
-      builtWith: "Tento web byl vytvořen vibe codingem",
+        "Vibe coding neznamená, že AI píše kód za tebe. Znamená to, že AI je součást workflow — jako lepší autocomplete, rychlejší research nebo code reviewer. Ale logiku, architekturu a rozhodnutí řídím já.",
+      builtWith: "Toto portfolio vzniklo s pomocí AI",
       builtDetail:
-        "Celé toto portfolio — design, logika, struktura, nasazení — vzniklo ve spolupráci s Claude od Anthropic. Nepsal jsem každý řádek, ale řídil jsem každé rozhodnutí. Výsledek mluví za sebe.",
+        "Design, logika, struktura, nasazení — vše navrženo a schváleno mnou, implementováno ve spolupráci s Claude. Každé rozhodnutí jsem řídil. AI byl nástroj, ne autor.",
       skills: [
         { label: "Prompt engineering", body: "Umím formulovat zadání tak, aby AI pochopila kontext, omezení i záměr." },
         { label: "Code review s AI", body: "Kontroluji, testuju a rozumím kódu, který AI navrhne — nejen kopíruji." },
@@ -314,9 +314,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Transitioning from IT support\ninto development.",
-      pitch: "Junior developer who thinks like a user — and codes until it works.",
+      pitch: "Python backend developer with an IT background — I understand systems from the inside, I build them from the outside.",
       description:
-        "From IT support straight into code. I saw every day where software really fails — now I bring that perspective to Python, Django, and clean backends. Certifications done, projects on GitHub, AI as a tool — not a crutch.",
+        "From IT support straight into backend. Years in the field showed me where software breaks and why — I now bring that perspective to Python, Django, and database logic. I debug, I build, I iterate. GitHub as my work log.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
@@ -338,20 +338,20 @@ export const content = {
       heading: "What I bring",
       cards: [
         {
-          title: "Python direction",
-          body: "Deliberately growing in Python, Django, SQLite, and web fundamentals through ITnetwork, projects, and certifications.",
+          title: "Backend thinking",
+          body: "I work with Python backend, Django, and SQLite. I think in terms of views, models, database queries, and server-side logic — not just the browser.",
         },
         {
-          title: "Technical base",
-          body: "Real hands-on experience with hardware, Windows, macOS, system recovery, and day-to-day troubleshooting.",
+          title: "Troubleshooting mindset",
+          body: "Years in IT support taught me to systematically hunt for root causes. That same perspective now drives my debugging — I find the cause, not just a patch.",
         },
         {
-          title: "Learning discipline",
-          body: "Structured study, certifications, GitHub workflow, and daily improvement including English through Duolingo.",
+          title: "Active builder",
+          body: "I don't just study theory. I build projects, deploy them, debug them, and iterate. The Python terminal on this site runs on a real backend server.",
         },
         {
-          title: "Developer mindset",
-          body: "I enjoy understanding how things work. I solve problems step by step and improve through consistent practice.",
+          title: "AI-augmented workflow",
+          body: "I use AI as part of my dev toolkit — faster debugging, code review, research. I know what I'm generating and why. I'm driving the output.",
         },
       ],
     },
@@ -360,12 +360,12 @@ export const content = {
       sectionLabel: "Highlights",
       heading: "What holds true",
       items: [
-        "Transition into development supported by ITnetwork, certifications, and projects",
-        "Troubleshooting Windows, macOS, hardware, recovery, and configuration",
-        "Foundations in Python, OOP, Django, SQLite, and JavaScript",
-        "Understanding of command line, API basics, JSON, and request-response flow",
-        "Strong interest in Python test automation, software quality, and debugging",
-        "Open to full-time junior opportunities in Prague",
+        "Python, Django, SQLite — backend stack in real use: models, views, database queries",
+        "IT support background: hardware diagnostics, Windows/macOS systems, recovery, troubleshooting",
+        "I understand request-response flow, API logic, JSON, and data flow between frontend and backend",
+        "I debug systematically — traceback analysis, problem isolation, iterative fixes",
+        "AI as part of workflow: prompt engineering, code review with AI, multi-model approach",
+        "Looking for a junior Python/backend role in Prague — immediately available",
       ],
     },
 
@@ -373,13 +373,13 @@ export const content = {
       sectionLabel: "Skills",
       heading: "What I know",
       active: {
-        label: "// actively using",
-        sub: "Daily practice, projects, certifications",
+        label: "// actively building with",
+        sub: "Daily practice, real projects, GitHub",
         tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
       },
       growing: {
-        label: "// developing",
-        sub: "Courses, projects, daily learning",
+        label: "// working with · adding",
+        sub: "Projects, experimentation, stack integration",
         tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
       },
       base: {
@@ -394,16 +394,16 @@ export const content = {
       heading: "Work history",
       items: [
         {
-          role: "Python Web Development",
-          company: "ITnetwork · Projects · Certifications",
+          role: "Python Backend Development",
+          company: "Personal Projects · ITnetwork · GitHub",
           period: "2025 – Present",
           location: "Prague",
           tags: ["Python", "Django", "SQLite", "JavaScript", "React", "OOP"],
           bullets: [
-            "Python and web development through ITnetwork, projects, certifications, and continuous self-study.",
-            "Developing skills in OOP, Django, SQLite, JavaScript, React, HTML, and web design.",
-            "Building understanding of backend logic, data handling, and request-response flow.",
-            "Using AI tools as support for learning, research, and debugging.",
+            "Building Python applications focused on backend logic — Django MVC, OOP architecture, SQLite databases.",
+            "Implementing server-side logic: request-response flow, database models, admin interface, URL routing.",
+            "Debugging systematically: traceback analysis, root cause isolation, iterative fixes.",
+            "Using AI as part of the dev workflow — code review, research, refactoring. I always understand and control the code.",
           ],
         },
         {
@@ -462,9 +462,9 @@ export const content = {
 
     terminal: {
       sectionLabel: "Python projects",
-      heading: "Run my code",
+      heading: "Live backend demo",
       description:
-        "Interactive terminal connected to a Python backend on Render.com. Select a project, run it, and provide input just like a real terminal.",
+        "A real Python backend deployed on Render.com. Select a project, run it, and interact with it directly — just like a real terminal. This isn't a mockup. It's code that actually runs.",
       waking: "Backend is waking up",
       wakingDetail: "Render.com free tier sleeps when idle. This may take 20–30 seconds.",
       ready: "Backend is ready",
@@ -494,12 +494,12 @@ export const content = {
 
     vibeSection: {
       sectionLabel: "Vibe Coding",
-      heading: "I code with AI",
+      heading: "AI as a tool, not the author",
       description:
-        "Vibe coding means AI stands beside you as a co-programmer. You don't write every line yourself — you describe what you want, AI suggests, you review, steer, and decide. The result depends on whether you actually understand what's happening.",
-      builtWith: "This website was built with vibe coding",
+        "Vibe coding doesn't mean AI writes code for you. It means AI is part of the workflow — like better autocomplete, faster research, or a code reviewer. But the logic, architecture, and decisions are mine.",
+      builtWith: "This portfolio was built with AI assistance",
       builtDetail:
-        "This entire portfolio — design, logic, structure, deployment — was built in collaboration with Claude by Anthropic. I didn't write every line, but I made every decision. The result speaks for itself.",
+        "Design, logic, structure, deployment — all designed and approved by me, implemented in collaboration with Claude. Every decision was mine. AI was the tool, not the author.",
       skills: [
         { label: "Prompt engineering", body: "I know how to frame a task so AI understands context, constraints, and intent." },
         { label: "Code review with AI", body: "I review, test, and understand the code AI proposes — not just copy-paste." },

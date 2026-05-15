@@ -31,25 +31,19 @@ export default async function Page() {
           <WhyMe />
           <SectionDivider />
 
-          <Skills />
-          <SectionDivider />
-
           <Experience />
           <SectionDivider />
 
-          <Certifications />
+          <Terminal />
           <SectionDivider />
 
-          <MasterPlan />
+          <Skills />
           <SectionDivider />
 
           <VibeCoding />
           <SectionDivider />
 
-          <AISection />
-          <SectionDivider />
-
-          <Terminal />
+          <Certifications />
           <SectionDivider />
 
           <Contact />
