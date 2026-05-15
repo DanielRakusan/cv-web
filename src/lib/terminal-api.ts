@@ -36,6 +36,30 @@ export async function fetchProjects(): Promise<{ id: string; name: string; descr
   }
 }
 
+export async function fetchProjectReadme(id: string): Promise<string | null> {
+  if (!siteConfig.renderApiUrl) return null;
+  try {
+    const res = await fetch(`${siteConfig.renderApiUrl}/projects/${id}/readme`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchProjectTree(id: string): Promise<{ path: string; type: string }[]> {
+  if (!siteConfig.renderApiUrl) return [];
+  try {
+    const res = await fetch(`${siteConfig.renderApiUrl}/projects/${id}/tree`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.tree ?? [];
+  } catch {
+    return [];
+  }
+}
+
 // Spustí projekt přes WebSocket, vrátí instanci WebSocket
 // Backend přijímá:
 //   { type: "run", projectId: string }

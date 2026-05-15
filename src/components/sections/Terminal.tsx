@@ -1,32 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import { useContent } from "@/hooks/useContent";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 import { siteConfig } from "@/config/site";
+import { fetchProjectReadme, fetchProjectTree } from "@/lib/terminal-api";
+import type { BackendProject } from "@/hooks/useTerminal";
 
-// Parsuje ANSI escape sekvence na CSS barvy
-function parseAnsi(text: string): { segments: { text: string; color?: string; bold?: boolean }[] } {
+// ── ANSI parser ───────────────────────────────────────────────────────────────
+
+function parseAnsi(text: string) {
   const segments: { text: string; color?: string; bold?: boolean }[] = [];
   const ansiRegex = /\x1b\[([0-9;]*)m/g;
   let lastIndex = 0;
   let currentColor: string | undefined;
   let currentBold = false;
-
   const ansiColors: Record<string, string> = {
     "30": "#555", "31": "#f87171", "32": "#4ade80", "33": "#fbbf24",
     "34": "#60a5fa", "35": "#c084fc", "36": "#22d3ee", "37": "#e5e7eb",
     "90": "#6b7280", "91": "#f87171", "92": "#4ade80", "93": "#fbbf24",
     "94": "#60a5fa", "95": "#c084fc", "96": "#22d3ee", "97": "#ffffff",
   };
-
   let match: RegExpExecArray | null;
   while ((match = ansiRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
+    if (match.index > lastIndex)
       segments.push({ text: text.slice(lastIndex, match.index), color: currentColor, bold: currentBold });
-    }
     const codes = match[1].split(";");
     for (const code of codes) {
       if (code === "0" || code === "") { currentColor = undefined; currentBold = false; }
@@ -35,32 +36,22 @@ function parseAnsi(text: string): { segments: { text: string; color?: string; bo
     }
     lastIndex = match.index + match[0].length;
   }
-
-  if (lastIndex < text.length) {
+  if (lastIndex < text.length)
     segments.push({ text: text.slice(lastIndex), color: currentColor, bold: currentBold });
-  }
-
-  return { segments };
+  return segments;
 }
 
 function TerminalLine({ type, text }: { type: string; text: string }) {
-  const { segments } = parseAnsi(text);
+  const segments = parseAnsi(text);
   const baseColor =
     type === "stderr" ? "#f87171" :
     type === "system" ? "rgba(255,255,255,0.35)" :
     type === "input" ? "#60a5fa" :
     "rgba(255,255,255,0.85)";
-
   return (
     <div className="font-mono text-sm leading-relaxed whitespace-pre-wrap break-all">
       {segments.map((seg, i) => (
-        <span
-          key={i}
-          style={{
-            color: seg.color ?? baseColor,
-            fontWeight: seg.bold ? 700 : undefined,
-          }}
-        >
+        <span key={i} style={{ color: seg.color ?? baseColor, fontWeight: seg.bold ? 700 : undefined }}>
           {seg.text}
         </span>
       ))}
@@ -68,47 +59,164 @@ function TerminalLine({ type, text }: { type: string; text: string }) {
   );
 }
 
-function WakingIndicator({ message, detail }: { message: string; detail: string }) {
+// ── File tree ─────────────────────────────────────────────────────────────────
+
+type TreeNode = { name: string; type: "blob" | "tree"; children?: TreeNode[] };
+
+function buildTree(items: { path: string; type: string }[]): TreeNode[] {
+  const root: TreeNode[] = [];
+  for (const item of items) {
+    const parts = item.path.split("/");
+    let nodes = root;
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      let node = nodes.find((n) => n.name === part);
+      if (!node) {
+        node = { name: part, type: i === parts.length - 1 ? (item.type as "blob" | "tree") : "tree", children: [] };
+        nodes.push(node);
+      }
+      nodes = node.children!;
+    }
+  }
+  return root;
+}
+
+function FileNode({ node, depth }: { node: TreeNode; depth: number }) {
+  const [open, setOpen] = useState(depth < 1);
+  const isDir = node.type === "tree";
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-16 px-6 text-center">
-      <div className="relative">
-        <div
-          className="w-12 h-12 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: "rgba(59,130,246,0.4)", borderTopColor: "var(--accent)" }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span style={{ fontSize: 10, color: "var(--accent)" }}>PY</span>
-        </div>
-      </div>
-      <div>
-        <p className="font-semibold text-sm" style={{ color: "var(--text)" }}>{message}</p>
-        <p className="text-xs mt-1.5 max-w-xs" style={{ color: "var(--text-muted)" }}>{detail}</p>
-      </div>
+    <div>
+      <button
+        type="button"
+        onClick={() => isDir && setOpen(!open)}
+        className="flex items-center gap-1.5 w-full text-left hover:bg-white/5 rounded px-1 py-0.5 transition-colors"
+        style={{ paddingLeft: `${depth * 14 + 4}px` }}
+      >
+        <span style={{ fontSize: ".7rem", color: isDir ? "#fbbf24" : "rgba(255,255,255,0.4)", flexShrink: 0 }}>
+          {isDir ? (open ? "▾" : "▸") : "·"}
+        </span>
+        <span className="font-mono truncate" style={{
+          fontSize: ".72rem",
+          color: isDir ? "#e2e8f0" : "rgba(255,255,255,0.65)",
+        }}>
+          {node.name}
+        </span>
+      </button>
+      {isDir && open && node.children?.map((child) => (
+        <FileNode key={child.name} node={child} depth={depth + 1} />
+      ))}
     </div>
   );
 }
 
+function FileTree({ items }: { items: { path: string; type: string }[] }) {
+  const tree = buildTree(items);
+  if (!tree.length) return <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Žádné soubory</p>;
+  return (
+    <div className="overflow-y-auto" style={{ maxHeight: 240 }}>
+      {tree.map((node) => <FileNode key={node.name} node={node} depth={0} />)}
+    </div>
+  );
+}
+
+// ── README renderer ───────────────────────────────────────────────────────────
+
+function ReadmeView({ content }: { content: string }) {
+  return (
+    <div
+      className="overflow-y-auto prose prose-invert prose-sm max-w-none"
+      style={{
+        maxHeight: 280,
+        padding: "1rem",
+        fontSize: ".82rem",
+        lineHeight: 1.7,
+        color: "rgba(255,255,255,0.75)",
+      }}
+    >
+      <ReactMarkdown
+        components={{
+          h1: ({ children }) => <h1 style={{ color: "#22d3ee", fontSize: "1rem", fontWeight: 700, marginBottom: ".5rem" }}>{children}</h1>,
+          h2: ({ children }) => <h2 style={{ color: "#4ade80", fontSize: ".9rem", fontWeight: 700, marginBottom: ".4rem", marginTop: "1rem" }}>{children}</h2>,
+          h3: ({ children }) => <h3 style={{ color: "rgba(255,255,255,0.85)", fontSize: ".82rem", fontWeight: 600, marginTop: ".8rem" }}>{children}</h3>,
+          code: ({ children, className }) => {
+            const isBlock = className?.includes("language-");
+            return isBlock
+              ? <code className={className} style={{ display: "block", background: "rgba(255,255,255,0.06)", borderRadius: 4, padding: ".4rem .6rem", fontSize: ".75rem", color: "#a78bfa", overflowX: "auto" }}>{children}</code>
+              : <code style={{ background: "rgba(255,255,255,0.08)", borderRadius: 3, padding: "1px 5px", fontSize: ".78rem", color: "#22d3ee" }}>{children}</code>;
+          },
+          a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{children}</a>,
+          ul: ({ children }) => <ul style={{ paddingLeft: "1.2rem", margin: ".3rem 0" }}>{children}</ul>,
+          li: ({ children }) => <li style={{ marginBottom: ".2rem" }}>{children}</li>,
+          p: ({ children }) => <p style={{ margin: ".4rem 0" }}>{children}</p>,
+          hr: () => <hr style={{ borderColor: "rgba(255,255,255,0.1)", margin: ".8rem 0" }} />,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
+
+// ── Project card ──────────────────────────────────────────────────────────────
+
+function ProjectCard({
+  project, selected, disabled, onClick,
+}: {
+  project: BackendProject; selected: boolean; disabled: boolean; onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="text-left rounded-xl border p-4 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+      style={{
+        borderColor: selected ? "rgba(34,211,238,.5)" : "rgba(255,255,255,0.08)",
+        background: selected ? "rgba(34,211,238,.07)" : "rgba(255,255,255,0.03)",
+        minWidth: 180, maxWidth: 220,
+      }}
+      onMouseEnter={(e) => { if (!selected) (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.18)"; }}
+      onMouseLeave={(e) => { if (!selected) (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; }}
+    >
+      <p className="font-mono font-bold text-sm truncate" style={{ color: selected ? "#22d3ee" : "rgba(255,255,255,0.85)" }}>
+        {project.name}
+      </p>
+      <p className="font-mono mt-1 line-clamp-2" style={{ fontSize: ".65rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
+        {project.description}
+      </p>
+    </button>
+  );
+}
+
+// ── Waking indicator ──────────────────────────────────────────────────────────
+
+function WakingIndicator() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+      <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+      <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Probouzím backend…</p>
+    </div>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────────
+
 export function Terminal() {
   const t = useContent();
-  const {
-    status,
-    lines,
-    running,
-    selectedProject,
-    wakeBackend,
-    runProject,
-    sendInput,
-    stopProcess,
-    clearLines,
-    backendProjects,
-  } = useTerminal();
+  const { status, lines, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
 
   const [inputValue, setInputValue] = useState("");
+  const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");
+  const [readme, setReadme] = useState<string | null>(null);
+  const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
+  const [infoOpen, setInfoOpen] = useState(true);
+  const [loadingInfo, setLoadingInfo] = useState(false);
+
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasPinged = useRef(false);
 
-  // Probuď backend při vstupu do viewportu
+  // Wake backend when section enters viewport
   const onSectionVisible = useCallback(() => {
     if (!hasPinged.current && siteConfig.renderApiUrl) {
       hasPinged.current = true;
@@ -119,19 +227,33 @@ export function Terminal() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) onSectionVisible(); },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
     const section = document.getElementById("projekty");
     if (section) observer.observe(section);
     return () => observer.disconnect();
   }, [onSectionVisible]);
 
-  // Auto-scroll output
+  // Auto-scroll terminal output
   useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight;
-    }
+    if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
   }, [lines]);
+
+  // Load README + tree when project is selected (but not yet run)
+  const handleSelectProject = useCallback(async (project: BackendProject) => {
+    setLoadingInfo(true);
+    setReadme(null);
+    setTree([]);
+    setInfoOpen(true);
+    const [rm, tr] = await Promise.all([
+      fetchProjectReadme(project.id),
+      fetchProjectTree(project.id),
+    ]);
+    setReadme(rm);
+    setTree(tr);
+    setLoadingInfo(false);
+    runProject(project);
+  }, [runProject]);
 
   function handleInputSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -140,14 +262,14 @@ export function Terminal() {
     setInputValue("");
   }
 
-  const hasProjects = backendProjects.length > 0;
   const backendConfigured = !!siteConfig.renderApiUrl;
+  const hasProjects = backendProjects.length > 0;
+  const hasInfo = readme !== null || tree.length > 0;
 
   return (
     <SectionWrapper id="projekty">
       <SectionHeader keyword={`// ${t.terminal.sectionLabel.toLowerCase()}`} heading={t.terminal.heading} />
-
-      <p className="mb-8 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+      <p className="mb-8 text-sm leading-relaxed" style={{ color: "var(--sub)" }}>
         {t.terminal.description}
       </p>
 
@@ -156,245 +278,203 @@ export function Terminal() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-2xl overflow-hidden border"
-        style={{
-          borderColor: "var(--border)",
-          background: "#1a1a1a",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.5)",
-        }}
+        className="flex flex-col gap-3"
       >
-        {/* macOS titlebar */}
+        {/* ── Project selector ── */}
+        {backendConfigured && (
+          <div className="rounded-xl border p-4" style={{ borderColor: "var(--b1)", background: "var(--s1)" }}>
+            <p className="font-mono mb-3" style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".08em" }}>
+              // ZVOL PROJEKT A SPUSŤ UKÁZKU
+            </p>
+
+            {status === "idle" || (status === "waking" && !hasProjects) ? (
+              <WakingIndicator />
+            ) : status === "error" ? (
+              <div className="flex items-center gap-3">
+                <span style={{ color: "#f87171", fontSize: ".82rem" }}>⚠ Backend nedostupný.</span>
+                <button type="button" onClick={() => wakeBackend()} className="font-mono text-xs px-3 py-1 rounded border" style={{ borderColor: "rgba(248,113,113,.3)", color: "#f87171" }}>
+                  Zkusit znovu
+                </button>
+              </div>
+            ) : !hasProjects ? (
+              <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+                {t.terminal.noProjects}
+              </p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+                {backendProjects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    selected={selectedProject?.id === project.id}
+                    disabled={running}
+                    onClick={() => handleSelectProject(project)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Project info panel (README + Files) ── */}
+        <AnimatePresence>
+          {selectedProject && hasInfo && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-xl border overflow-hidden"
+              style={{ borderColor: "var(--b1)", background: "#111118" }}
+            >
+              {/* Panel header */}
+              <div
+                className="flex items-center gap-1 px-4 border-b"
+                style={{ background: "#16161f", borderColor: "rgba(255,255,255,0.06)", height: 38 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("readme")}
+                  className="font-mono px-3 py-1 rounded text-xs transition-colors"
+                  style={{
+                    color: activeTab === "readme" ? "#22d3ee" : "rgba(255,255,255,0.4)",
+                    background: activeTab === "readme" ? "rgba(34,211,238,.08)" : "transparent",
+                  }}
+                >
+                  README.md
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("files")}
+                  className="font-mono px-3 py-1 rounded text-xs transition-colors"
+                  style={{
+                    color: activeTab === "files" ? "#22d3ee" : "rgba(255,255,255,0.4)",
+                    background: activeTab === "files" ? "rgba(34,211,238,.08)" : "transparent",
+                  }}
+                >
+                  Soubory
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInfoOpen(!infoOpen)}
+                  className="ml-auto font-mono text-xs px-2"
+                  style={{ color: "rgba(255,255,255,0.3)" }}
+                >
+                  {infoOpen ? "▴ skrýt" : "▾ zobrazit"}
+                </button>
+              </div>
+
+              {/* Panel content */}
+              <AnimatePresence>
+                {infoOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    {loadingInfo ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+                      </div>
+                    ) : activeTab === "readme" ? (
+                      readme ? <ReadmeView content={readme} /> : (
+                        <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>README nenalezeno.</p>
+                      )
+                    ) : (
+                      <div className="p-3">
+                        <FileTree items={tree} />
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Terminal window ── */}
         <div
-          className="flex items-center gap-3 px-4 py-3 border-b"
-          style={{
-            background: "#252525",
-            borderColor: "rgba(255,255,255,0.06)",
-          }}
+          className="rounded-2xl overflow-hidden border"
+          style={{ borderColor: "var(--b1)", background: "#1a1a1a", boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
         >
-          {/* Traffic lights */}
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              aria-label="Close"
-              className="w-3 h-3 rounded-full transition-opacity hover:opacity-80"
-              style={{ background: "#ff5f57" }}
-              onClick={stopProcess}
-            />
-            <button
-              type="button"
-              aria-label="Minimize"
-              className="w-3 h-3 rounded-full transition-opacity hover:opacity-80"
-              style={{ background: "#ffbd2e" }}
-            />
-            <button
-              type="button"
-              aria-label="Maximize"
-              className="w-3 h-3 rounded-full transition-opacity hover:opacity-80"
-              style={{ background: "#28c840" }}
-            />
+          {/* macOS titlebar */}
+          <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="flex items-center gap-1.5">
+              <button type="button" aria-label="Stop" className="w-3 h-3 rounded-full hover:opacity-80" style={{ background: "#ff5f57" }} onClick={stopProcess} />
+              <div className="w-3 h-3 rounded-full" style={{ background: "#ffbd2e" }} />
+              <div className="w-3 h-3 rounded-full" style={{ background: "#28c840" }} />
+            </div>
+            <div className="flex-1 text-center text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>
+              {selectedProject ? `python — ${selectedProject.name}` : t.terminal.titleBar}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs font-semibold" style={{
+              color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : status === "error" ? "#f87171" : "rgba(255,255,255,0.35)",
+            }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
+              <span className="hidden sm:inline">
+                {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : "—"}
+              </span>
+            </div>
           </div>
 
-          {/* Titulek */}
-          <div
-            className="flex-1 text-center text-xs font-semibold"
-            style={{ color: "rgba(255,255,255,0.45)" }}
-          >
-            {selectedProject ? `python — ${selectedProject.name}` : t.terminal.titleBar}
-          </div>
-
-          {/* Status badge */}
-          <div
-            className="flex items-center gap-1.5 text-xs font-semibold"
-            style={{
-              color:
-                status === "ready" ? "#4ade80" :
-                status === "waking" ? "#fbbf24" :
-                status === "error" ? "#f87171" :
-                "rgba(255,255,255,0.35)",
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{
-                background: "currentColor",
-                animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none",
-              }}
-            />
-            <span className="hidden sm:inline">
-              {status === "ready" ? t.terminal.ready :
-               status === "waking" ? t.terminal.waking :
-               status === "error" ? t.terminal.error :
-               "—"}
-            </span>
-          </div>
-        </div>
-
-        {/* Toolbar */}
-        {(backendConfigured && hasProjects) && (
-          <div
-            className="flex items-center gap-2 px-4 py-2.5 border-b flex-wrap"
-            style={{
-              background: "#1e1e1e",
-              borderColor: "rgba(255,255,255,0.05)",
-            }}
-          >
-            <span className="text-xs mr-1" style={{ color: "rgba(255,255,255,0.3)" }}>
-              {t.terminal.selectProject}:
-            </span>
-            {backendProjects.map((project) => (
-              <button
-                key={project.id}
-                type="button"
-                disabled={running || status !== "ready"}
-                onClick={() => runProject(project)}
-                className="px-3 py-1 rounded text-xs font-semibold border transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{
-                  borderColor: selectedProject?.id === project.id ? "var(--accent-border)" : "rgba(255,255,255,0.1)",
-                  background: selectedProject?.id === project.id ? "var(--accent-glow)" : "rgba(255,255,255,0.04)",
-                  color: selectedProject?.id === project.id ? "var(--accent)" : "rgba(255,255,255,0.6)",
-                }}
-              >
-                {project.name}
-              </button>
-            ))}
-
-            {running && (
-              <button
-                type="button"
-                onClick={stopProcess}
-                className="ml-auto px-3 py-1 rounded text-xs font-semibold border transition-all duration-150"
-                style={{
-                  borderColor: "rgba(248,113,113,0.3)",
-                  background: "rgba(248,113,113,0.08)",
-                  color: "#f87171",
-                }}
-              >
+          {/* Toolbar */}
+          {running && (
+            <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
+              <button type="button" onClick={stopProcess} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(248,113,113,.3)", background: "rgba(248,113,113,.08)", color: "#f87171" }}>
                 {t.terminal.stop}
               </button>
-            )}
-
-            {lines.length > 0 && !running && (
-              <button
-                type="button"
-                onClick={clearLines}
-                className="ml-auto px-3 py-1 rounded text-xs font-semibold border transition-all duration-150"
-                style={{
-                  borderColor: "rgba(255,255,255,0.08)",
-                  background: "transparent",
-                  color: "rgba(255,255,255,0.35)",
-                }}
-              >
+            </div>
+          )}
+          {!running && lines.length > 0 && (
+            <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
+              <button type="button" onClick={clearLines} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(255,255,255,.08)", background: "transparent", color: "rgba(255,255,255,.35)" }}>
                 {t.terminal.clear}
               </button>
+            </div>
+          )}
+
+          {/* Output */}
+          <div
+            ref={outputRef}
+            className="overflow-y-auto p-4 space-y-1"
+            style={{ minHeight: 200, maxHeight: 380, background: "#1a1a1a" }}
+            onClick={() => inputRef.current?.focus()}
+          >
+            {!backendConfigured && (
+              <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
+                Backend není nakonfigurován.
+              </p>
             )}
+            {backendConfigured && lines.length === 0 && !running && (
+              <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
+                {hasProjects ? "← Vyber projekt a klikni na kartu pro spuštění." : "Žádné projekty."}
+              </p>
+            )}
+            {lines.map((line) => <TerminalLine key={line.id} type={line.type} text={line.text} />)}
+            {running && <div className="font-mono text-sm" style={{ color: "rgba(255,255,255,0.5)" }}><span className="cursor-blink">▌</span></div>}
           </div>
-        )}
 
-        {/* Output area */}
-        <div
-          ref={outputRef}
-          className="overflow-y-auto p-4 space-y-1"
-          style={{
-            minHeight: 300,
-            maxHeight: 420,
-            background: "#1a1a1a",
-          }}
-          onClick={() => inputRef.current?.focus()}
-        >
-          {/* Stav: backend není nakonfigurován */}
-          {!backendConfigured && (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-              <span className="text-3xl">🚧</span>
-              <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
-                Backend není ještě nakonfigurován.
-              </p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
-                Nastav <code className="font-mono px-1 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>NEXT_PUBLIC_RENDER_API_URL</code> a přidej projekty v <code className="font-mono px-1 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>src/config/site.ts</code>
-              </p>
-            </div>
-          )}
-
-          {/* Stav: probouzení */}
-          {backendConfigured && status === "waking" && lines.length === 0 && (
-            <WakingIndicator message={t.terminal.waking} detail={t.terminal.wakingDetail} />
-          )}
-
-          {/* Stav: error */}
-          {backendConfigured && status === "error" && lines.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-              <span style={{ color: "#f87171", fontSize: "1.5rem" }}>⚠</span>
-              <p className="font-semibold text-sm" style={{ color: "#f87171" }}>{t.terminal.error}</p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>{t.terminal.errorDetail}</p>
-              <button
-                type="button"
-                onClick={() => wakeBackend()}
-                className="mt-2 px-4 py-2 rounded text-xs font-semibold border transition-all duration-150"
-                style={{
-                  borderColor: "rgba(248,113,113,0.3)",
-                  background: "rgba(248,113,113,0.06)",
-                  color: "#f87171",
-                }}
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          {/* Stav: ready, žádné projekty */}
-          {backendConfigured && status === "ready" && !hasProjects && lines.length === 0 && (
-            <div className="flex items-center justify-center py-16">
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>{t.terminal.noProjects}</p>
-            </div>
-          )}
-
-          {/* Output lines */}
-          {lines.map((line) => (
-            <TerminalLine key={line.id} type={line.type} text={line.text} />
-          ))}
-
-          {/* Blikající kurzor */}
-          {running && (
-            <div className="font-mono text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
-              <span className="cursor-blink">▌</span>
-            </div>
+          {/* stdin input */}
+          {backendConfigured && status === "ready" && running && (
+            <form onSubmit={handleInputSubmit} className="flex items-center gap-2 px-4 py-3 border-t" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.06)" }}>
+              <span className="font-mono text-sm flex-shrink-0" style={{ color: "#60a5fa" }}>›</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder={t.terminal.inputPlaceholder}
+                autoComplete="off"
+                spellCheck={false}
+                className="flex-1 bg-transparent outline-none font-mono text-sm"
+                style={{ color: "rgba(255,255,255,0.85)", caretColor: "#60a5fa" }}
+              />
+              <button type="submit" className="text-xs px-3 py-1.5 rounded border font-semibold" style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "#22d3ee" }}>↵</button>
+            </form>
           )}
         </div>
-
-        {/* Input */}
-        {backendConfigured && status === "ready" && running && (
-          <form
-            onSubmit={handleInputSubmit}
-            className="flex items-center gap-2 px-4 py-3 border-t"
-            style={{
-              background: "#1e1e1e",
-              borderColor: "rgba(255,255,255,0.06)",
-            }}
-          >
-            <span className="font-mono text-sm" style={{ color: "#60a5fa", flexShrink: 0 }}>›</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={t.terminal.inputPlaceholder}
-              autoComplete="off"
-              spellCheck={false}
-              className="flex-1 bg-transparent outline-none font-mono text-sm"
-              style={{ color: "rgba(255,255,255,0.85)", caretColor: "#60a5fa" }}
-            />
-            <button
-              type="submit"
-              className="text-xs px-3 py-1.5 rounded border font-semibold transition-all duration-150"
-              style={{
-                borderColor: "var(--accent-border)",
-                background: "var(--accent-glow)",
-                color: "var(--accent)",
-              }}
-            >
-              ↵
-            </button>
-          </form>
-        )}
       </motion.div>
     </SectionWrapper>
   );
