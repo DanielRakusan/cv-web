@@ -207,18 +207,30 @@ export const content = {
     },
 
     vibeSection: {
-      sectionLabel: "Vibe Coding",
-      heading: "AI jako nástroj, ne autor",
+      sectionLabel: "AI & Učení",
+      heading: "AI jako akcelerátor učení",
       description:
-        "Vibe coding neznamená, že AI píše kód za tebe. Znamená to, že AI je součást workflow — jako lepší autocomplete, rychlejší research nebo code reviewer. Ale logiku, architekturu a rozhodnutí řídím já.",
-      builtWith: "Toto portfolio vzniklo s pomocí AI",
+        "Nepoužívám AI proto, abych se vyhnul přemýšlení. Používám ho proto, abych se učil rychleji a efektivněji — jako sparring partnera, který mi vysvětlí traceback, porovná dvě řešení nebo ukáže, kde jsem udělal logickou chybu. Výsledky si vždy ověřuji a snažím se jim rozumět.",
+      builtWith: "Toto portfolio vzniklo ve spolupráci s AI",
       builtDetail:
-        "Design, logika, struktura, nasazení — vše navrženo a schváleno mnou, implementováno ve spolupráci s Claude. Každé rozhodnutí jsem řídil. AI byl nástroj, ne autor.",
+        "Design, logika, struktura — navrženo a rozhodováno mnou, implementováno ve spolupráci s Claude. Každý výstup jsem kontroloval, testoval a pochopil. AI urychlil realizaci, porozumění bylo moje.",
       skills: [
-        { label: "Prompt engineering", body: "Umím formulovat zadání tak, aby AI pochopila kontext, omezení i záměr." },
-        { label: "Code review s AI", body: "Kontroluji, testuju a rozumím kódu, který AI navrhne — nejen kopíruji." },
-        { label: "Iterativní vývoj", body: "Pracuji v cyklech: zadám, ověřím, opravím, posunu se dál — stejně jako v reálném projektu." },
-        { label: "Multi-model přístup", body: "Pracuji s Claude, ChatGPT i dalšími — a vím, kdy použít který nástroj." },
+        {
+          label: "Debugging s AI",
+          body: "Vložím traceback, ptám se na příčinu — ne na opravu. AI mi vysvětlí, proč k chybě došlo, já pak problém vyřeším sám. Chápu kód, ne jen záplatu.",
+        },
+        {
+          label: "Učení nových konceptů",
+          body: "Nové téma si nechám vysvětlit s příklady, pak ho sám implementuji a ověřuji. AI funguje jako rychlý, trpělivý učitel — dokumentaci si ale vždy dočítám.",
+        },
+        {
+          label: "Code review a porovnávání",
+          body: "Napíšu řešení, požádám AI o review. Porovnám přístupy, ptám se na trade-offy. Výsledkem je lepší porozumění — ne jen lepší kód.",
+        },
+        {
+          label: "Research a ověřování",
+          body: "AI zrychluje první orientaci v tématu. Vždy ale ověřuji v dokumentaci a vlastními testy. AI je výchozí bod, ne pravda.",
+        },
       ],
     },
 
@@ -493,18 +505,30 @@ export const content = {
     },
 
     vibeSection: {
-      sectionLabel: "Vibe Coding",
-      heading: "AI as a tool, not the author",
+      sectionLabel: "AI & Learning",
+      heading: "AI as a learning accelerator",
       description:
-        "Vibe coding doesn't mean AI writes code for you. It means AI is part of the workflow — like better autocomplete, faster research, or a code reviewer. But the logic, architecture, and decisions are mine.",
-      builtWith: "This portfolio was built with AI assistance",
+        "I don't use AI to avoid thinking. I use it to learn faster and more effectively — as a sparring partner that explains a traceback, compares two solutions, or points out where my logic breaks. I always verify the output and make sure I actually understand it.",
+      builtWith: "This portfolio was built in collaboration with AI",
       builtDetail:
-        "Design, logic, structure, deployment — all designed and approved by me, implemented in collaboration with Claude. Every decision was mine. AI was the tool, not the author.",
+        "Design, logic, structure — designed and decided by me, implemented in collaboration with Claude. Every output was reviewed, tested, and understood. AI accelerated the execution; the understanding was mine.",
       skills: [
-        { label: "Prompt engineering", body: "I know how to frame a task so AI understands context, constraints, and intent." },
-        { label: "Code review with AI", body: "I review, test, and understand the code AI proposes — not just copy-paste." },
-        { label: "Iterative development", body: "I work in cycles: describe, verify, fix, move forward — just like in real projects." },
-        { label: "Multi-model approach", body: "I work with Claude, ChatGPT, and others — and know when to use which tool." },
+        {
+          label: "Debugging with AI",
+          body: "I paste a traceback and ask for the cause — not the fix. AI explains why the error happened; I then solve it myself. I understand the code, not just the patch.",
+        },
+        {
+          label: "Learning new concepts",
+          body: "I ask AI to explain a new topic with examples, then implement it myself and verify. AI acts as a fast, patient teacher — but I always read the docs too.",
+        },
+        {
+          label: "Code review & comparison",
+          body: "I write a solution, then ask AI to review it. I compare approaches and ask about trade-offs. The result is better understanding — not just better code.",
+        },
+        {
+          label: "Research & verification",
+          body: "AI speeds up initial orientation in a topic. I always verify in official docs and through my own tests. AI is a starting point, not the source of truth.",
+        },
       ],
     },
 
