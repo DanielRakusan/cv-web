@@ -310,13 +310,15 @@ export function Certifications() {
                 </a>
               </div>
 
-              {/* PDF iframe */}
-              <iframe
-                src={`/certificates/${active.file}`}
-                title={lang === "cz" ? active.titleCz : active.titleEn}
-                className="flex-1 w-full"
-                style={{ border: "none", background: "#fff" }}
-              />
+              {/* Certificate image */}
+              <div className="flex-1 overflow-auto flex items-start justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
+                  alt={lang === "cz" ? active.titleCz : active.titleEn}
+                  style={{ maxWidth: "100%", height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)" }}
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}
