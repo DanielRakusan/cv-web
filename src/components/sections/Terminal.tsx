@@ -12,9 +12,13 @@ import type { BackendProject } from "@/hooks/useTerminal";
 
 // ── ANSI parser ───────────────────────────────────────────────────────────────
 
-function parseAnsi(text: string) {
+function parseAnsi(raw: string) {
+  // Normalize line endings from PTY (\r\n → \n, lone \r → nothing)
+  const text = raw.replace(/\r\n/g, "\n").replace(/\r/g, "");
+
   const segments: { text: string; color?: string; bold?: boolean }[] = [];
-  const ansiRegex = /\x1b\[([0-9;]*)m/g;
+  // Match ANY CSI escape sequence: \x1b[ ... <letter>
+  const ansiRegex = /\x1b\[([^A-Za-z]*)([A-Za-z])/g;
   let lastIndex = 0;
   let currentColor: string | undefined;
   let currentBold = false;
@@ -28,12 +32,16 @@ function parseAnsi(text: string) {
   while ((match = ansiRegex.exec(text)) !== null) {
     if (match.index > lastIndex)
       segments.push({ text: text.slice(lastIndex, match.index), color: currentColor, bold: currentBold });
-    const codes = match[1].split(";");
-    for (const code of codes) {
-      if (code === "0" || code === "") { currentColor = undefined; currentBold = false; }
-      else if (code === "1") { currentBold = true; }
-      else if (ansiColors[code]) { currentColor = ansiColors[code]; }
+    if (match[2] === "m") {
+      // SGR — apply colors/bold
+      const codes = match[1].split(";");
+      for (const code of codes) {
+        if (code === "0" || code === "") { currentColor = undefined; currentBold = false; }
+        else if (code === "1") { currentBold = true; }
+        else if (ansiColors[code]) { currentColor = ansiColors[code]; }
+      }
     }
+    // Non-SGR sequences (cursor move, clear screen, etc.) — skip silently
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length)
@@ -278,7 +286,7 @@ export function Terminal() {
     if (!running) return;
     if (e.key === "Enter") {
       e.preventDefault();
-      sendInput(liveInput + "\n");
+      sendInput(liveInput + "\n");  // sendInput sends this directly to PTY
       setLiveInput("");
     } else if (e.key === "Backspace") {
       e.preventDefault();

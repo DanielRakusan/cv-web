@@ -85,8 +85,13 @@ export function useTerminal() {
     const ws = createTerminalSocket(
       project.id,
       (msg) => {
-        if (msg.type === "stdout") appendLine("stdout", msg.data);
-        else if (msg.type === "stderr") appendLine("stderr", msg.data);
+        if (msg.type === "stdout") {
+          // Detect clear-screen ANSI sequences (\x1b[2J, \x1b[3J)
+          if (/\x1b\[\d*[23]?J/.test(msg.data)) {
+            setLines([]);
+          }
+          appendLine("stdout", msg.data);
+        } else if (msg.type === "stderr") appendLine("stderr", msg.data);
         else if (msg.type === "exit") {
           appendLine("system", `[Process exited with code ${msg.code}]`);
           setRunning(false);
@@ -104,11 +109,10 @@ export function useTerminal() {
     wsRef.current = ws;
   }, [appendLine]);
 
-  // Pošle vstup do běžícího procesu
+  // Pošle vstup do běžícího procesu (PTY echo zobrazí vstup sám)
   const sendInput = useCallback((input: string) => {
-    appendLine("input", `> ${input}`);
-    wsRef.current?.send(JSON.stringify({ type: "input", data: input + "\n" }));
-  }, [appendLine]);
+    wsRef.current?.send(JSON.stringify({ type: "input", data: input }));
+  }, []);
 
   // Zastaví běžící proces
   const stopProcess = useCallback(() => {
