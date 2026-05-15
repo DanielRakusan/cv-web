@@ -85,29 +85,22 @@ export const content = {
 
     skills: {
       sectionLabel: "Dovednosti",
-      heading: "Developer toolkit",
-      groups: [
-        {
-          label: "Backend",
-          tags: ["Python", "Django", "SQLite", "OOP"],
-        },
-        {
-          label: "Web",
-          tags: ["JavaScript", "HTML", "CSS", "React", "Next.js"],
-        },
-        {
-          label: "Workflow",
-          tags: ["Git", "GitHub", "Command line", "JSON", "API basics", "Debugging"],
-        },
-        {
-          label: "Technická základna",
-          tags: ["Windows", "macOS", "Linux basics", "Hardware", "Troubleshooting"],
-        },
-        {
-          label: "Podpůrné nástroje",
-          tags: ["System recovery", "Drivers", "Boot media", "Networking basics", "Virtualization"],
-        },
-      ],
+      heading: "Co umím",
+      active: {
+        label: "// aktivně používám",
+        sub: "Denní praxe, projekty, certifikáty",
+        tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
+      },
+      growing: {
+        label: "// rozvíjím",
+        sub: "Kurzy, projekty, každodenní učení",
+        tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
+      },
+      base: {
+        label: "// IT základ",
+        sub: "Reálná zkušenost z praxe",
+        tags: ["Windows", "macOS", "Hardware", "Troubleshooting", "Linux basics", "System recovery"],
+      },
     },
 
     experience: {
@@ -378,29 +371,22 @@ export const content = {
 
     skills: {
       sectionLabel: "Skills",
-      heading: "Developer toolkit",
-      groups: [
-        {
-          label: "Backend",
-          tags: ["Python", "Django", "SQLite", "OOP"],
-        },
-        {
-          label: "Web",
-          tags: ["JavaScript", "HTML", "CSS", "React", "Next.js"],
-        },
-        {
-          label: "Workflow",
-          tags: ["Git", "GitHub", "Command line", "JSON", "API basics", "Debugging"],
-        },
-        {
-          label: "Technical base",
-          tags: ["Windows", "macOS", "Linux basics", "Hardware", "Troubleshooting"],
-        },
-        {
-          label: "Supportive tools",
-          tags: ["System recovery", "Drivers", "Boot media", "Networking basics", "Virtualization"],
-        },
-      ],
+      heading: "What I know",
+      active: {
+        label: "// actively using",
+        sub: "Daily practice, projects, certifications",
+        tags: ["Python", "Django", "SQLite", "OOP", "Git", "GitHub", "HTML", "CSS"],
+      },
+      growing: {
+        label: "// developing",
+        sub: "Courses, projects, daily learning",
+        tags: ["JavaScript", "React", "Next.js", "JSON", "API basics", "Debugging"],
+      },
+      base: {
+        label: "// IT background",
+        sub: "Real-world hands-on experience",
+        tags: ["Windows", "macOS", "Hardware", "Troubleshooting", "Linux basics", "System recovery"],
+      },
     },
 
     experience: {

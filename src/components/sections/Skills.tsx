@@ -4,64 +4,139 @@ import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
+type TierProps = {
+  label: string;
+  sub: string;
+  tags: readonly string[];
+  accent: "cyan" | "green" | "dim";
+  icon: string;
+  delay: number;
+};
+
+function Tier({ label, sub, tags, accent, icon, delay }: TierProps) {
+  const colors = {
+    cyan: {
+      border: "rgba(34,211,238,.25)",
+      bg: "rgba(34,211,238,.05)",
+      tagBorder: "rgba(34,211,238,.22)",
+      tagBg: "rgba(34,211,238,.06)",
+      tagColor: "var(--cyan)",
+      labelColor: "var(--cyan)",
+      iconBg: "rgba(34,211,238,.12)",
+    },
+    green: {
+      border: "rgba(74,222,128,.25)",
+      bg: "rgba(74,222,128,.05)",
+      tagBorder: "rgba(74,222,128,.22)",
+      tagBg: "rgba(74,222,128,.06)",
+      tagColor: "var(--green)",
+      labelColor: "var(--green)",
+      iconBg: "rgba(74,222,128,.12)",
+    },
+    dim: {
+      border: "var(--b1)",
+      bg: "var(--s1)",
+      tagBorder: "var(--b1)",
+      tagBg: "rgba(255,255,255,.03)",
+      tagColor: "var(--sub)",
+      labelColor: "var(--dim)",
+      iconBg: "rgba(255,255,255,.06)",
+    },
+  }[accent];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-xl border p-5"
+      style={{ borderColor: colors.border, background: colors.bg }}
+    >
+      {/* Header row */}
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+          style={{ background: colors.iconBg }}
+          aria-hidden="true"
+        >
+          {icon}
+        </div>
+        <div>
+          <p
+            className="font-mono font-bold"
+            style={{ fontSize: ".7rem", color: colors.labelColor, letterSpacing: ".06em" }}
+          >
+            {label}
+          </p>
+          <p
+            className="font-mono"
+            style={{ fontSize: ".58rem", color: "var(--dim)", letterSpacing: ".04em", marginTop: 1 }}
+          >
+            {sub}
+          </p>
+        </div>
+      </div>
+
+      {/* Tags */}
+      <div className="flex flex-wrap gap-1.5">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="font-mono transition-all duration-150 cursor-default"
+            style={{
+              fontSize: ".7rem",
+              padding: "3px 10px",
+              borderRadius: 4,
+              border: `1px solid ${colors.tagBorder}`,
+              background: colors.tagBg,
+              color: colors.tagColor,
+              letterSpacing: ".02em",
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export function Skills() {
   const t = useContent();
 
   return (
     <SectionWrapper id="dovednosti">
-      <SectionHeader keyword={`// ${t.skills.sectionLabel.toLowerCase()}`} heading={t.skills.heading} />
+      <SectionHeader
+        keyword={`// ${t.skills.sectionLabel.toLowerCase()}`}
+        heading={t.skills.heading}
+      />
 
-      <div className="space-y-8">
-        {t.skills.groups.map((group, gi) => (
-          <motion.div
-            key={gi}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: gi * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col sm:flex-row sm:items-start gap-4"
-          >
-            <div
-              className="flex-shrink-0 w-full sm:w-36 text-xs font-bold tracking-widest uppercase pt-1"
-              style={{ color: "var(--text-faint)" }}
-            >
-              {group.label}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {group.tags.map((tag, ti) => (
-                <motion.span
-                  key={ti}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: gi * 0.05 + ti * 0.04, duration: 0.35 }}
-                  className="px-3 py-1.5 rounded-lg text-sm font-semibold border cursor-default transition-all duration-150 select-none"
-                  style={{
-                    borderColor: "var(--border)",
-                    background: "var(--surface)",
-                    color: "var(--text-muted)",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--accent-border)";
-                    el.style.background = "var(--accent-glow)";
-                    el.style.color = "var(--accent)";
-                    el.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--border)";
-                    el.style.background = "var(--surface)";
-                    el.style.color = "var(--text-muted)";
-                    el.style.transform = "translateY(0)";
-                  }}
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+      <div className="flex flex-col gap-4">
+        <Tier
+          label={t.skills.active.label}
+          sub={t.skills.active.sub}
+          tags={t.skills.active.tags}
+          accent="green"
+          icon="✓"
+          delay={0}
+        />
+        <Tier
+          label={t.skills.growing.label}
+          sub={t.skills.growing.sub}
+          tags={t.skills.growing.tags}
+          accent="cyan"
+          icon="→"
+          delay={0.08}
+        />
+        <Tier
+          label={t.skills.base.label}
+          sub={t.skills.base.sub}
+          tags={t.skills.base.tags}
+          accent="dim"
+          icon="⚙"
+          delay={0.16}
+        />
       </div>
     </SectionWrapper>
   );
