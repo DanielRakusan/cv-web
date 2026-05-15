@@ -28,9 +28,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Přecházím z IT supportu\ndo světa vývoje.",
-      pitch: "Roky jsem řešil technické problémy kolem počítačů a systémů. Dnes tenhle mindset rozvíjím v Pythonu, SQL a backend logice.",
+      pitch: "Technické přemýšlení, backend logika a chuť neustále věci zlepšovat.",
       description:
-        "Debugguji systematicky, hledám příčiny — ne záplaty. Stavím věci, které fungují. AI jako součást workflow, ne jako zkratka.",
+        "Aktuálně rozvíjím Python, SQL a vlastní projekty s důrazem na funkčnost, jednoduchost a moderní workflow.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
@@ -326,9 +326,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Transitioning from IT support\ninto development.",
-      pitch: "For years I solved technical problems around computers and systems. Today I'm channelling that mindset into Python, SQL, and backend logic.",
+      pitch: "Technical thinking, backend logic, and a constant drive to improve things.",
       description:
-        "I debug systematically, looking for causes — not patches. I build things that work. AI as part of the workflow, not a shortcut.",
+        "Currently building Python, SQL, and personal projects with a focus on functionality, simplicity, and modern workflow.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
