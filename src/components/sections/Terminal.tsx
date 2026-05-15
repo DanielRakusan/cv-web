@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
-import { terminalProjects, siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site";
 
 // Parsuje ANSI escape sekvence na CSS barvy
 function parseAnsi(text: string): { segments: { text: string; color?: string; bold?: boolean }[] } {
@@ -100,6 +100,7 @@ export function Terminal() {
     sendInput,
     stopProcess,
     clearLines,
+    backendProjects,
   } = useTerminal();
 
   const [inputValue, setInputValue] = useState("");
@@ -139,7 +140,7 @@ export function Terminal() {
     setInputValue("");
   }
 
-  const hasProjects = terminalProjects.length > 0;
+  const hasProjects = backendProjects.length > 0;
   const backendConfigured = !!siteConfig.renderApiUrl;
 
   return (
@@ -240,7 +241,7 @@ export function Terminal() {
             <span className="text-xs mr-1" style={{ color: "rgba(255,255,255,0.3)" }}>
               {t.terminal.selectProject}:
             </span>
-            {terminalProjects.map((project) => (
+            {backendProjects.map((project) => (
               <button
                 key={project.id}
                 type="button"

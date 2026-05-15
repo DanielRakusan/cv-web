@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { pingBackend, createTerminalSocket } from "@/lib/terminal-api";
-import { siteConfig, type TerminalProject } from "@/config/site";
+import { pingBackend, fetchProjects, createTerminalSocket } from "@/lib/terminal-api";
+import { siteConfig } from "@/config/site";
 
 export type BackendStatus = "idle" | "waking" | "ready" | "error";
 
@@ -12,6 +12,12 @@ export type TerminalLine = {
   text: string;
 };
 
+export type BackendProject = {
+  id: string;
+  name: string;
+  description: string;
+};
+
 let lineIdCounter = 0;
 function nextId() { return ++lineIdCounter; }
 
@@ -19,7 +25,8 @@ export function useTerminal() {
   const [status, setStatus] = useState<BackendStatus>("idle");
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [running, setRunning] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<TerminalProject | null>(null);
+  const [selectedProject, setSelectedProject] = useState<BackendProject | null>(null);
+  const [backendProjects, setBackendProjects] = useState<BackendProject[]>([]);
 
   const wsRef = useRef<WebSocket | null>(null);
   const wakeAbortRef = useRef<AbortController | null>(null);
@@ -48,6 +55,8 @@ export function useTerminal() {
       if (abort.signal.aborted) return;
       const ok = await pingBackend(abort.signal);
       if (ok) {
+        const projects = await fetchProjects();
+        setBackendProjects(projects);
         setStatus("ready");
         return;
       }
@@ -63,7 +72,7 @@ export function useTerminal() {
   }, []);
 
   // Spustí projekt
-  const runProject = useCallback((project: TerminalProject) => {
+  const runProject = useCallback((project: BackendProject) => {
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
@@ -123,6 +132,7 @@ export function useTerminal() {
     lines,
     running,
     selectedProject,
+    backendProjects,
     wakeBackend,
     runProject,
     sendInput,
