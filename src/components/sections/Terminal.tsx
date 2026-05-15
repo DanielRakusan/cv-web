@@ -205,7 +205,7 @@ export function Terminal() {
   const t = useContent();
   const { status, lines, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
 
-  const [inputValue, setInputValue] = useState("");
+  const [liveInput, setLiveInput] = useState("");
   const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");
   const [readme, setReadme] = useState<string | null>(null);
   const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
@@ -213,7 +213,7 @@ export function Terminal() {
   const [loadingInfo, setLoadingInfo] = useState(false);
 
   const outputRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
   const hasPinged = useRef(false);
 
   // Wake backend when section enters viewport
@@ -239,9 +239,12 @@ export function Terminal() {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
   }, [lines]);
 
-  // Auto-focus input when program starts running
+  // Focus terminal window when program starts so keystrokes are captured
   useEffect(() => {
-    if (running) setTimeout(() => inputRef.current?.focus(), 100);
+    if (running) {
+      setLiveInput("");
+      setTimeout(() => terminalRef.current?.focus(), 100);
+    }
   }, [running]);
 
   const [pendingProject, setPendingProject] = useState<BackendProject | null>(null);
@@ -271,11 +274,21 @@ export function Terminal() {
     runProject(project);
   }, [pendingProject, clearLines, runProject]);
 
-  function handleInputSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
-    sendInput(inputValue);
-    setInputValue("");
+  function handleTerminalKey(e: React.KeyboardEvent) {
+    if (!running) return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendInput(liveInput + "\n");
+      setLiveInput("");
+    } else if (e.key === "Backspace") {
+      e.preventDefault();
+      setLiveInput((prev) => prev.slice(0, -1));
+    } else if (e.key === "c" && e.ctrlKey) {
+      e.preventDefault();
+      sendInput("\x03");
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      setLiveInput((prev) => prev + e.key);
+    }
   }
 
   const backendConfigured = !!siteConfig.renderApiUrl;
@@ -449,9 +462,12 @@ export function Terminal() {
 
         {/* ── Terminal window ── */}
         <div
-          className="rounded-2xl overflow-hidden border"
+          ref={terminalRef}
+          tabIndex={0}
+          className="rounded-2xl overflow-hidden border outline-none"
           style={{ borderColor: "var(--b1)", background: "#1a1a1a", boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
-          onClick={() => running && inputRef.current?.focus()}
+          onKeyDown={handleTerminalKey}
+          onClick={() => running && terminalRef.current?.focus()}
         >
           {/* macOS titlebar */}
           <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
@@ -482,12 +498,11 @@ export function Terminal() {
             </div>
           )}
 
-          {/* Output */}
+          {/* Output + live input */}
           <div
             ref={outputRef}
-            className="overflow-y-auto overflow-x-auto p-4 space-y-0.5"
+            className="overflow-y-auto overflow-x-auto p-4"
             style={{ minHeight: 200, maxHeight: 400, background: "#1a1a1a", cursor: running ? "text" : "default" }}
-            onClick={() => running && inputRef.current?.focus()}
           >
             {!backendConfigured && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
@@ -500,27 +515,14 @@ export function Terminal() {
               </p>
             )}
             {lines.map((line) => <TerminalLine key={line.id} type={line.type} text={line.text} />)}
-            {running && <div className="font-mono text-sm" style={{ color: "rgba(255,255,255,0.5)" }}><span className="cursor-blink">▌</span></div>}
+            {running && (
+              <div style={{ display: "flex", fontFamily: "monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", marginTop: "2px" }}>
+                <span style={{ color: "#60a5fa", flexShrink: 0 }}>{"› "}</span>
+                <span style={{ color: "rgba(255,255,255,0.9)" }}>{liveInput}</span>
+                <span style={{ display: "inline-block", width: "0.55em", height: "1.1em", background: "rgba(255,255,255,0.75)", verticalAlign: "text-bottom", animation: "cursor-blink 1s step-end infinite" }} />
+              </div>
+            )}
           </div>
-
-          {/* stdin input */}
-          {backendConfigured && status === "ready" && running && (
-            <form onSubmit={handleInputSubmit} className="flex items-center gap-2 px-4 py-3 border-t" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.06)" }}>
-              <span className="font-mono text-sm flex-shrink-0" style={{ color: "#60a5fa" }}>›</span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={t.terminal.inputPlaceholder}
-                autoComplete="off"
-                spellCheck={false}
-                className="flex-1 bg-transparent outline-none font-mono text-sm"
-                style={{ color: "rgba(255,255,255,0.85)", caretColor: "#60a5fa" }}
-              />
-              <button type="submit" className="text-xs px-3 py-1.5 rounded border font-semibold" style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "#22d3ee" }}>↵</button>
-            </form>
-          )}
         </div>
       </motion.div>
     </SectionWrapper>
