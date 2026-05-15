@@ -23,10 +23,10 @@ export const siteConfig = {
 
   // Ping Render backendu při načtení stránky (wake-up)
   // Jak dlouho čekat na odpověď backendu v ms
-  renderWakeTimeoutMs: 45_000,
+  renderWakeTimeoutMs: 120_000,
 
   // Jak often pingovat backend dokud se neprobudí (ms)
-  renderPingIntervalMs: 3_000,
+  renderPingIntervalMs: 4_000,
 } as const;
 
 // ============================================================
