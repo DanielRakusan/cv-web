@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useContent } from "@/hooks/useContent";
 import { useTerminal } from "@/hooks/useTerminal";
@@ -217,15 +217,23 @@ export function Terminal() {
   const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");
   const [readme, setReadme] = useState<string | null>(null);
   const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
-  const [infoOpen, setInfoOpen] = useState(true);
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const outputRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
   const hasPinged = useRef(false);
   const startTimeRef = useRef<number | null>(null);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Wake backend when section enters viewport
   const onSectionVisible = useCallback(() => {
@@ -280,7 +288,6 @@ export function Terminal() {
     setLoadingInfo(true);
     setReadme(null);
     setTree([]);
-    setInfoOpen(true);
     const [rm, tr] = await Promise.all([
       fetchProjectReadme(project.id),
       fetchProjectTree(project.id),
@@ -315,8 +322,7 @@ export function Terminal() {
 
   const backendConfigured = !!siteConfig.renderApiUrl;
   const hasProjects = backendProjects.length > 0;
-  const hasInfo = readme !== null || tree.length > 0;
-  const activeProject = pendingProject;
+const activeProject = pendingProject;
   const hasOutput = outputText.length > 0;
 
   return (
@@ -333,28 +339,28 @@ export function Terminal() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col gap-3"
       >
-        {/* ── Project selector ── */}
+        {/* ── Project selector (cards + inline info panel) ── */}
         {backendConfigured && (
-          <div className="rounded-xl border p-4" style={{ borderColor: "var(--b1)", background: "var(--s1)" }}>
-            <p className="font-mono mb-3" style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".08em" }}>
-              // ZVOL PROJEKT A SPUSŤ UKÁZKU
-            </p>
-
-            {status === "idle" || (status === "waking" && !hasProjects) ? (
-              <WakingIndicator />
-            ) : status === "error" ? (
-              <div className="flex items-center gap-3">
-                <span style={{ color: "#f87171", fontSize: ".82rem" }}>⚠ Backend nedostupný.</span>
-                <button type="button" onClick={() => wakeBackend()} className="font-mono text-xs px-3 py-1 rounded border" style={{ borderColor: "rgba(248,113,113,.3)", color: "#f87171" }}>
-                  Zkusit znovu
-                </button>
-              </div>
-            ) : !hasProjects ? (
-              <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
-                {t.terminal.noProjects}
+          <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--b1)", background: "var(--s1)" }}>
+            <div className="p-4">
+              <p className="font-mono mb-3" style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".08em" }}>
+                // ZVOL PROJEKT A SPUSŤ UKÁZKU
               </p>
-            ) : (
-              <>
+
+              {status === "idle" || (status === "waking" && !hasProjects) ? (
+                <WakingIndicator />
+              ) : status === "error" ? (
+                <div className="flex items-center gap-3">
+                  <span style={{ color: "#f87171", fontSize: ".82rem" }}>⚠ Backend nedostupný.</span>
+                  <button type="button" onClick={() => wakeBackend()} className="font-mono text-xs px-3 py-1 rounded border" style={{ borderColor: "rgba(248,113,113,.3)", color: "#f87171" }}>
+                    Zkusit znovu
+                  </button>
+                </div>
+              ) : !hasProjects ? (
+                <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  {t.terminal.noProjects}
+                </p>
+              ) : (
                 <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
                   {backendProjects.map((project) => (
                     <ProjectCard
@@ -366,160 +372,143 @@ export function Terminal() {
                     />
                   ))}
                 </div>
+              )}
+            </div>
 
-                {activeProject && !running && (
-                  <div className="mt-3 flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={handleStart}
-                      className="font-mono font-bold px-5 py-2 rounded-lg transition-all duration-150"
-                      style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".75rem", letterSpacing: ".04em" }}
-                      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
-                      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
-                    >
-                      {"▶"} Spustit {activeProject.name}
-                    </button>
-                    <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>
-                      {activeProject.description}
-                    </span>
-                  </div>
-                )}
+            {/* Inline info panel — fixed height, no AnimatePresence, no page jump */}
+            {activeProject && (
+              <div className="border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                {/* Tab bar */}
+                <div
+                  className="flex items-center gap-1 px-4 border-b"
+                  style={{ height: 38, background: "rgba(0,0,0,.25)", borderColor: "rgba(255,255,255,0.05)" }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("readme")}
+                    className="font-mono px-3 py-1 rounded text-xs transition-colors"
+                    style={{
+                      color: activeTab === "readme" ? "#22d3ee" : "rgba(255,255,255,0.4)",
+                      background: activeTab === "readme" ? "rgba(34,211,238,.08)" : "transparent",
+                    }}
+                  >
+                    README.md
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("files")}
+                    className="font-mono px-3 py-1 rounded text-xs transition-colors"
+                    style={{
+                      color: activeTab === "files" ? "#22d3ee" : "rgba(255,255,255,0.4)",
+                      background: activeTab === "files" ? "rgba(34,211,238,.08)" : "transparent",
+                    }}
+                  >
+                    Soubory
+                  </button>
+                </div>
 
-                {running && (
-                  <div className="mt-3 flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={stopProcess}
-                      className="font-mono font-bold px-5 py-2 rounded-lg transition-all duration-150"
-                      style={{ background: "rgba(248,113,113,.12)", color: "#f87171", border: "1px solid rgba(248,113,113,.3)", fontSize: ".75rem" }}
-                    >
-                      {"■"} {t.terminal.stop}
-                    </button>
-                    <span className="font-mono text-xs" style={{ color: "var(--dim)", animation: "pulse 1.5s ease-in-out infinite" }}>
-                      běží…
-                    </span>
-                  </div>
-                )}
-              </>
+                {/* Fixed-height content area */}
+                <div style={{ height: 260, overflow: "hidden", background: "#0e0e16" }}>
+                  {loadingInfo ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+                    </div>
+                  ) : activeTab === "readme" ? (
+                    readme ? (
+                      <ReadmeView content={readme} />
+                    ) : (
+                      <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>README nenalezeno.</p>
+                    )
+                  ) : (
+                    <div className="p-3 h-full overflow-y-auto">
+                      <FileTree items={tree} />
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         )}
 
-        {/* ── Project info panel (README + Files) ── */}
-        <AnimatePresence>
-          {activeProject && hasInfo && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="rounded-xl border overflow-hidden"
-              style={{ borderColor: "var(--b1)", background: "#111118" }}
-            >
-              {/* Panel header */}
-              <div
-                className="flex items-center gap-1 px-4 border-b"
-                style={{ background: "#16161f", borderColor: "rgba(255,255,255,0.06)", height: 38 }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("readme")}
-                  className="font-mono px-3 py-1 rounded text-xs transition-colors"
-                  style={{
-                    color: activeTab === "readme" ? "#22d3ee" : "rgba(255,255,255,0.4)",
-                    background: activeTab === "readme" ? "rgba(34,211,238,.08)" : "transparent",
-                  }}
-                >
-                  README.md
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("files")}
-                  className="font-mono px-3 py-1 rounded text-xs transition-colors"
-                  style={{
-                    color: activeTab === "files" ? "#22d3ee" : "rgba(255,255,255,0.4)",
-                    background: activeTab === "files" ? "rgba(34,211,238,.08)" : "transparent",
-                  }}
-                >
-                  Soubory
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setInfoOpen(!infoOpen)}
-                  className="ml-auto font-mono text-xs px-2"
-                  style={{ color: "rgba(255,255,255,0.3)" }}
-                >
-                  {infoOpen ? "▴ skrýt" : "▾ zobrazit"}
-                </button>
-              </div>
-
-              {/* Panel content */}
-              <AnimatePresence>
-                {infoOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    style={{ overflow: "hidden" }}
-                  >
-                    {loadingInfo ? (
-                      <div className="flex items-center justify-center py-8">
-                        <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
-                      </div>
-                    ) : activeTab === "readme" ? (
-                      readme ? <ReadmeView content={readme} /> : (
-                        <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>README nenalezeno.</p>
-                      )
-                    ) : (
-                      <div className="p-3">
-                        <FileTree items={tree} />
-                      </div>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* ── Terminal window ── */}
         <div
           ref={terminalRef}
-          className="rounded-2xl overflow-hidden border outline-none"
-          style={{ borderColor: "var(--b1)", background: "#1a1a1a", boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
+          className="rounded-2xl overflow-hidden border outline-none flex flex-col"
+          style={{
+            borderColor: "var(--b1)",
+            background: "#1a1a1a",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.5)",
+            ...(isMobile && running ? {
+              position: "fixed" as const,
+              inset: 0,
+              zIndex: 100,
+              borderRadius: 0,
+              border: "none",
+            } : {}),
+          }}
           onClick={focusInput}
         >
           {/* macOS titlebar */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
-            <div className="flex items-center gap-1.5">
-              <button type="button" aria-label="Stop" className="w-3 h-3 rounded-full hover:opacity-80" style={{ background: "#ff5f57" }} onClick={stopProcess} />
+          <div className="flex items-center gap-2 px-4 py-3 border-b flex-shrink-0" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <button
+                type="button"
+                aria-label="Stop"
+                className="w-3 h-3 rounded-full hover:opacity-80"
+                style={{ background: "#ff5f57" }}
+                onClick={(e) => { e.stopPropagation(); stopProcess(); }}
+              />
               <div className="w-3 h-3 rounded-full" style={{ background: "#ffbd2e" }} />
               <div className="w-3 h-3 rounded-full" style={{ background: "#28c840" }} />
             </div>
-            <div className="flex-1 text-center text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>
+
+            <div className="flex-1 text-center font-mono font-semibold truncate" style={{ fontSize: ".68rem", color: "rgba(255,255,255,0.45)" }}>
               {selectedProject ? `python — ${selectedProject.name}` : t.terminal.titleBar}
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold">
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Start / Stop buttons live here */}
+              {activeProject && !running && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleStart(); }}
+                  className="font-mono font-bold transition-all duration-150"
+                  style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
+                >
+                  ▶ Spustit
+                </button>
+              )}
+              {running && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); stopProcess(); }}
+                  className="font-mono font-bold transition-all duration-150"
+                  style={{ background: "rgba(248,113,113,.12)", color: "#f87171", border: "1px solid rgba(248,113,113,.3)", fontSize: ".63rem", padding: "2px 8px", borderRadius: 4 }}
+                >
+                  ■ Stop
+                </button>
+              )}
               {running && elapsed > 0 && (
-                <span className="font-mono" style={{ color: "#fbbf24", fontSize: ".68rem", letterSpacing: ".03em" }}>
+                <span className="font-mono" style={{ color: "#fbbf24", fontSize: ".65rem", letterSpacing: ".03em" }}>
                   {Math.floor(elapsed / 60).toString().padStart(2, "0")}:{(elapsed % 60).toString().padStart(2, "0")}
                 </span>
               )}
               <span className="flex items-center gap-1.5" style={{
                 color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : status === "error" ? "#f87171" : "rgba(255,255,255,0.35)",
               }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
-                <span className="hidden sm:inline">
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
+                <span className="hidden sm:inline font-mono" style={{ fontSize: ".63rem" }}>
                   {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : "—"}
                 </span>
               </span>
             </div>
           </div>
 
-          {/* Toolbar — clear po doběhnutí */}
+          {/* Toolbar — clear after done */}
           {!running && hasOutput && (
-            <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
+            <div className="flex items-center gap-2 px-4 py-2 border-b flex-shrink-0" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
               <button type="button" onClick={clearLines} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(255,255,255,.08)", background: "transparent", color: "rgba(255,255,255,.35)" }}>
                 {t.terminal.clear}
               </button>
@@ -530,7 +519,11 @@ export function Terminal() {
           <div
             ref={outputRef}
             className="overflow-y-auto overflow-x-auto p-4"
-            style={{ height: "22rem", background: "#1a1a1a", cursor: running ? "text" : "default" }}
+            style={{
+              background: "#1a1a1a",
+              cursor: running ? "text" : "default",
+              ...(isMobile && running ? { flex: 1 } : { height: "22rem" }),
+            }}
           >
             {!backendConfigured && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
@@ -539,10 +532,9 @@ export function Terminal() {
             )}
             {backendConfigured && !hasOutput && !running && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
-                {hasProjects ? "← Vyber projekt a klikni na kartu pro spuštění." : "Žádné projekty."}
+                {hasProjects ? "← Vyber projekt, pak klikni ▶ Spustit." : "Žádné projekty."}
               </p>
             )}
-            {/* Single pre block — no gaps between chunks */}
             {hasOutput && (
               <pre style={{ margin: 0, fontFamily: "'Fira Code', 'Courier New', monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", color: "rgba(255,255,255,0.85)" }}>
                 {parseAnsi(outputText).map((seg, i) => (
@@ -561,7 +553,7 @@ export function Terminal() {
             )}
           </div>
 
-          {/* Hidden input — triggers mobile keyboard, syncs liveInput */}
+          {/* Hidden input — triggers mobile keyboard */}
           {running && (
             <input
               ref={mobileInputRef}
