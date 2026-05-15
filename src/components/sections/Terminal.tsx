@@ -211,7 +211,7 @@ function WakingIndicator() {
 
 export function Terminal() {
   const t = useContent();
-  const { status, lines, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
+  const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
 
   const [liveInput, setLiveInput] = useState("");
   const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");
@@ -245,7 +245,7 @@ export function Terminal() {
   // Auto-scroll terminal output
   useEffect(() => {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
-  }, [lines]);
+  }, [outputText]);
 
   // Focus terminal window when program starts so keystrokes are captured
   useEffect(() => {
@@ -303,6 +303,7 @@ export function Terminal() {
   const hasProjects = backendProjects.length > 0;
   const hasInfo = readme !== null || tree.length > 0;
   const activeProject = pendingProject;
+  const hasOutput = outputText.length > 0;
 
   return (
     <SectionWrapper id="projekty">
@@ -498,7 +499,7 @@ export function Terminal() {
           </div>
 
           {/* Toolbar — clear po doběhnutí */}
-          {!running && lines.length > 0 && (
+          {!running && hasOutput && (
             <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
               <button type="button" onClick={clearLines} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(255,255,255,.08)", background: "transparent", color: "rgba(255,255,255,.35)" }}>
                 {t.terminal.clear}
@@ -510,21 +511,30 @@ export function Terminal() {
           <div
             ref={outputRef}
             className="overflow-y-auto overflow-x-auto p-4"
-            style={{ minHeight: 200, maxHeight: 400, background: "#1a1a1a", cursor: running ? "text" : "default" }}
+            style={{ height: "22rem", background: "#1a1a1a", cursor: running ? "text" : "default" }}
           >
             {!backendConfigured && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
                 Backend není nakonfigurován.
               </p>
             )}
-            {backendConfigured && lines.length === 0 && !running && (
+            {backendConfigured && !hasOutput && !running && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
                 {hasProjects ? "← Vyber projekt a klikni na kartu pro spuštění." : "Žádné projekty."}
               </p>
             )}
-            {lines.map((line) => <TerminalLine key={line.id} type={line.type} text={line.text} />)}
+            {/* Single pre block — no gaps between chunks */}
+            {hasOutput && (
+              <pre style={{ margin: 0, fontFamily: "'Fira Code', 'Courier New', monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", color: "rgba(255,255,255,0.85)" }}>
+                {parseAnsi(outputText).map((seg, i) => (
+                  <span key={i} style={{ color: seg.color, fontWeight: seg.bold ? 700 : undefined }}>
+                    {seg.text}
+                  </span>
+                ))}
+              </pre>
+            )}
             {running && (
-              <div style={{ display: "flex", fontFamily: "monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", marginTop: "2px" }}>
+              <div style={{ display: "flex", fontFamily: "'Fira Code', 'Courier New', monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre" }}>
                 <span style={{ color: "#60a5fa", flexShrink: 0 }}>{"› "}</span>
                 <span style={{ color: "rgba(255,255,255,0.9)" }}>{liveInput}</span>
                 <span style={{ display: "inline-block", width: "0.55em", height: "1.1em", background: "rgba(255,255,255,0.75)", verticalAlign: "text-bottom", animation: "cursor-blink 1s step-end infinite" }} />

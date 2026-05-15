@@ -6,24 +6,15 @@ import { siteConfig } from "@/config/site";
 
 export type BackendStatus = "idle" | "waking" | "ready" | "error";
 
-export type TerminalLine = {
-  id: number;
-  type: "stdout" | "stderr" | "system" | "input";
-  text: string;
-};
-
 export type BackendProject = {
   id: string;
   name: string;
   description: string;
 };
 
-let lineIdCounter = 0;
-function nextId() { return ++lineIdCounter; }
-
 export function useTerminal() {
   const [status, setStatus] = useState<BackendStatus>("idle");
-  const [lines, setLines] = useState<TerminalLine[]>([]);
+  const [outputText, setOutputText] = useState("");
   const [running, setRunning] = useState(false);
   const [selectedProject, setSelectedProject] = useState<BackendProject | null>(null);
   const [backendProjects, setBackendProjects] = useState<BackendProject[]>([]);
@@ -31,11 +22,11 @@ export function useTerminal() {
   const wsRef = useRef<WebSocket | null>(null);
   const wakeAbortRef = useRef<AbortController | null>(null);
 
-  const appendLine = useCallback((type: TerminalLine["type"], text: string) => {
-    setLines((prev) => [...prev, { id: nextId(), type, text }]);
+  const appendOutput = useCallback((text: string) => {
+    setOutputText((prev) => prev + text);
   }, []);
 
-  const clearLines = useCallback(() => setLines([]), []);
+  const clearLines = useCallback(() => setOutputText(""), []);
 
   // Probudí Render backend
   const wakeBackend = useCallback(async () => {
@@ -80,23 +71,24 @@ export function useTerminal() {
 
     setRunning(true);
     setSelectedProject(project);
-    appendLine("system", `$ run ${project.id}`);
+    appendOutput(`\x1b[2m$ run ${project.id}\x1b[0m\n`);
 
     const ws = createTerminalSocket(
       project.id,
       (msg) => {
         if (msg.type === "stdout") {
-          // Detect clear-screen ANSI sequences (\x1b[2J, \x1b[3J)
           if (/\x1b\[\d*[23]?J/.test(msg.data)) {
-            setLines([]);
+            setOutputText("");
+          } else {
+            appendOutput(msg.data);
           }
-          appendLine("stdout", msg.data);
-        } else if (msg.type === "stderr") appendLine("stderr", msg.data);
-        else if (msg.type === "exit") {
-          appendLine("system", `[Process exited with code ${msg.code}]`);
+        } else if (msg.type === "stderr") {
+          appendOutput(`\x1b[31m${msg.data}\x1b[0m`);
+        } else if (msg.type === "exit") {
+          appendOutput(`\x1b[2m\n[Process exited with code ${msg.code}]\x1b[0m`);
           setRunning(false);
         } else if (msg.type === "error") {
-          appendLine("system", `[Error: ${msg.message}]`);
+          appendOutput(`\x1b[31m\n[Error: ${msg.message}]\x1b[0m`);
           setRunning(false);
         }
       },
@@ -107,9 +99,9 @@ export function useTerminal() {
     );
 
     wsRef.current = ws;
-  }, [appendLine]);
+  }, [appendOutput]);
 
-  // Pošle vstup do běžícího procesu (PTY echo zobrazí vstup sám)
+  // Pošle vstup do běžícího procesu
   const sendInput = useCallback((input: string) => {
     wsRef.current?.send(JSON.stringify({ type: "input", data: input }));
   }, []);
@@ -120,8 +112,8 @@ export function useTerminal() {
     wsRef.current?.close();
     wsRef.current = null;
     setRunning(false);
-    appendLine("system", "[Stopped]");
-  }, [appendLine]);
+    appendOutput(`\x1b[2m\n[Stopped]\x1b[0m`);
+  }, [appendOutput]);
 
   // Cleanup při unmount
   useEffect(() => {
@@ -133,7 +125,7 @@ export function useTerminal() {
 
   return {
     status,
-    lines,
+    outputText,
     running,
     selectedProject,
     backendProjects,
