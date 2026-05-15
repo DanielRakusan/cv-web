@@ -49,7 +49,7 @@ function TerminalLine({ type, text }: { type: string; text: string }) {
     type === "input" ? "#60a5fa" :
     "rgba(255,255,255,0.85)";
   return (
-    <div className="font-mono text-sm leading-relaxed whitespace-pre-wrap break-all">
+    <div className="font-mono" style={{ fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", minWidth: 0 }}>
       {segments.map((seg, i) => (
         <span key={i} style={{ color: seg.color ?? baseColor, fontWeight: seg.bold ? 700 : undefined }}>
           {seg.text}
@@ -238,6 +238,11 @@ export function Terminal() {
   useEffect(() => {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
   }, [lines]);
+
+  // Auto-focus input when program starts running
+  useEffect(() => {
+    if (running) setTimeout(() => inputRef.current?.focus(), 100);
+  }, [running]);
 
   const [pendingProject, setPendingProject] = useState<BackendProject | null>(null);
 
@@ -446,6 +451,7 @@ export function Terminal() {
         <div
           className="rounded-2xl overflow-hidden border"
           style={{ borderColor: "var(--b1)", background: "#1a1a1a", boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
+          onClick={() => running && inputRef.current?.focus()}
         >
           {/* macOS titlebar */}
           <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
@@ -479,9 +485,9 @@ export function Terminal() {
           {/* Output */}
           <div
             ref={outputRef}
-            className="overflow-y-auto p-4 space-y-1"
-            style={{ minHeight: 200, maxHeight: 380, background: "#1a1a1a" }}
-            onClick={() => inputRef.current?.focus()}
+            className="overflow-y-auto overflow-x-auto p-4 space-y-0.5"
+            style={{ minHeight: 200, maxHeight: 400, background: "#1a1a1a", cursor: running ? "text" : "default" }}
+            onClick={() => running && inputRef.current?.focus()}
           >
             {!backendConfigured && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
