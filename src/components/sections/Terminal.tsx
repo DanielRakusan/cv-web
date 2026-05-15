@@ -239,8 +239,12 @@ export function Terminal() {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
   }, [lines]);
 
-  // Load README + tree when project is selected (but not yet run)
+  const [pendingProject, setPendingProject] = useState<BackendProject | null>(null);
+
+  // Karta: jen vybere projekt a načte info, nespustí ho
   const handleSelectProject = useCallback(async (project: BackendProject) => {
+    if (running) return;
+    setPendingProject(project);
     setLoadingInfo(true);
     setReadme(null);
     setTree([]);
@@ -252,8 +256,15 @@ export function Terminal() {
     setReadme(rm);
     setTree(tr);
     setLoadingInfo(false);
+  }, [running]);
+
+  // Tlačítko Start: skutečně spustí
+  const handleStart = useCallback(() => {
+    const project = pendingProject;
+    if (!project) return;
+    clearLines();
     runProject(project);
-  }, [runProject]);
+  }, [pendingProject, clearLines, runProject]);
 
   function handleInputSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -265,6 +276,7 @@ export function Terminal() {
   const backendConfigured = !!siteConfig.renderApiUrl;
   const hasProjects = backendProjects.length > 0;
   const hasInfo = readme !== null || tree.length > 0;
+  const activeProject = pendingProject;
 
   return (
     <SectionWrapper id="projekty">
@@ -301,24 +313,60 @@ export function Terminal() {
                 {t.terminal.noProjects}
               </p>
             ) : (
-              <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-                {backendProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    selected={selectedProject?.id === project.id}
-                    disabled={running}
-                    onClick={() => handleSelectProject(project)}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+                  {backendProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      selected={activeProject?.id === project.id}
+                      disabled={running}
+                      onClick={() => handleSelectProject(project)}
+                    />
+                  ))}
+                </div>
+
+                {activeProject && !running && (
+                  <div className="mt-3 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleStart}
+                      className="font-mono font-bold px-5 py-2 rounded-lg transition-all duration-150"
+                      style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".75rem", letterSpacing: ".04em" }}
+                      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
+                      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
+                    >
+                      {"▶"} Spustit {activeProject.name}
+                    </button>
+                    <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>
+                      {activeProject.description}
+                    </span>
+                  </div>
+                )}
+
+                {running && (
+                  <div className="mt-3 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={stopProcess}
+                      className="font-mono font-bold px-5 py-2 rounded-lg transition-all duration-150"
+                      style={{ background: "rgba(248,113,113,.12)", color: "#f87171", border: "1px solid rgba(248,113,113,.3)", fontSize: ".75rem" }}
+                    >
+                      {"■"} {t.terminal.stop}
+                    </button>
+                    <span className="font-mono text-xs" style={{ color: "var(--dim)", animation: "pulse 1.5s ease-in-out infinite" }}>
+                      běží…
+                    </span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
 
         {/* ── Project info panel (README + Files) ── */}
         <AnimatePresence>
-          {selectedProject && hasInfo && (
+          {activeProject && hasInfo && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -419,14 +467,7 @@ export function Terminal() {
             </div>
           </div>
 
-          {/* Toolbar */}
-          {running && (
-            <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
-              <button type="button" onClick={stopProcess} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(248,113,113,.3)", background: "rgba(248,113,113,.08)", color: "#f87171" }}>
-                {t.terminal.stop}
-              </button>
-            </div>
-          )}
+          {/* Toolbar — clear po doběhnutí */}
           {!running && lines.length > 0 && (
             <div className="flex items-center gap-2 px-4 py-2 border-b" style={{ background: "#1e1e1e", borderColor: "rgba(255,255,255,0.05)" }}>
               <button type="button" onClick={clearLines} className="font-mono text-xs px-3 py-1 rounded border transition-all" style={{ borderColor: "rgba(255,255,255,.08)", background: "transparent", color: "rgba(255,255,255,.35)" }}>
