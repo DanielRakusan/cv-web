@@ -129,7 +129,7 @@ export function Hero({ profile }: HeroProps) {
               style={{ fontSize: ".63rem", color: "var(--green)", letterSpacing: ".13em" }}
             >
               <span style={{ width: 18, height: 1, background: "var(--green)", flexShrink: 0 }} />
-              Praha · Junior Python Developer · {t.hero.badge.split("·")[0].trim()}
+              Praha · Python Backend · IT background
             </div>
           </FadeUp>
 

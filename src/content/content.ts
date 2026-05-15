@@ -28,9 +28,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Přecházím z IT supportu\ndo světa vývoje.",
-      pitch: "Python backend developer s IT backgroundem — rozumím systémům zevnitř, stavím je zvenčí.",
+      pitch: "Léta jsem opravoval software. Teď ho stavím.",
       description:
-        "Z IT podpory přímo do backendu. Roky v terénu mi ukázaly, kde software selhává a proč — teď tuhle perspektivu přenáším do Pythonu, Djanga a databázové logiky. Debugguji, stavím, iteruji. GitHub jako deník práce.",
+        "Roky v IT podpoře mi ukázaly, kde systémy padají a proč. Teď tuhle perspektivu přenáším do Pythonu, Djanga a backendu. Debugguji systematicky, stavím věci, které fungují. AI jako součást workflow — ne jako zkratka.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
@@ -197,7 +197,7 @@ export const content = {
       sectionLabel: "Kontakt",
       heading: "Pojďme si promluvit",
       description:
-        "Hledám první junior příležitost v Praze. Pokud tě můj profil zaujal, ozvi se — rád si promluvím.",
+        "Hledám junior Python/backend pozici v Praze. Pokud tě profil zaujal, ozvi se — rád si promluvím.",
       availability: "Ihned k dispozici",
       location: "Praha, Česká republika",
       email: "daniel@rakusan.cz",
@@ -326,9 +326,9 @@ export const content = {
       role: "Junior Python Developer",
       subRole: "/ Software Developer in Test Candidate",
       tagline: "Transitioning from IT support\ninto development.",
-      pitch: "Python backend developer with an IT background — I understand systems from the inside, I build them from the outside.",
+      pitch: "I spent years fixing software. Now I build it.",
       description:
-        "From IT support straight into backend. Years in the field showed me where software breaks and why — I now bring that perspective to Python, Django, and database logic. I debug, I build, I iterate. GitHub as my work log.",
+        "Years in IT support showed me where systems fail and why. Now I bring that perspective to Python, Django, and backend logic. I debug systematically, I build things that work. AI as part of the workflow — not a shortcut.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "Django", color: "cyan" },
@@ -495,7 +495,7 @@ export const content = {
       sectionLabel: "Contact",
       heading: "Let's talk",
       description:
-        "I'm looking for my first junior opportunity in Prague. If my profile caught your attention, reach out — I'd love to have a conversation.",
+        "Looking for a junior Python/backend role in Prague. If my profile caught your attention, reach out — happy to talk.",
       availability: "Immediately available",
       location: "Prague, Czech Republic",
       email: "daniel@rakusan.cz",
