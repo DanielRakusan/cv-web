@@ -219,10 +219,12 @@ export function Terminal() {
   const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
   const [infoOpen, setInfoOpen] = useState(true);
   const [loadingInfo, setLoadingInfo] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
 
   const outputRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const hasPinged = useRef(false);
+  const startTimeRef = useRef<number | null>(null);
 
   // Wake backend when section enters viewport
   const onSectionVisible = useCallback(() => {
@@ -251,8 +253,21 @@ export function Terminal() {
   useEffect(() => {
     if (running) {
       setLiveInput("");
+      startTimeRef.current = Date.now();
+      setElapsed(0);
       setTimeout(() => terminalRef.current?.focus(), 100);
+    } else {
+      startTimeRef.current = null;
     }
+  }, [running]);
+
+  // Live session timer
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      if (startTimeRef.current) setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(id);
   }, [running]);
 
   const [pendingProject, setPendingProject] = useState<BackendProject | null>(null);
@@ -488,12 +503,19 @@ export function Terminal() {
             <div className="flex-1 text-center text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>
               {selectedProject ? `python — ${selectedProject.name}` : t.terminal.titleBar}
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold" style={{
-              color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : status === "error" ? "#f87171" : "rgba(255,255,255,0.35)",
-            }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
-              <span className="hidden sm:inline">
-                {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : "—"}
+            <div className="flex items-center gap-2 text-xs font-semibold">
+              {running && elapsed > 0 && (
+                <span className="font-mono" style={{ color: "#fbbf24", fontSize: ".68rem", letterSpacing: ".03em" }}>
+                  {Math.floor(elapsed / 60).toString().padStart(2, "0")}:{(elapsed % 60).toString().padStart(2, "0")}
+                </span>
+              )}
+              <span className="flex items-center gap-1.5" style={{
+                color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : status === "error" ? "#f87171" : "rgba(255,255,255,0.35)",
+              }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
+                <span className="hidden sm:inline">
+                  {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : "—"}
+                </span>
               </span>
             </div>
           </div>
