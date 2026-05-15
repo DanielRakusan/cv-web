@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050505;
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.16);
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-faint: rgba(255, 255, 255, 0.35);
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --accent-border: rgba(59, 130, 246, 0.35);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans, "Inter", system-ui, sans-serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fff;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes float-star {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-120px); }
+}
+
+@keyframes pulse-star {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 1; }
+}
