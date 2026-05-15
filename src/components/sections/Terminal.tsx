@@ -223,6 +223,7 @@ export function Terminal() {
 
   const outputRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
   const hasPinged = useRef(false);
   const startTimeRef = useRef<number | null>(null);
 
@@ -249,13 +250,13 @@ export function Terminal() {
     if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
   }, [outputText]);
 
-  // Focus terminal window when program starts so keystrokes are captured
+  // Focus hidden input when program starts — triggers mobile keyboard
   useEffect(() => {
     if (running) {
       setLiveInput("");
       startTimeRef.current = Date.now();
       setElapsed(0);
-      setTimeout(() => terminalRef.current?.focus(), 100);
+      setTimeout(() => mobileInputRef.current?.focus(), 100);
     } else {
       startTimeRef.current = null;
     }
@@ -297,21 +298,19 @@ export function Terminal() {
     runProject(project);
   }, [pendingProject, clearLines, runProject]);
 
-  function handleTerminalKey(e: React.KeyboardEvent) {
-    if (!running) return;
+  function handleMobileInputKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       e.preventDefault();
-      sendInput(liveInput + "\n");  // sendInput sends this directly to PTY
+      sendInput(liveInput + "\n");
       setLiveInput("");
-    } else if (e.key === "Backspace") {
-      e.preventDefault();
-      setLiveInput((prev) => prev.slice(0, -1));
     } else if (e.key === "c" && e.ctrlKey) {
       e.preventDefault();
       sendInput("\x03");
-    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      setLiveInput((prev) => prev + e.key);
     }
+  }
+
+  function focusInput() {
+    if (running) mobileInputRef.current?.focus();
   }
 
   const backendConfigured = !!siteConfig.renderApiUrl;
@@ -487,11 +486,9 @@ export function Terminal() {
         {/* ── Terminal window ── */}
         <div
           ref={terminalRef}
-          tabIndex={0}
           className="rounded-2xl overflow-hidden border outline-none"
           style={{ borderColor: "var(--b1)", background: "#1a1a1a", boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
-          onKeyDown={handleTerminalKey}
-          onClick={() => running && terminalRef.current?.focus()}
+          onClick={focusInput}
         >
           {/* macOS titlebar */}
           <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ background: "#252525", borderColor: "rgba(255,255,255,0.06)" }}>
@@ -563,6 +560,24 @@ export function Terminal() {
               </div>
             )}
           </div>
+
+          {/* Hidden input — triggers mobile keyboard, syncs liveInput */}
+          {running && (
+            <input
+              ref={mobileInputRef}
+              type="text"
+              inputMode="text"
+              value={liveInput}
+              onChange={(e) => setLiveInput(e.target.value)}
+              onKeyDown={handleMobileInputKey}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              aria-hidden="true"
+              style={{ position: "fixed", top: -200, left: -200, width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+            />
+          )}
         </div>
       </motion.div>
     </SectionWrapper>

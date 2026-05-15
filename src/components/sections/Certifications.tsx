@@ -151,7 +151,7 @@ export function Certifications() {
 
       <div
         className="grid gap-3"
-        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
+        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))" }}
       >
         {CERTS.map((cert, i) => {
           const title = lang === "cz" ? cert.titleCz : cert.titleEn;

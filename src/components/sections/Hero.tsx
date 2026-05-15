@@ -35,19 +35,16 @@ export function Hero({ profile }: HeroProps) {
       className="relative z-10 min-h-screen flex items-center"
       style={{ padding: "88px 5vw 3rem", maxWidth: 1060, margin: "0 auto" }}
     >
-      {/* 2-col grid: photo left | text right */}
-      <div
-        className="w-full grid items-center gap-16"
-        style={{ gridTemplateColumns: "220px 1fr" }}
-      >
+      {/* 2-col grid: photo left | text right — stacks on mobile */}
+      <div className="w-full grid items-center hero-grid">
         {/* ── LEFT: Photo ── */}
         <FadeUp delay={0}>
           <div className="flex flex-col items-center gap-4">
             {/* Square photo with cyan corner frame */}
-            <div className="relative" style={{ width: 210, height: 210 }}>
+            <div className="relative hero-photo-wrap">
               <div
-                className="relative overflow-hidden group"
-                style={{ width: 210, height: 210, borderRadius: 10 }}
+                className="relative overflow-hidden group hero-photo-wrap"
+                style={{ borderRadius: 10 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -90,7 +87,7 @@ export function Hero({ profile }: HeroProps) {
                 </div>
               </div>
               {/* Cyan corner frame */}
-              <div className="photo-frame absolute inset-0 pointer-events-none" style={{ inset: -3 }} />
+              <div className="photo-frame absolute pointer-events-none" style={{ inset: -3 }} />
             </div>
 
             {/* Availability badge below photo */}
