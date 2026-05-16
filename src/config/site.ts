@@ -15,7 +15,7 @@ export const siteConfig = {
   social: {
     github: "https://github.com/DanielRakusan",
     linkedin: "https://linkedin.com/in/daniel-rakusan",
-    email: "daniel@rakusan.cz",
+    email: "rakusan.dev@gmail.com",
   },
 
   // Doména webu
