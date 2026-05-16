@@ -11,7 +11,7 @@ export function Footer() {
       style={{ borderColor: "var(--border)" }}
     >
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span className="text-xs" style={{ color: "var(--text-faint)" }}>
+        <span className="text-xs" style={{ color: "var(--text-muted)" }}>
           {t.footer.built}
         </span>
         <span

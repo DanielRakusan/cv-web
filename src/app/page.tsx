@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { fetchGitHubProfile } from "@/lib/github";
 import { siteConfig } from "@/config/site";
 import { BackgroundLayers } from "@/components/background/BackgroundLayers";
@@ -6,13 +7,20 @@ import { Hero } from "@/components/sections/Hero";
 import { WhyMe } from "@/components/sections/WhyMe";
 import { Skills } from "@/components/sections/Skills";
 import { Experience } from "@/components/sections/Experience";
-import { Certifications } from "@/components/sections/Certifications";
-import { MasterPlan } from "@/components/sections/MasterPlan";
-import { VibeCoding } from "@/components/sections/VibeCoding";
-import { AISection } from "@/components/sections/AISection";
-import { Terminal } from "@/components/sections/Terminal";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
+
+// Lazy-loaded sekce — JS chunky se načtou odděleně, nezablokují
+// initial render Hero/WhyMe/Experience a sníží TBT.
+const Terminal = dynamic(() =>
+  import("@/components/sections/Terminal").then(m => ({ default: m.Terminal }))
+);
+const VibeCoding = dynamic(() =>
+  import("@/components/sections/VibeCoding").then(m => ({ default: m.VibeCoding }))
+);
+const Certifications = dynamic(() =>
+  import("@/components/sections/Certifications").then(m => ({ default: m.Certifications }))
+);
 
 // Schema.org @graph — Google preferuje propojené entity přes @id
 const SITE_URL = "https://www.danielrakusan.cz";

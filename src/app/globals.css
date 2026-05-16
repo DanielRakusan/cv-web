@@ -153,6 +153,16 @@ body {
   to   { transform: translateY(calc(100vh + 40px)); }
 }
 
+/* ── Hero CSS animations (replaces framer-motion, better LCP) ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(4px); }
+}
+
 /* ── photo frame corner decorations ── */
 .photo-frame::before,
 .photo-frame::after {

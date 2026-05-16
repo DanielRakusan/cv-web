@@ -8,12 +8,14 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 const firaCode = Fira_Code({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 const SITE_URL = "https://www.danielrakusan.cz";
@@ -95,6 +97,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="cs" className={`${spaceGrotesk.variable} ${firaCode.variable}`}>
+      <head>
+        {/* Preconnect — připraví TCP spojení dříve, než je komponenta potřebuje */}
+        <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+        <link rel="preconnect" href="https://cv-backend-92jb.onrender.com" />
+      </head>
       <body>
         {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
         <a href="#oMne" className="skip-to-main">

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { useContent } from "@/hooks/useContent";
 import { siteConfig } from "@/config/site";
 import type { GitHubProfile } from "@/lib/github";
@@ -9,18 +9,16 @@ type HeroProps = {
   profile: GitHubProfile | null;
 };
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
+// CSS-based fade-up — stejný vizuální efekt jako framer-motion,
+// ale server renderuje obsah bez opacity:0 → LCP se měří dříve.
 function FadeUp({ delay, children, className }: { delay: number; children: React.ReactNode; className?: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.55, ease }}
+    <div
       className={className}
+      style={{ animation: `fade-up 0.55s cubic-bezier(0.22,1,0.36,1) ${delay}s both` }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -46,15 +44,15 @@ export function Hero({ profile }: HeroProps) {
                 className="relative overflow-hidden group hero-photo-wrap"
                 style={{ borderRadius: 10 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={avatarUrl}
                   alt={t.github.avatarAlt.replace("{name}", displayName)}
-                  width={210}
-                  height={210}
+                  width={320}
+                  height={320}
+                  sizes="(max-width: 539px) 140px, (max-width: 767px) 190px, 210px"
                   className="w-full h-full object-cover block transition-all duration-300"
                   style={{ filter: "grayscale(8%)" }}
-                  referrerPolicy="no-referrer"
+                  priority
                 />
                 {/* Hover overlay */}
                 <div
@@ -268,20 +266,17 @@ export function Hero({ profile }: HeroProps) {
       </div>
 
       {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.6 }}
+      <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono"
-        style={{ fontSize: ".58rem", color: "var(--dim)", letterSpacing: ".1em" }}
+        style={{ fontSize: ".58rem", color: "var(--dim)", letterSpacing: ".1em", animation: "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) 1s both" }}
       >
         <span className="uppercase">{t.hero.scrollHint}</span>
-        <motion.div animate={{ y: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}>
+        <div style={{ animation: "scroll-bounce 1.8s ease-in-out infinite" }}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
