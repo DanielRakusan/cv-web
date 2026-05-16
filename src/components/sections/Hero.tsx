@@ -126,7 +126,7 @@ export function Hero({ profile }: HeroProps) {
               style={{ fontSize: ".63rem", color: "var(--green)", letterSpacing: ".13em" }}
             >
               <span style={{ width: 18, height: 1, background: "var(--green)", flexShrink: 0 }} />
-              Praha · Python Backend · IT background
+              {t.hero.eyebrow}
             </div>
           </FadeUp>
 

@@ -198,7 +198,7 @@ export function Navbar({ profile }: NavbarProps) {
           onMouseEnter={e => { e.currentTarget.style.background = "var(--cyan)"; e.currentTarget.style.color = "#02020a"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--cyan)"; }}
         >
-          {lang === "cz" ? "Napište mi →" : "Get in touch →"}
+          {t.hero.ctaContact} →
         </a>
       </div>
     </header>

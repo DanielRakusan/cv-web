@@ -496,16 +496,27 @@ const activeProject = pendingProject;
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* Start / Stop buttons live here */}
               {activeProject && !running && (
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); handleStart(); }}
-                  className="font-mono font-bold transition-all duration-150"
-                  style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
-                >
-                  ▶ Spustit
-                </button>
+                <div style={{ position: "relative", borderRadius: 6, padding: 2, overflow: "hidden", flexShrink: 0 }}>
+                  <div style={{
+                    position: "absolute",
+                    width: "200%",
+                    height: "200%",
+                    top: "-50%",
+                    left: "-50%",
+                    background: "conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.85) 8%, rgba(34,211,238,0.5) 16%, transparent 24%)",
+                    animation: "border-run 2.5s linear infinite",
+                  }} />
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); handleStart(); }}
+                    className="font-mono font-bold transition-all duration-150"
+                    style={{ position: "relative", background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
+                  >
+                    ▶ {t.terminal.run}
+                  </button>
+                </div>
               )}
               {running && (
                 <button
@@ -514,7 +525,7 @@ const activeProject = pendingProject;
                   className="font-mono font-bold transition-all duration-150"
                   style={{ background: "rgba(248,113,113,.12)", color: "#f87171", border: "1px solid rgba(248,113,113,.3)", fontSize: ".63rem", padding: "2px 8px", borderRadius: 4 }}
                 >
-                  ■ Stop
+                  ■ {t.terminal.stop}
                 </button>
               )}
               {running && elapsed > 0 && (
@@ -554,12 +565,12 @@ const activeProject = pendingProject;
           >
             {!backendConfigured && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.3)" }}>
-                Backend není nakonfigurován.
+                {t.terminal.notConfigured}
               </p>
             )}
             {backendConfigured && !hasOutput && !running && (
               <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
-                {hasProjects ? "← Vyber projekt, pak klikni ▶ Spustit." : "Žádné projekty."}
+                {hasProjects ? t.terminal.selectHint : t.terminal.noProjects}
               </p>
             )}
             {hasOutput && (
