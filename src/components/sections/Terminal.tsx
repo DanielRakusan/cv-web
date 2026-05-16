@@ -496,15 +496,14 @@ const activeProject = pendingProject;
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* Start / Stop buttons live here */}
               {activeProject && !running && (
-                <div style={{ position: "relative", borderRadius: 6, padding: 2, overflow: "hidden", flexShrink: 0 }}>
+                <div style={{ position: "relative", flexShrink: 0 }}>
                   <div style={{
                     position: "absolute",
-                    width: "200%",
-                    height: "200%",
-                    top: "-50%",
-                    left: "-50%",
-                    background: "conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.85) 8%, rgba(34,211,238,0.5) 16%, transparent 24%)",
-                    animation: "border-run 2.5s linear infinite",
+                    inset: -2,
+                    borderRadius: 6,
+                    background: "linear-gradient(90deg, rgba(34,211,238,0.15), rgba(255,255,255,0.88), rgba(34,211,238,0.7), rgba(167,139,250,0.5), rgba(255,255,255,0.88), rgba(34,211,238,0.15))",
+                    backgroundSize: "300% 100%",
+                    animation: "border-sweep 2.5s linear infinite",
                   }} />
                   <button
                     type="button"

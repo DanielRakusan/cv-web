@@ -119,9 +119,9 @@ body {
   50%     { opacity:.22; transform:scale(.48); }
 }
 
-@keyframes border-run {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes border-sweep {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
 }
 
 /* ── photo frame corner decorations ── */
