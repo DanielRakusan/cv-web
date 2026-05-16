@@ -74,7 +74,7 @@ export function Navbar({ profile }: NavbarProps) {
       </a>
 
       {/* Nav links */}
-      <nav className="hidden md:flex items-center gap-6">
+      <nav aria-label="Hlavní navigace" className="hidden md:flex items-center gap-6">
         {navLinks.map((l) => (
           <a
             key={l.href}

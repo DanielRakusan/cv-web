@@ -193,6 +193,13 @@ export const content = {
       notConfigured: "Backend není nakonfigurován.",
       inputPlaceholder: "Zadej vstup...",
       titleBar: "python — daniel@rakusan",
+      projectPrompt: "// ZVOL PROJEKT A SPUSŤ UKÁZKU",
+      filesTab: "Soubory",
+      noFiles: "Žádné soubory",
+      wakingBackend: "Probouzím backend…",
+      backendUnavailable: "⚠ Backend nedostupný.",
+      tryAgain: "Zkusit znovu",
+      readmeNotFound: "README nenalezeno.",
     },
 
     contact: {
@@ -493,6 +500,13 @@ export const content = {
       notConfigured: "Backend not configured.",
       inputPlaceholder: "Enter input...",
       titleBar: "python — daniel@rakusan",
+      projectPrompt: "// SELECT A PROJECT AND RUN THE DEMO",
+      filesTab: "Files",
+      noFiles: "No files",
+      wakingBackend: "Waking backend…",
+      backendUnavailable: "⚠ Backend unavailable.",
+      tryAgain: "Try again",
+      readmeNotFound: "README not found.",
     },
 
     contact: {

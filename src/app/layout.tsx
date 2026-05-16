@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
@@ -18,6 +18,14 @@ const firaCode = Fira_Code({
 
 const SITE_URL = "https://www.danielrakusan.cz";
 
+/* ── Viewport / theme-color ───────────────────────────────────── */
+export const viewport: Viewport = {
+  themeColor: "#02020a",          // mobile browser chrome bar matches the site
+  width: "device-width",
+  initialScale: 1,
+};
+
+/* ── SEO Metadata ─────────────────────────────────────────────── */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
@@ -27,7 +35,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Junior Python backend developer v Praze. Přecházím z IT podpory do vývoje — Python, Django, SQLite, Git. Ihned k dispozici. / Junior Python backend developer in Prague — available now.",
+    "Junior Python backend developer · Praha / Prague. Python, Django, SQLite, Git. IT background, přecházím do vývoje. Ihned k dispozici.",
 
   keywords: [
     "Daniel Rakušan",
@@ -37,7 +45,7 @@ export const metadata: Metadata = {
     "backend developer Prague",
     "Django developer",
     "SQLite developer",
-    "IT support developer",
+    "IT support to developer",
     "junior developer Praha",
     "junior developer Prague",
     "Python portfolio",
@@ -72,7 +80,7 @@ export const metadata: Metadata = {
   },
 
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Daniel Rakušan — Junior Python Developer",
     description:
       "Junior Python backend developer from Prague. Python, Django, SQLite. Available now.",
@@ -80,17 +88,37 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "cs-CZ": `${SITE_URL}/#/cz`,
-      "en-US": `${SITE_URL}/#/en`,
-    },
   },
 };
 
+/* ── Root layout ──────────────────────────────────────────────── */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="cs" className={`${spaceGrotesk.variable} ${firaCode.variable}`}>
       <body>
+        {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
+        <a
+          href="#oMne"
+          className="font-mono"
+          style={{
+            position: "absolute",
+            top: -999,
+            left: 8,
+            zIndex: 9999,
+            padding: "4px 12px",
+            background: "var(--cyan)",
+            color: "#02020a",
+            fontSize: ".75rem",
+            borderRadius: 4,
+            textDecoration: "none",
+            fontWeight: 700,
+          }}
+          onFocus={(e) => (e.currentTarget.style.top = "8px")}
+          onBlur={(e) => (e.currentTarget.style.top = "-999px")}
+        >
+          Přeskočit na obsah
+        </a>
+
         <LanguageProvider>
           <VisitPing />
           {children}

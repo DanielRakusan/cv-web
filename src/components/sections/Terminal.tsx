@@ -118,9 +118,9 @@ function FileNode({ node, depth }: { node: TreeNode; depth: number }) {
   );
 }
 
-function FileTree({ items }: { items: { path: string; type: string }[] }) {
+function FileTree({ items, noFilesLabel }: { items: { path: string; type: string }[]; noFilesLabel: string }) {
   const tree = buildTree(items);
-  if (!tree.length) return <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Žádné soubory</p>;
+  if (!tree.length) return <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{noFilesLabel}</p>;
   return (
     <div className="overflow-y-auto" style={{ maxHeight: 240 }}>
       {tree.map((node) => <FileNode key={node.name} node={node} depth={0} />)}
@@ -218,11 +218,11 @@ function ProjectCard({
 
 // ── Waking indicator ──────────────────────────────────────────────────────────
 
-function WakingIndicator() {
+function WakingIndicator({ label }: { label: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
       <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
-      <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Probouzím backend…</p>
+      <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{label}</p>
     </div>
   );
 }
@@ -371,16 +371,16 @@ const activeProject = pendingProject;
           <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--b1)", background: "var(--s1)" }}>
             <div className="p-4">
               <p className="font-mono mb-3" style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".08em" }}>
-                // ZVOL PROJEKT A SPUSŤ UKÁZKU
+                {t.terminal.projectPrompt}
               </p>
 
               {status === "idle" || (status === "waking" && !hasProjects) ? (
-                <WakingIndicator />
+                <WakingIndicator label={t.terminal.wakingBackend} />
               ) : status === "error" ? (
                 <div className="flex items-center gap-3">
-                  <span style={{ color: "#f87171", fontSize: ".82rem" }}>⚠ Backend nedostupný.</span>
+                  <span style={{ color: "#f87171", fontSize: ".82rem" }}>{t.terminal.backendUnavailable}</span>
                   <button type="button" onClick={() => wakeBackend()} className="font-mono text-xs px-3 py-1 rounded border" style={{ borderColor: "rgba(248,113,113,.3)", color: "#f87171" }}>
-                    Zkusit znovu
+                    {t.terminal.tryAgain}
                   </button>
                 </div>
               ) : !hasProjects ? (
@@ -430,7 +430,7 @@ const activeProject = pendingProject;
                       background: activeTab === "files" ? "rgba(34,211,238,.08)" : "transparent",
                     }}
                   >
-                    Soubory
+                    {t.terminal.filesTab}
                   </button>
                 </div>
 
@@ -444,11 +444,11 @@ const activeProject = pendingProject;
                     readme ? (
                       <ReadmeView content={readme} onLangSwitch={setLang} />
                     ) : (
-                      <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>README nenalezeno.</p>
+                      <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>{t.terminal.readmeNotFound}</p>
                     )
                   ) : (
                     <div className="p-3 h-full overflow-y-auto">
-                      <FileTree items={tree} />
+                      <FileTree items={tree} noFilesLabel={t.terminal.noFiles} />
                     </div>
                   )}
                 </div>
