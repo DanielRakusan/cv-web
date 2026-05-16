@@ -16,17 +16,74 @@ const firaCode = Fira_Code({
   weight: ["400", "500", "700"],
 });
 
+const SITE_URL = "https://www.danielrakusan.cz";
+
 export const metadata: Metadata = {
-  title: "Daniel Rakušan — Junior Python Developer",
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: "Daniel Rakušan — Junior Python Developer",
+    template: "%s | Daniel Rakušan",
+  },
+
   description:
-    "Junior Python Developer. Přecházím z IT podpory do vývoje přes Python, Django, SQLite a JavaScript. Praha. Ihned k dispozici.",
+    "Junior Python backend developer v Praze. Přecházím z IT podpory do vývoje — Python, Django, SQLite, Git. Ihned k dispozici. / Junior Python backend developer in Prague — available now.",
+
+  keywords: [
+    "Daniel Rakušan",
+    "junior Python developer",
+    "Python backend developer",
+    "backend developer Praha",
+    "backend developer Prague",
+    "Django developer",
+    "SQLite developer",
+    "IT support developer",
+    "junior developer Praha",
+    "junior developer Prague",
+    "Python portfolio",
+    "Python Django portfolio",
+  ],
+
+  authors: [{ name: "Daniel Rakušan", url: SITE_URL }],
+  creator: "Daniel Rakušan",
+  publisher: "Daniel Rakušan",
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
   openGraph: {
-    title: "Daniel Rakušan — Junior Python Developer",
-    description: "Junior Python Developer. Prague. Immediately available.",
-    url: "https://www.danielrakusan.cz",
-    siteName: "Daniel Rakušan",
-    locale: "cs_CZ",
     type: "website",
+    locale: "cs_CZ",
+    alternateLocale: "en_US",
+    url: SITE_URL,
+    siteName: "Daniel Rakušan",
+    title: "Daniel Rakušan — Junior Python Developer",
+    description:
+      "Junior Python backend developer from Prague with IT background. Python, Django, SQLite. Available now.",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Daniel Rakušan — Junior Python Developer",
+    description:
+      "Junior Python backend developer from Prague. Python, Django, SQLite. Available now.",
+  },
+
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "cs-CZ": `${SITE_URL}/#/cz`,
+      "en-US": `${SITE_URL}/#/en`,
+    },
   },
 };
 

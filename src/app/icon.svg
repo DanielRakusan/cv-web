@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dark background matching site palette -->
+  <rect width="32" height="32" rx="8" fill="#02020a"/>
+
+  <!-- Snake head: Python blue -->
+  <ellipse cx="16" cy="17" rx="12" ry="11" fill="#3776AB"/>
+
+  <!-- Belly/chin: Python yellow — signals Python brand, not danger -->
+  <ellipse cx="16" cy="23.5" rx="7.5" ry="5" fill="#FFD43B"/>
+
+  <!-- Left eye (white sclera) -->
+  <circle cx="11.5" cy="13.5" r="3.3" fill="#fff"/>
+  <!-- Left pupil -->
+  <circle cx="12" cy="14" r="2" fill="#040814"/>
+  <!-- Left shine — makes it look friendly/alive -->
+  <circle cx="12.9" cy="12.9" r="0.85" fill="#fff"/>
+
+  <!-- Right eye (white sclera) -->
+  <circle cx="20.5" cy="13.5" r="3.3" fill="#fff"/>
+  <!-- Right pupil -->
+  <circle cx="21" cy="14" r="2" fill="#040814"/>
+  <!-- Right shine -->
+  <circle cx="21.9" cy="12.9" r="0.85" fill="#fff"/>
+
+  <!-- Subtle nostril dots -->
+  <circle cx="14.5" cy="19.8" r="0.75" fill="#2a6090" opacity="0.6"/>
+  <circle cx="17.5" cy="19.8" r="0.75" fill="#2a6090" opacity="0.6"/>
+
+  <!-- Friendly smile in the yellow area -->
+  <path d="M12.5 22.5 Q16 25 19.5 22.5" stroke="#2a6090" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+</svg>
