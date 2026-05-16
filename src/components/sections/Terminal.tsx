@@ -496,26 +496,16 @@ const activeProject = pendingProject;
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* Start / Stop buttons live here */}
               {activeProject && !running && (
-                <div style={{ position: "relative", flexShrink: 0 }}>
-                  <div style={{
-                    position: "absolute",
-                    inset: -2,
-                    borderRadius: 6,
-                    background: "linear-gradient(90deg, rgba(34,211,238,0.15), rgba(255,255,255,0.88), rgba(34,211,238,0.7), rgba(167,139,250,0.5), rgba(255,255,255,0.88), rgba(34,211,238,0.15))",
-                    backgroundSize: "300% 100%",
-                    animation: "border-sweep 2.5s linear infinite",
-                  }} />
-                  <button
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); handleStart(); }}
-                    className="font-mono font-bold transition-all duration-150"
-                    style={{ position: "relative", background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#67e8f9")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--cyan)")}
-                  >
-                    ▶ {t.terminal.run}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleStart(); }}
+                  className="run-btn font-mono font-bold transition-all duration-150"
+                  style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#67e8f9"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(34,211,238,0.45)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--cyan)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.2)"; }}
+                >
+                  ▶ {t.terminal.run}
+                </button>
               )}
               {running && (
                 <button

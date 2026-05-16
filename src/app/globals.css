@@ -124,6 +124,30 @@ body {
   100% { background-position: 200% 50%; }
 }
 
+.run-btn {
+  position: relative !important;
+  box-shadow: 0 0 10px rgba(34,211,238,0.2);
+}
+
+.run-btn::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(34,211,238,0.1),
+    rgba(255,255,255,0.88),
+    rgba(34,211,238,0.7),
+    rgba(167,139,250,0.55),
+    rgba(255,255,255,0.88),
+    rgba(34,211,238,0.1)
+  );
+  background-size: 300% 100%;
+  animation: border-sweep 2.5s linear infinite;
+  z-index: -1;
+}
+
 /* ── photo frame corner decorations ── */
 .photo-frame::before,
 .photo-frame::after {
