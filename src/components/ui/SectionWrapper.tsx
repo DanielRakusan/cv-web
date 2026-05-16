@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
 type Props = {
@@ -9,25 +9,42 @@ type Props = {
   className?: string;
 };
 
+// CSS IntersectionObserver — stejný efekt jako framer-motion whileInView,
+// ale bez závislosti → framer-motion zůstane jen v lazy-loaded sekcích.
 export function SectionWrapper({ id, children, className = "" }: Props) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("in-view");
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "-60px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <motion.section
+    <section
+      ref={ref}
       id={id}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className={`${className}`}
+      className={`section-fade ${className}`}
       style={{ padding: "5rem 5vw", maxWidth: 1060, margin: "0 auto" }}
     >
       {children}
-    </motion.section>
+    </section>
   );
 }
 
 type SectionHeaderProps = {
-  keyword: string;   // e.g. "// proč mě najmout"
-  heading: string;   // e.g. "Co dostanete"
+  keyword: string;
+  heading: string;
   sub?: string;
 };
 

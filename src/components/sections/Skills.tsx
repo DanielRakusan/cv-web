@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
@@ -10,10 +9,9 @@ type TierProps = {
   tags: readonly string[];
   accent: "cyan" | "green" | "dim";
   icon: string;
-  delay: number;
 };
 
-function Tier({ label, sub, tags, accent, icon, delay }: TierProps) {
+function Tier({ label, sub, tags, accent, icon }: TierProps) {
   const colors = {
     cyan: {
       border: "rgba(34,211,238,.25)",
@@ -45,11 +43,7 @@ function Tier({ label, sub, tags, accent, icon, delay }: TierProps) {
   }[accent];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    <div
       className="rounded-xl border p-5"
       style={{ borderColor: colors.border, background: colors.bg }}
     >
@@ -98,7 +92,7 @@ function Tier({ label, sub, tags, accent, icon, delay }: TierProps) {
           </span>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -113,30 +107,9 @@ export function Skills() {
       />
 
       <div className="flex flex-col gap-4">
-        <Tier
-          label={t.skills.active.label}
-          sub={t.skills.active.sub}
-          tags={t.skills.active.tags}
-          accent="green"
-          icon="✓"
-          delay={0}
-        />
-        <Tier
-          label={t.skills.growing.label}
-          sub={t.skills.growing.sub}
-          tags={t.skills.growing.tags}
-          accent="cyan"
-          icon="→"
-          delay={0.08}
-        />
-        <Tier
-          label={t.skills.base.label}
-          sub={t.skills.base.sub}
-          tags={t.skills.base.tags}
-          accent="dim"
-          icon="⚙"
-          delay={0.16}
-        />
+        <Tier label={t.skills.active.label}  sub={t.skills.active.sub}  tags={t.skills.active.tags}  accent="green" icon="✓" />
+        <Tier label={t.skills.growing.label} sub={t.skills.growing.sub} tags={t.skills.growing.tags} accent="cyan"  icon="→" />
+        <Tier label={t.skills.base.label}    sub={t.skills.base.sub}    tags={t.skills.base.tags}    accent="dim"   icon="⚙" />
       </div>
     </SectionWrapper>
   );

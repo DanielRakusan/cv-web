@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import { useContent } from "@/hooks/useContent";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTerminal } from "@/hooks/useTerminal";
@@ -135,52 +133,62 @@ const README_LANG_MAP: Record<string, "cz" | "en"> = {
   "readme.en.md": "en",
 };
 
+// ── Lightweight markdown parser — nahrazuje react-markdown (~50 KB) ──────────
+
+function parseInline(text: string, onLangSwitch: (lang: "cz" | "en") => void): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  const re = /(\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\))/g;
+  let last = 0, m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    if (m[2])      parts.push(<strong key={m.index}>{m[2]}</strong>);
+    else if (m[3]) parts.push(<em key={m.index}>{m[3]}</em>);
+    else if (m[4]) parts.push(<code key={m.index} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 3, padding: "1px 5px", fontSize: ".78rem", color: "#22d3ee" }}>{m[4]}</code>);
+    else if (m[5] && m[6]) {
+      const targetLang = README_LANG_MAP[m[6].toLowerCase()];
+      parts.push(targetLang
+        ? <a key={m.index} href="#" onClick={(e) => { e.preventDefault(); onLangSwitch(targetLang); }} style={{ color: "#60a5fa", textDecoration: "underline", cursor: "pointer" }}>{m[5]}</a>
+        : <a key={m.index} href={m[6]} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{m[5]}</a>
+      );
+    }
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts.length === 1 ? parts[0] : <>{parts}</>;
+}
+
+function SimpleMarkdown({ content, onLangSwitch }: { content: string; onLangSwitch: (lang: "cz" | "en") => void }) {
+  const nodes: React.ReactNode[] = [];
+  const lines = content.split("\n");
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.startsWith("```")) {
+      let code = ""; i++;
+      while (i < lines.length && !lines[i].startsWith("```")) { code += lines[i] + "\n"; i++; }
+      nodes.push(<code key={i} style={{ display: "block", background: "rgba(255,255,255,0.06)", borderRadius: 4, padding: ".4rem .6rem", fontSize: ".75rem", color: "#a78bfa", overflowX: "auto", whiteSpace: "pre", marginBottom: ".4rem" }}>{code}</code>);
+      i++; continue;
+    }
+    if (line.startsWith("### ")) { nodes.push(<h3 key={i} style={{ color: "rgba(255,255,255,0.85)", fontSize: ".82rem", fontWeight: 600, marginTop: ".8rem" }}>{parseInline(line.slice(4), onLangSwitch)}</h3>); i++; continue; }
+    if (line.startsWith("## "))  { nodes.push(<h2 key={i} style={{ color: "#4ade80", fontSize: ".9rem", fontWeight: 700, marginBottom: ".4rem", marginTop: "1rem" }}>{parseInline(line.slice(3), onLangSwitch)}</h2>); i++; continue; }
+    if (line.startsWith("# "))   { nodes.push(<h1 key={i} style={{ color: "#22d3ee", fontSize: "1rem", fontWeight: 700, marginBottom: ".5rem" }}>{parseInline(line.slice(2), onLangSwitch)}</h1>); i++; continue; }
+    if (/^-{3,}$/.test(line))    { nodes.push(<hr key={i} style={{ borderColor: "rgba(255,255,255,0.1)", margin: ".8rem 0" }} />); i++; continue; }
+    if (/^[-*] /.test(line)) {
+      const items: React.ReactNode[] = [];
+      while (i < lines.length && /^[-*] /.test(lines[i])) { items.push(<li key={i} style={{ marginBottom: ".2rem" }}>{parseInline(lines[i].slice(2), onLangSwitch)}</li>); i++; }
+      nodes.push(<ul key={`ul${i}`} style={{ paddingLeft: "1.2rem", margin: ".3rem 0" }}>{items}</ul>); continue;
+    }
+    if (line.trim() === "") { i++; continue; }
+    nodes.push(<p key={i} style={{ margin: ".4rem 0" }}>{parseInline(line, onLangSwitch)}</p>);
+    i++;
+  }
+  return <>{nodes}</>;
+}
+
 function ReadmeView({ content, onLangSwitch }: { content: string; onLangSwitch: (lang: "cz" | "en") => void }) {
   return (
-    <div
-      className="overflow-y-auto prose prose-invert prose-sm max-w-none"
-      style={{
-        maxHeight: 280,
-        padding: "1rem",
-        fontSize: ".82rem",
-        lineHeight: 1.7,
-        color: "rgba(255,255,255,0.75)",
-      }}
-    >
-      <ReactMarkdown
-        components={{
-          h1: ({ children }) => <h1 style={{ color: "#22d3ee", fontSize: "1rem", fontWeight: 700, marginBottom: ".5rem" }}>{children}</h1>,
-          h2: ({ children }) => <h2 style={{ color: "#4ade80", fontSize: ".9rem", fontWeight: 700, marginBottom: ".4rem", marginTop: "1rem" }}>{children}</h2>,
-          h3: ({ children }) => <h3 style={{ color: "rgba(255,255,255,0.85)", fontSize: ".82rem", fontWeight: 600, marginTop: ".8rem" }}>{children}</h3>,
-          code: ({ children, className }) => {
-            const isBlock = className?.includes("language-");
-            return isBlock
-              ? <code className={className} style={{ display: "block", background: "rgba(255,255,255,0.06)", borderRadius: 4, padding: ".4rem .6rem", fontSize: ".75rem", color: "#a78bfa", overflowX: "auto" }}>{children}</code>
-              : <code style={{ background: "rgba(255,255,255,0.08)", borderRadius: 3, padding: "1px 5px", fontSize: ".78rem", color: "#22d3ee" }}>{children}</code>;
-          },
-          a: ({ href, children }) => {
-            const targetLang = href ? README_LANG_MAP[href.toLowerCase()] : undefined;
-            if (targetLang) {
-              return (
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); onLangSwitch(targetLang); }}
-                  style={{ color: "#60a5fa", textDecoration: "underline", cursor: "pointer" }}
-                >
-                  {children}
-                </a>
-              );
-            }
-            return <a href={href} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{children}</a>;
-          },
-          ul: ({ children }) => <ul style={{ paddingLeft: "1.2rem", margin: ".3rem 0" }}>{children}</ul>,
-          li: ({ children }) => <li style={{ marginBottom: ".2rem" }}>{children}</li>,
-          p: ({ children }) => <p style={{ margin: ".4rem 0" }}>{children}</p>,
-          hr: () => <hr style={{ borderColor: "rgba(255,255,255,0.1)", margin: ".8rem 0" }} />,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
+    <div className="overflow-y-auto" style={{ maxHeight: 280, padding: "1rem", fontSize: ".82rem", lineHeight: 1.7, color: "rgba(255,255,255,0.75)" }}>
+      <SimpleMarkdown content={content} onLangSwitch={onLangSwitch} />
     </div>
   );
 }
@@ -359,13 +367,7 @@ const activeProject = pendingProject;
         {t.terminal.description}
       </p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="flex flex-col gap-3"
-      >
+      <div className="flex flex-col gap-3">
         {/* ── Project selector (cards + inline info panel) ── */}
         {backendConfigured && (
           <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--b1)", background: "var(--s1)" }}>
@@ -598,7 +600,7 @@ const activeProject = pendingProject;
             />
           )}
         </div>
-      </motion.div>
+      </div>
     </SectionWrapper>
   );
 }

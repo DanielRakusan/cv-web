@@ -1,9 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { siteConfig } from "@/config/site";
-import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 
 export function Contact() {
   const t = useContent();
@@ -43,12 +42,7 @@ export function Contact() {
   return (
     <SectionWrapper id="kontakt">
       <div className="text-center max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <div>
           <div
             className="text-xs font-bold tracking-widest uppercase mb-3"
             style={{ color: "var(--accent)" }}
@@ -70,16 +64,10 @@ export function Contact() {
           >
             {t.contact.description}
           </p>
-        </motion.div>
+        </div>
 
         {/* Info chips */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-3 mb-10"
-        >
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
           <span
             className="flex items-center gap-2 px-4 py-2 rounded-full text-sm border"
             style={{ borderColor: "rgba(34,197,94,0.3)", background: "rgba(34,197,94,0.06)", color: "rgba(134,239,172,0.9)" }}
@@ -93,16 +81,10 @@ export function Contact() {
           >
             📍 {t.contact.location}
           </span>
-        </motion.div>
+        </div>
 
         {/* CTA tlačítka */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-3"
-        >
+        <div className="flex flex-wrap justify-center gap-3">
           {links.map((link, i) => (
             <a
               key={i}
@@ -146,7 +128,7 @@ export function Contact() {
               {link.label}
             </a>
           ))}
-        </motion.div>
+        </div>
       </div>
     </SectionWrapper>
   );

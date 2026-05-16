@@ -163,6 +163,18 @@ body {
   50%       { transform: translateY(4px); }
 }
 
+/* ── Section scroll reveal (replaces framer-motion whileInView) ── */
+.section-fade {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.section-fade.in-view {
+  opacity: 1;
+  transform: none;
+}
+
 /* ── photo frame corner decorations ── */
 .photo-frame::before,
 .photo-frame::after {

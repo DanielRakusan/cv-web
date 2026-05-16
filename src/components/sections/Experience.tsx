@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
@@ -21,14 +20,7 @@ export function Experience() {
 
         <div className="space-y-10">
           {t.experience.items.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: i * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="sm:pl-14 relative"
-            >
+            <div key={i} className="sm:pl-14 relative">
               {/* Dot na timeline */}
               <div
                 className="absolute left-2 top-3 w-5 h-5 rounded-full border-2 hidden sm:flex items-center justify-center"
@@ -115,7 +107,7 @@ export function Experience() {
                   ))}
                 </ul>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

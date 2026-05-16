@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
@@ -15,13 +14,7 @@ export function WhyMe() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {t.whyMe.cards.map((card, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div key={i}>
             <div
               className="h-full p-6 rounded-2xl border transition-all duration-200 group cursor-default"
               style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -51,19 +44,15 @@ export function WhyMe() {
                 {card.body}
               </p>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {/* Highlights grid */}
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {t.highlights.items.map((item, i) => (
-          <motion.div
+          <div
             key={i}
-            initial={{ opacity: 0, x: -12 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: i * 0.06, duration: 0.45, ease: "easeOut" }}
             className="flex items-start gap-3 py-3 px-4 rounded-xl border transition-all duration-150"
             style={{ borderColor: "var(--border)", background: "var(--surface)" }}
             onMouseEnter={(e) => {
@@ -84,7 +73,7 @@ export function WhyMe() {
             <span className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
               {item}
             </span>
-          </motion.div>
+          </div>
         ))}
       </div>
     </SectionWrapper>

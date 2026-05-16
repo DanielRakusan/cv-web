@@ -1,31 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Dark background matching site palette -->
-  <rect width="32" height="32" rx="8" fill="#02020a"/>
-
-  <!-- Snake head: Python blue -->
-  <ellipse cx="16" cy="17" rx="12" ry="11" fill="#3776AB"/>
-
-  <!-- Belly/chin: Python yellow — signals Python brand, not danger -->
-  <ellipse cx="16" cy="23.5" rx="7.5" ry="5" fill="#FFD43B"/>
-
-  <!-- Left eye (white sclera) -->
-  <circle cx="11.5" cy="13.5" r="3.3" fill="#fff"/>
-  <!-- Left pupil -->
-  <circle cx="12" cy="14" r="2" fill="#040814"/>
-  <!-- Left shine — makes it look friendly/alive -->
-  <circle cx="12.9" cy="12.9" r="0.85" fill="#fff"/>
-
-  <!-- Right eye (white sclera) -->
-  <circle cx="20.5" cy="13.5" r="3.3" fill="#fff"/>
-  <!-- Right pupil -->
-  <circle cx="21" cy="14" r="2" fill="#040814"/>
-  <!-- Right shine -->
-  <circle cx="21.9" cy="12.9" r="0.85" fill="#fff"/>
-
-  <!-- Subtle nostril dots -->
-  <circle cx="14.5" cy="19.8" r="0.75" fill="#2a6090" opacity="0.6"/>
-  <circle cx="17.5" cy="19.8" r="0.75" fill="#2a6090" opacity="0.6"/>
-
-  <!-- Friendly smile in the yellow area -->
-  <path d="M12.5 22.5 Q16 25 19.5 22.5" stroke="#2a6090" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="7" fill="#02020a"/>
+  <!-- Terminal window -->
+  <rect x="4" y="5" width="24" height="22" rx="4" fill="#0d1117" stroke="rgba(74,222,128,0.3)" stroke-width="1"/>
+  <!-- Title bar -->
+  <rect x="4" y="5" width="24" height="6" rx="4" fill="rgba(74,222,128,0.08)"/>
+  <!-- Traffic lights -->
+  <circle cx="9"  cy="8" r="1.2" fill="rgba(255,100,100,0.7)"/>
+  <circle cx="13" cy="8" r="1.2" fill="rgba(255,200,50,0.7)"/>
+  <circle cx="17" cy="8" r="1.2" fill="rgba(74,222,128,0.7)"/>
+  <!-- > prompt -->
+  <path d="M7 16 L12 19.5 L7 23" stroke="#4ade80" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- _ cursor -->
+  <rect x="14" y="21.5" width="6" height="2.2" rx="1" fill="#22d3ee"/>
 </svg>

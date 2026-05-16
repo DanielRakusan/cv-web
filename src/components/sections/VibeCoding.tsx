@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
@@ -16,11 +15,7 @@ export function VibeCoding() {
       </p>
 
       {/* "Built with vibe coding" callout */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      <div
         className="mb-10 rounded-2xl border p-6"
         style={{
           borderColor: "rgba(255,255,255,0.12)",
@@ -44,17 +39,13 @@ export function VibeCoding() {
             </p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Skill cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {t.vibeSection.skills.map((item, i) => (
-          <motion.div
+          <div
             key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="rounded-2xl border p-5 transition-all duration-200"
             style={{
               borderColor: "var(--border)",
@@ -77,7 +68,7 @@ export function VibeCoding() {
             <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
               {item.body}
             </p>
-          </motion.div>
+          </div>
         ))}
       </div>
     </SectionWrapper>
