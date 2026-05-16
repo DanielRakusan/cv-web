@@ -130,7 +130,12 @@ function FileTree({ items }: { items: { path: string; type: string }[] }) {
 
 // ── README renderer ───────────────────────────────────────────────────────────
 
-function ReadmeView({ content }: { content: string }) {
+const README_LANG_MAP: Record<string, "cz" | "en"> = {
+  "readme.md": "cz",
+  "readme.en.md": "en",
+};
+
+function ReadmeView({ content, onLangSwitch }: { content: string; onLangSwitch: (lang: "cz" | "en") => void }) {
   return (
     <div
       className="overflow-y-auto prose prose-invert prose-sm max-w-none"
@@ -153,7 +158,21 @@ function ReadmeView({ content }: { content: string }) {
               ? <code className={className} style={{ display: "block", background: "rgba(255,255,255,0.06)", borderRadius: 4, padding: ".4rem .6rem", fontSize: ".75rem", color: "#a78bfa", overflowX: "auto" }}>{children}</code>
               : <code style={{ background: "rgba(255,255,255,0.08)", borderRadius: 3, padding: "1px 5px", fontSize: ".78rem", color: "#22d3ee" }}>{children}</code>;
           },
-          a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{children}</a>,
+          a: ({ href, children }) => {
+            const targetLang = href ? README_LANG_MAP[href.toLowerCase()] : undefined;
+            if (targetLang) {
+              return (
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); onLangSwitch(targetLang); }}
+                  style={{ color: "#60a5fa", textDecoration: "underline", cursor: "pointer" }}
+                >
+                  {children}
+                </a>
+              );
+            }
+            return <a href={href} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{children}</a>;
+          },
           ul: ({ children }) => <ul style={{ paddingLeft: "1.2rem", margin: ".3rem 0" }}>{children}</ul>,
           li: ({ children }) => <li style={{ marginBottom: ".2rem" }}>{children}</li>,
           p: ({ children }) => <p style={{ margin: ".4rem 0" }}>{children}</p>,
@@ -212,7 +231,7 @@ function WakingIndicator() {
 
 export function Terminal() {
   const t = useContent();
-  const { lang } = useLanguage();
+  const { lang, setLang } = useLanguage();
   const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
 
   const [liveInput, setLiveInput] = useState("");
@@ -423,7 +442,7 @@ const activeProject = pendingProject;
                     </div>
                   ) : activeTab === "readme" ? (
                     readme ? (
-                      <ReadmeView content={readme} />
+                      <ReadmeView content={readme} onLangSwitch={setLang} />
                     ) : (
                       <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>README nenalezeno.</p>
                     )
