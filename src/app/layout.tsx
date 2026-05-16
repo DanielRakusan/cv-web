@@ -97,25 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="cs" className={`${spaceGrotesk.variable} ${firaCode.variable}`}>
       <body>
         {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
-        <a
-          href="#oMne"
-          className="font-mono"
-          style={{
-            position: "absolute",
-            top: -999,
-            left: 8,
-            zIndex: 9999,
-            padding: "4px 12px",
-            background: "var(--cyan)",
-            color: "#02020a",
-            fontSize: ".75rem",
-            borderRadius: 4,
-            textDecoration: "none",
-            fontWeight: 700,
-          }}
-          onFocus={(e) => (e.currentTarget.style.top = "8px")}
-          onBlur={(e) => (e.currentTarget.style.top = "-999px")}
-        >
+        <a href="#oMne" className="skip-to-main">
           Přeskočit na obsah
         </a>
 
