@@ -499,10 +499,10 @@ const activeProject = pendingProject;
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); handleStart(); }}
-                  className="run-btn font-mono font-bold transition-all duration-150"
-                  style={{ background: "var(--cyan)", color: "#02020a", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#67e8f9"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(34,211,238,0.45)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--cyan)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.2)"; }}
+                  className="run-btn font-mono font-bold"
+                  style={{ background: "#030f06", color: "#4ade80", border: "1.5px solid rgba(74,222,128,.25)", fontSize: ".63rem", letterSpacing: ".04em", padding: "2px 10px", borderRadius: 4 }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 22px 4px rgba(74,222,128,.55)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.5)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.25)"; }}
                 >
                   ▶ {t.terminal.run}
                 </button>
