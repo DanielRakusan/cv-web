@@ -100,7 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Preconnect — připraví TCP spojení dříve, než je komponenta potřebuje */}
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
-        <link rel="preconnect" href="https://cv-backend-92jb.onrender.com" />
+        {/* Render backend NENÍ preconnect — free tier spí, timeout by škodil skóre */}
       </head>
       <body>
         {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
