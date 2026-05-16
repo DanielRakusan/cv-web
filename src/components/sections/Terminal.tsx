@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { useContent } from "@/hooks/useContent";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 import { siteConfig } from "@/config/site";
@@ -211,6 +212,7 @@ function WakingIndicator() {
 
 export function Terminal() {
   const t = useContent();
+  const { lang } = useLanguage();
   const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
 
   const [liveInput, setLiveInput] = useState("");
@@ -289,13 +291,19 @@ export function Terminal() {
     setReadme(null);
     setTree([]);
     const [rm, tr] = await Promise.all([
-      fetchProjectReadme(project.id),
+      fetchProjectReadme(project.id, lang),
       fetchProjectTree(project.id),
     ]);
     setReadme(rm);
     setTree(tr);
     setLoadingInfo(false);
-  }, [running]);
+  }, [running, lang]);
+
+  // Při přepnutí jazyka znovu načti README pro aktuálně vybraný projekt
+  useEffect(() => {
+    if (!pendingProject || running) return;
+    fetchProjectReadme(pendingProject.id, lang).then(setReadme);
+  }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Tlačítko Start: skutečně spustí
   const handleStart = useCallback(() => {

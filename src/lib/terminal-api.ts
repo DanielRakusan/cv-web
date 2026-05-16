@@ -36,10 +36,10 @@ export async function fetchProjects(): Promise<{ id: string; name: string; descr
   }
 }
 
-export async function fetchProjectReadme(id: string): Promise<string | null> {
+export async function fetchProjectReadme(id: string, lang: string = "cz"): Promise<string | null> {
   if (!siteConfig.renderApiUrl) return null;
   try {
-    const res = await fetch(`${siteConfig.renderApiUrl}/projects/${id}/readme`, { cache: "no-store" });
+    const res = await fetch(`${siteConfig.renderApiUrl}/projects/${id}/readme?lang=${lang}`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     return data.content ?? null;
