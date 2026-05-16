@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
+import { VisitPing } from "@/components/layout/VisitPing";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -33,7 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="cs" className={`${spaceGrotesk.variable} ${firaCode.variable}`}>
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <VisitPing />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
