@@ -1,22 +1,8 @@
 "use client";
 
-/**
- * BehaviorTracker — sleduje chování návštěvníka a posílá signály na backend.
- *
- * Sleduje:
- *  1. Pohyb myší           → human_signal  (robot vs člověk)
- *  2. Rychlost scrollu     → scroll_speed  (bot = desetitisíce px/s)
- *  3. Hloubku scrollu      → scroll        (jak daleko dočetl)
- *  4. Sekce v viewportu    → section_view  (která sekce, jak dlouho)
- *  5. Kliky (všechna tlač.)→ click         (text, tag, href)
- *  6. Čas na stránce       → page_time     (celková délka návštěvy)
- *
- * Terminal run se trackuje přímo v useTerminal.ts.
- * CTA kliky (email/LinkedIn/GitHub) se trackují přímo v Contact.tsx.
- */
-
 import { useEffect, useRef } from "react";
 import { trackEvent } from "@/lib/track";
+import { siteConfig } from "@/config/site";
 
 // Sekce webu — sledujeme dwell time pro každou
 const SECTION_IDS = [
@@ -40,6 +26,18 @@ export function BehaviorTracker() {
   const sectionEnter   = useRef<Record<string, number>>({});
 
   useEffect(() => {
+    // ── 0. Ověř dosažitelnost backendu a loguj výsledek ─────────────────────
+    if (siteConfig.renderApiUrl) {
+      fetch(`${siteConfig.renderApiUrl}/track-test`, { cache: "no-store" })
+        .then(r => {
+          if (r.ok) console.log("[BehaviorTracker] ✓ backend dosažitelný, tracking aktivní");
+          else      console.warn("[BehaviorTracker] backend odpověděl HTTP", r.status);
+        })
+        .catch(err => console.error("[BehaviorTracker] backend nedosažitelný:", err?.message ?? err));
+    } else {
+      console.warn("[BehaviorTracker] NEXT_PUBLIC_RENDER_API_URL není nastaveno — tracking vypnutý");
+    }
+
     // ── 1. Mouse movement → human_signal ────────────────────────────────────
     const onMouseMove = () => {
       if (mouseSent.current) return;

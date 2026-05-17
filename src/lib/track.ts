@@ -1,6 +1,17 @@
 import { siteConfig } from "@/config/site";
 
-/** Vrátí visit_id z localStorage (stejný jako VisitPing). */
+export type TrackEventType =
+  | "human_signal"
+  | "scroll"
+  | "scroll_speed"
+  | "page_time"
+  | "section_view"
+  | "click"
+  | "cta_click"
+  | "terminal_run";
+
+const DEBUG = process.env.NODE_ENV === "development";
+
 function getVid(): string {
   try {
     const key = "dr_vid";
@@ -17,37 +28,43 @@ function getVid(): string {
 
 /**
  * Pošle tracking event na backend.
- * Používá sendBeacon (na pagehide) nebo fetch (jinak).
- * Tiché selhání — nikdy nevyhazuje výjimku.
+ *
+ * Používá fetch() s keepalive:true místo sendBeacon — sendBeacon s Blob(application/json)
+ * nefunguje cross-origin (CORS preflight selže tiše). fetch+keepalive je ekvivalentní,
+ * funguje i při pagehide a správně posílá Content-Type: application/json.
+ *
+ * Chyby loguje do konzole, nikdy nevyhazuje výjimku.
  */
-export type TrackEventType =
-  | "human_signal"
-  | "scroll"
-  | "scroll_speed"
-  | "page_time"
-  | "section_view"
-  | "click"
-  | "cta_click"
-  | "terminal_run";
-
 export function trackEvent(
   type: TrackEventType,
   data?: Record<string, string | number | boolean>
 ) {
-  if (!siteConfig.renderApiUrl) return;
-  try {
-    const payload = JSON.stringify({ vid: getVid(), type, data: data ?? {} });
-    const url = `${siteConfig.renderApiUrl}/track`;
-    if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-      navigator.sendBeacon(url, new Blob([payload], { type: "application/json" }));
-    } else {
-      fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: payload,
-      }).catch(() => {});
-    }
-  } catch {
-    /* ignore */
+  if (typeof window === "undefined") return;
+  if (!siteConfig.renderApiUrl) {
+    if (DEBUG) console.warn("[track] renderApiUrl není nastaveno");
+    return;
   }
+
+  const payload = { vid: getVid(), type, data: data ?? {} };
+  if (DEBUG) console.log("[track] →", type, payload.data);
+
+  const url = `${siteConfig.renderApiUrl}/track`;
+
+  // keepalive: true = funguje i při pagehide (ekvivalent sendBeacon, ale s JSON)
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    keepalive: true,
+  }).then((res) => {
+    if (!res.ok && DEBUG) {
+      console.warn(`[track] server odmítl ${type}: HTTP ${res.status}`);
+    } else if (DEBUG) {
+      console.log(`[track] ✓ ${type}`);
+    }
+  }).catch((err) => {
+    // Nezobrazovat uživateli, jen logovat pro debug
+    if (DEBUG) console.error(`[track] fetch chyba ${type}:`, err);
+    else        console.debug(`[track] ${type} failed:`, err?.message ?? err);
+  });
 }
