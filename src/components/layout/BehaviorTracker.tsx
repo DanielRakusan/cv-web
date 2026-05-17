@@ -26,25 +26,23 @@ export function BehaviorTracker() {
   const sectionEnter   = useRef<Record<string, number>>({});
 
   useEffect(() => {
-    // ── 0. Ověř dosažitelnost backendu a loguj výsledek ─────────────────────
-    if (siteConfig.renderApiUrl) {
-      fetch(`${siteConfig.renderApiUrl}/track-test`, { cache: "no-store" })
-        .then(r => {
-          if (r.ok) console.log("[BehaviorTracker] ✓ backend dosažitelný, tracking aktivní");
-          else      console.warn("[BehaviorTracker] backend odpověděl HTTP", r.status);
-        })
-        .catch(err => console.error("[BehaviorTracker] backend nedosažitelný:", err?.message ?? err));
-    } else {
+    // ── 0. page_load — odešle se ihned, dokazuje že tracking funguje ─────────
+    if (!siteConfig.renderApiUrl) {
       console.warn("[BehaviorTracker] NEXT_PUBLIC_RENDER_API_URL není nastaveno — tracking vypnutý");
+      return;
     }
+    console.log("[BehaviorTracker] ✓ aktivní, backend:", siteConfig.renderApiUrl);
+    trackEvent("page_load" as never, { path: window.location.pathname });
 
-    // ── 1. Mouse movement → human_signal ────────────────────────────────────
-    const onMouseMove = () => {
+    // ── 1. Mouse movement / touch → human_signal ────────────────────────────
+    const sendHuman = () => {
       if (mouseSent.current) return;
       mouseSent.current = true;
       trackEvent("human_signal", { mouse: true });
-      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mousemove", sendHuman);
+      document.removeEventListener("touchstart", sendHuman);
     };
+    const onMouseMove = sendHuman;
 
     // ── 2. Scroll speed + depth ──────────────────────────────────────────────
     const onScroll = () => {
@@ -146,6 +144,7 @@ export function BehaviorTracker() {
 
     // ── Registrace event listenerů ───────────────────────────────────────────
     document.addEventListener("mousemove",        onMouseMove,   { passive: true });
+    document.addEventListener("touchstart",       sendHuman,     { passive: true });
     window.addEventListener  ("scroll",           onScroll,      { passive: true });
     document.addEventListener("click",            onDocClick,    { capture: true });
     document.addEventListener("visibilitychange", onVisibility);
@@ -153,6 +152,7 @@ export function BehaviorTracker() {
 
     return () => {
       document.removeEventListener("mousemove",        onMouseMove);
+      document.removeEventListener("touchstart",       sendHuman);
       window.removeEventListener  ("scroll",           onScroll);
       document.removeEventListener("click",            onDocClick, { capture: true });
       document.removeEventListener("visibilitychange", onVisibility);

@@ -1,24 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 
 /**
- * Next.js Middleware — běží na serveru (Vercel Edge) PŘED React hydratací.
- * Zachytí KAŽDÝ request, včetně crawlerů které nespustí JS.
+ * Next.js Middleware — Vercel Edge, běží PŘED React hydratací.
+ * Zachytí requesty crawlerů, kteří nespustí JS a nikdy nezavolají /health.
  *
- * Posílá /crawl-ping na backend jen pro HTML page requesty (ne assety).
- * Crawleři (GPTBot, Googlebot, ...) tak budou viditelní v admin analytice.
+ * after() garantuje dokončení fetch i po vrácení response (Next.js 15+).
  */
 
 const RENDER_API = process.env.NEXT_PUBLIC_RENDER_API_URL ?? "";
 
-// Crawler UA patterns (substring match, lowercase)
 const CRAWLER_PATTERNS = [
   "googlebot", "bingbot", "slurp", "duckduckbot", "baiduspider",
   "yandexbot", "gptbot", "chatgpt-user", "openai", "anthropic",
   "claudebot", "perplexitybot", "meta-externalagent",
-  "ahrefsbot", "semrushbot", "mj12bot", "dotbot", "rogerbot",
-  "linkdexbot", "ia_archiver", "archive.org",
+  "ahrefsbot", "semrushbot", "mj12bot", "dotbot",
   "facebookexternalhit", "twitterbot", "linkedinbot",
   "whatsapp", "telegrambot", "slackbot", "discordbot",
+  "ia_archiver", "archive.org_bot",
   "bot", "crawler", "spider",
 ];
 
@@ -30,7 +28,6 @@ function detectCrawler(ua: string): string | null {
   return null;
 }
 
-// Extrahuje IP z Vercel/proxy headers
 function getIp(req: NextRequest): string {
   return (
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -42,11 +39,11 @@ function getIp(req: NextRequest): string {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Ignoruj assety, API routes, _next internals
+  // Ignoruj assety, API routes, Next.js internals
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
-    pathname.match(/\.(ico|png|jpg|jpeg|svg|webp|pdf|woff2?|css|js|map)$/)
+    /\.(ico|png|jpg|jpeg|svg|webp|pdf|woff2?|css|js|map|txt|xml)$/.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -54,30 +51,33 @@ export function middleware(req: NextRequest) {
   const ua = req.headers.get("user-agent") ?? "";
   const crawlerMatch = detectCrawler(ua);
 
-  // Posli asynchronní ping backendu (fire-and-forget, nezdržuje response)
-  if (RENDER_API && (crawlerMatch || ua === "")) {
+  if (RENDER_API && crawlerMatch) {
     const ip      = getIp(req);
     const referer = req.headers.get("referer") ?? "";
 
-    // waitUntil není v middleware API — použijeme fetch bez await
-    // Middleware musí okamžitě vrátit response, proto tiché odeslání
-    fetch(`${RENDER_API}/crawl-ping`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ip,
-        ua: ua.slice(0, 200),
-        path: pathname,
-        crawler: crawlerMatch ?? "unknown-bot",
-        referer: referer.slice(0, 200),
-      }),
-    }).catch(() => {});
+    // after() = garantovaně doběhne i po odeslání response (Next.js 15+)
+    after(async () => {
+      try {
+        await fetch(`${RENDER_API}/crawl-ping`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ip,
+            ua:      ua.slice(0, 200),
+            path:    pathname,
+            crawler: crawlerMatch,
+            referer: referer.slice(0, 200),
+          }),
+        });
+      } catch {
+        // Tiché selhání — middleware nesmí crashnout kvůli analytics
+      }
+    });
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  // Spouštět na všech cestách kromě statických souborů
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
