@@ -20,8 +20,18 @@ function getVid(): string {
  * Používá sendBeacon (na pagehide) nebo fetch (jinak).
  * Tiché selhání — nikdy nevyhazuje výjimku.
  */
+export type TrackEventType =
+  | "human_signal"
+  | "scroll"
+  | "scroll_speed"
+  | "page_time"
+  | "section_view"
+  | "click"
+  | "cta_click"
+  | "terminal_run";
+
 export function trackEvent(
-  type: "human_signal" | "scroll" | "page_time" | "cta_click",
+  type: TrackEventType,
   data?: Record<string, string | number | boolean>
 ) {
   if (!siteConfig.renderApiUrl) return;

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { pingBackend, fetchProjects, createTerminalSocket } from "@/lib/terminal-api";
+import { trackEvent } from "@/lib/track";
 import { siteConfig } from "@/config/site";
 
 export type BackendStatus = "idle" | "waking" | "ready" | "error";
@@ -72,6 +73,7 @@ export function useTerminal() {
     setRunning(true);
     setSelectedProject(project);
     appendOutput(`\x1b[2m$ run ${project.id}\x1b[0m\n`);
+    trackEvent("terminal_run", { project: project.id });
 
     const ws = createTerminalSocket(
       project.id,
