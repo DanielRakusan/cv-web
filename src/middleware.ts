@@ -22,6 +22,8 @@ const CRAWLER_PATTERNS = [
   // Social previews
   "facebookexternalhit", "twitterbot", "linkedinbot",
   "whatsapp", "telegrambot", "slackbot", "discordbot",
+  // Hosting / infra
+  "vercel", "netlify", "render",
   // Archives
   "ia_archiver", "archive.org_bot",
   // Generic catch-all
