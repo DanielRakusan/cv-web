@@ -77,11 +77,6 @@ export function middleware(req: NextRequest) {
   const ua = req.headers.get("user-agent") ?? "";
   const crawlerMatch = detectCrawler(ua);
 
-  // DEBUG — dočasné logování všech UA pro diagnostiku Groku
-  if (pathname === "/" || pathname === "") {
-    console.log(`[mw] ua="${ua}" crawler=${crawlerMatch ?? "none"} browser=${isLikelyBrowser(ua)}`);
-  }
-
   // Ping pošleme pokud:
   //  a) UA odpovídá známému botu/crawleru, NEBO
   //  b) UA nevypadá jako normální prohlížeč (prázdné, curl, neznámý bot…)
