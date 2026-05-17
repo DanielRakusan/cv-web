@@ -36,6 +36,20 @@ function detectCrawler(ua: string): string | null {
   return null;
 }
 
+/**
+ * Vrátí true pokud UA vypadá jako normální prohlížeč (Chrome/Firefox/Safari/Edge).
+ * Takoví návštěvníci spustí JS a zavolají /health sami — ping nepotřebují.
+ * Cokoliv jiného (prázdné UA, curl, wget, neznámé boty…) ping dostane.
+ */
+function isLikelyBrowser(ua: string): boolean {
+  if (!ua) return false;
+  const u = ua.toLowerCase();
+  return u.includes("mozilla") && (
+    u.includes("chrome") || u.includes("firefox") ||
+    u.includes("safari") || u.includes("webkit") || u.includes("edg")
+  );
+}
+
 function getIp(req: NextRequest): string {
   return (
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -59,7 +73,10 @@ export function middleware(req: NextRequest) {
   const ua = req.headers.get("user-agent") ?? "";
   const crawlerMatch = detectCrawler(ua);
 
-  if (RENDER_API && crawlerMatch) {
+  // Ping pošleme pokud:
+  //  a) UA odpovídá známému botu/crawleru, NEBO
+  //  b) UA nevypadá jako normální prohlížeč (prázdné, curl, neznámý bot…)
+  if (RENDER_API && (crawlerMatch || !isLikelyBrowser(ua))) {
     const ip      = getIp(req);
     const referer = req.headers.get("referer") ?? "";
 
@@ -73,7 +90,7 @@ export function middleware(req: NextRequest) {
             ip,
             ua:      ua.slice(0, 200),
             path:    pathname,
-            crawler: crawlerMatch,
+            crawler: crawlerMatch ?? "unknown",
             referer: referer.slice(0, 200),
           }),
         });
