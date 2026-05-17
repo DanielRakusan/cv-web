@@ -10,13 +10,21 @@ import { NextRequest, NextResponse, after } from "next/server";
 const RENDER_API = process.env.NEXT_PUBLIC_RENDER_API_URL ?? "";
 
 const CRAWLER_PATTERNS = [
-  "googlebot", "bingbot", "slurp", "duckduckbot", "baiduspider",
-  "yandexbot", "gptbot", "chatgpt-user", "openai", "anthropic",
-  "claudebot", "perplexitybot", "meta-externalagent",
-  "ahrefsbot", "semrushbot", "mj12bot", "dotbot",
+  // Search engines
+  "googlebot", "bingbot", "slurp", "duckduckbot", "baiduspider", "yandexbot",
+  "applebot", "amazonbot", "bytespider",
+  // AI crawlers
+  "gptbot", "chatgpt-user", "openai", "anthropic", "claudebot",
+  "perplexitybot", "grok", "x.ai",
+  "cohere-ai", "mistral", "gemini",
+  // SEO tools
+  "meta-externalagent", "ahrefsbot", "semrushbot", "mj12bot", "dotbot",
+  // Social previews
   "facebookexternalhit", "twitterbot", "linkedinbot",
   "whatsapp", "telegrambot", "slackbot", "discordbot",
+  // Archives
   "ia_archiver", "archive.org_bot",
+  // Generic catch-all
   "bot", "crawler", "spider",
 ];
 
