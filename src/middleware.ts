@@ -41,11 +41,13 @@ function detectCrawler(ua: string): string | null {
 /**
  * Vrátí true pokud UA vypadá jako normální prohlížeč (Chrome/Firefox/Safari/Edge).
  * Takoví návštěvníci spustí JS a zavolají /health sami — ping nepotřebují.
- * Cokoliv jiného (prázdné UA, curl, wget, neznámé boty…) ping dostane.
+ * Cokoliv jiného (prázdné UA, curl, headless, neznámé boty…) ping dostane.
  */
 function isLikelyBrowser(ua: string): boolean {
   if (!ua) return false;
   const u = ua.toLowerCase();
+  // Headless prohlížeče JS spustí, ale nejsou reální uživatelé
+  if (u.includes("headless") || u.includes("puppeteer") || u.includes("playwright")) return false;
   return u.includes("mozilla") && (
     u.includes("chrome") || u.includes("firefox") ||
     u.includes("safari") || u.includes("webkit") || u.includes("edg")
