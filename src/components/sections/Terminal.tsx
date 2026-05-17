@@ -235,6 +235,40 @@ function WakingIndicator({ label }: { label: string }) {
   );
 }
 
+// ── Terminal-style loading (inside the dark terminal window) ──────────────────
+
+const BRAILLE = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"];
+
+function TerminalLoading() {
+  const [frame, setFrame] = useState(0);
+  const [dots, setDots]   = useState(0);
+
+  useEffect(() => {
+    const spin = setInterval(() => setFrame(f => (f + 1) % BRAILLE.length), 80);
+    const dot  = setInterval(() => setDots(d => (d + 1) % 4), 420);
+    return () => { clearInterval(spin); clearInterval(dot); };
+  }, []);
+
+  return (
+    <div className="flex flex-col justify-center items-start h-full px-4 py-10 gap-1.5 select-none">
+      <div className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+        <span style={{ color: "#4ade80" }}>$ </span>
+        <span>python backend</span>
+        <span style={{ color: "#fbbf24" }}>.{"·".repeat(dots)}</span>
+      </div>
+      <div className="font-mono text-xs flex items-center gap-2" style={{ color: "rgba(34,211,238,0.6)" }}>
+        <span>{BRAILLE[frame]}</span>
+        <span>connecting to render.com</span>
+        <span style={{
+          display: "inline-block", width: "0.5em", height: "1em",
+          background: "rgba(34,211,238,0.5)", verticalAlign: "text-bottom",
+          animation: "cursor-blink 1s step-end infinite",
+        }} />
+      </div>
+    </div>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────────────────
 
 export function Terminal() {
@@ -560,9 +594,11 @@ const activeProject = pendingProject;
               </p>
             )}
             {backendConfigured && !hasOutput && !running && (
-              <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
-                {hasProjects ? t.terminal.selectHint : t.terminal.noProjects}
-              </p>
+              (status === "idle" || (status === "waking" && !hasProjects))
+                ? <TerminalLoading />
+                : <p className="font-mono text-xs py-12 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    {hasProjects ? t.terminal.selectHint : t.terminal.noProjects}
+                  </p>
             )}
             {hasOutput && (
               <pre style={{ margin: 0, fontFamily: "'Fira Code', 'Courier New', monospace", fontSize: "0.72rem", lineHeight: 1.55, whiteSpace: "pre", color: "rgba(255,255,255,0.85)" }}>
