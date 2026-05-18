@@ -19,7 +19,7 @@ const firaCode = Fira_Code({
   display: "swap",
 });
 
-const SITE_URL = "https://www.danielrakusan.cz";
+const SITE_URL = "https://danielrakusan.cz";
 
 /* ── Viewport / theme-color ───────────────────────────────────── */
 export const viewport: Viewport = {
