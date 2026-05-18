@@ -102,7 +102,7 @@ export default async function Page() {
       <BackgroundLayers />
 
       <div className="relative z-10">
-        <Navbar profile={profile} />
+        <Navbar />
 
         <main>
           <Hero profile={profile} />

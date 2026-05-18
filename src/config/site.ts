@@ -19,7 +19,7 @@ export const siteConfig = {
   },
 
   // Doména webu
-  siteUrl: "https://www.danielrakusan.cz",
+  siteUrl: "https://danielrakusan.cz",
 
   // Ping Render backendu při načtení stránky (wake-up)
   // Jak dlouho čekat na odpověď backendu v ms

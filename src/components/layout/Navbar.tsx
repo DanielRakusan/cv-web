@@ -1,17 +1,217 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useContent } from "@/hooks/useContent";
 import { siteConfig } from "@/config/site";
-import type { GitHubProfile } from "@/lib/github";
 
-type NavbarProps = { profile: GitHubProfile | null };
+// ── Kontaktní data e-vizitky ────────────────────────────────────────
+const CARD = {
+  name:     "Daniel Rakušan",
+  role:     "Junior Python Backend Developer",
+  city:     "Praha",
+  email:    siteConfig.social.email,
+  github:   siteConfig.social.github,
+  linkedin: "https://linkedin.com/in/daniel-rakusan",
+  web:      siteConfig.siteUrl,
+} as const;
 
-export function Navbar({ profile }: NavbarProps) {
+// vCard 3.0 — po naskenování QR telefon nabídne „Přidat do kontaktů"
+const VCARD = [
+  "BEGIN:VCARD",
+  "VERSION:3.0",
+  "N:Rakušan;Daniel;;;",
+  `FN:${CARD.name}`,
+  "TITLE:Junior Python Backend Developer",
+  `EMAIL;TYPE=INTERNET:${CARD.email}`,
+  `URL:${CARD.web}`,
+  `X-SOCIALPROFILE;type=github:${CARD.github}`,
+  `X-SOCIALPROFILE;type=linkedin:${CARD.linkedin}`,
+  "ADR;TYPE=HOME:;;Praha;;;CZ;",
+  "END:VCARD",
+].join("\n");
+
+// ── Ikony ───────────────────────────────────────────────────────────
+function GitHubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.5 7.5 0 0 1 8 4.84c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
+// ── E-vizitka (popover) ─────────────────────────────────────────────
+function BusinessCard({ onClose }: { onClose: () => void }) {
+  const downloadVcard = useCallback(() => {
+    const blob = new Blob([VCARD], { type: "text/vcard;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = "daniel-rakusan.vcf";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const contactRows = [
+    { icon: <GitHubIcon className="w-3 h-3" />, label: "github",   value: "@DanielRakusan",      href: CARD.github },
+    { icon: <MailIcon />,                        label: "mail",     value: CARD.email,             href: `mailto:${CARD.email}` },
+    { icon: <LinkedInIcon />,                    label: "linkedin", value: "/in/daniel-rakusan",   href: CARD.linkedin },
+    { icon: <GlobeIcon />,                       label: "web",      value: "danielrakusan.cz",     href: CARD.web },
+  ];
+
+  return (
+    <div
+      className="absolute right-0 top-full mt-2 rounded-xl border z-50"
+      style={{
+        width: "min(340px, calc(100vw - 32px))",
+        background: "rgba(4,4,18,.97)",
+        borderColor: "var(--b1)",
+        backdropFilter: "blur(20px)",
+        boxShadow: "0 24px 64px rgba(0,0,0,.65)",
+      }}
+    >
+      {/* Hlavička — jméno + role */}
+      <div
+        className="px-5 pt-5 pb-4"
+        style={{ borderBottom: "1px solid var(--b0)" }}
+      >
+        <p
+          className="font-mono"
+          style={{ fontSize: ".6rem", color: "var(--cyan)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: ".35rem" }}
+        >
+          // e-vizitka
+        </p>
+        <p style={{ fontSize: "1rem", fontWeight: 700, color: "var(--txt)", lineHeight: 1.2, marginBottom: ".2rem" }}>
+          {CARD.name}
+        </p>
+        <p className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)", letterSpacing: ".02em" }}>
+          {CARD.role} · {CARD.city}
+        </p>
+      </div>
+
+      {/* Tělo — QR + kontakty */}
+      <div className="flex gap-4 px-5 py-4" style={{ borderBottom: "1px solid var(--b0)" }}>
+
+        {/* QR kód */}
+        <div className="flex-shrink-0 flex flex-col items-center gap-1.5">
+          <div
+            className="rounded-lg p-2"
+            style={{ background: "#fff" }}
+            title="Naskenuj pro uložení kontaktu"
+          >
+            <QRCodeSVG
+              value={VCARD}
+              size={88}
+              bgColor="#ffffff"
+              fgColor="#02020a"
+              level="M"
+            />
+          </div>
+          <p className="font-mono text-center" style={{ fontSize: ".52rem", color: "var(--dim)", lineHeight: 1.3 }}>
+            scan →<br />uložit kontakt
+          </p>
+        </div>
+
+        {/* Kontaktní řádky */}
+        <div className="flex flex-col justify-center gap-1.5 flex-1 min-w-0">
+          {contactRows.map(({ icon, label, value, href }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith("mailto") ? undefined : "_blank"}
+              rel="noreferrer"
+              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 border transition-all duration-150"
+              style={{
+                borderColor: "var(--b0)",
+                background: "var(--s1)",
+                textDecoration: "none",
+                minWidth: 0,
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,.3)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b0)"; }}
+            >
+              <span style={{ color: "var(--dim)", flexShrink: 0 }}>{icon}</span>
+              <span
+                className="font-mono truncate"
+                style={{ fontSize: ".72rem", color: "var(--txt)" }}
+                title={value}
+              >
+                {value}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer — stažení vCard */}
+      <div className="px-5 py-3">
+        <button
+          type="button"
+          onClick={downloadVcard}
+          className="w-full flex items-center justify-center gap-2 rounded-lg py-2 border font-mono transition-all duration-150"
+          style={{
+            fontSize: ".72rem",
+            color: "var(--cyan)",
+            borderColor: "rgba(34,211,238,.25)",
+            background: "rgba(34,211,238,.04)",
+            cursor: "pointer",
+            letterSpacing: ".04em",
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(34,211,238,.1)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.5)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(34,211,238,.04)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.25)"; }}
+          title="Stáhnout .vcf soubor — otevře se v aplikaci Kontakty"
+        >
+          <DownloadIcon />
+          uložit kontakt (.vcf)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Navbar ──────────────────────────────────────────────────────────
+export function Navbar() {
   const { lang, setLang } = useLanguage();
   const t = useContent();
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -22,35 +222,25 @@ export function Navbar({ profile }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setPopoverOpen(false); };
-    const onClick = (e: MouseEvent) => {
+    const onKey   = (e: KeyboardEvent) => { if (e.key === "Escape") setPopoverOpen(false); };
+    const onClick = (e: MouseEvent)    => {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) setPopoverOpen(false);
     };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onClick);
-    return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onClick); };
+    document.addEventListener("keydown",    onKey);
+    document.addEventListener("mousedown",  onClick);
+    return () => {
+      document.removeEventListener("keydown",   onKey);
+      document.removeEventListener("mousedown", onClick);
+    };
   }, []);
 
-  function normalizeUrl(val: string | null | undefined) {
-    if (!val) return "";
-    return /^https?:\/\//i.test(val) ? val : "https://" + val;
-  }
-
-  const profileItems = profile ? [
-    { label: "GitHub", value: "@" + profile.login, href: profile.html_url },
-    profile.location ? { label: t.github.location, value: profile.location } : null,
-    profile.email ? { label: t.github.email, value: profile.email, href: "mailto:" + profile.email } : null,
-    profile.blog ? { label: t.github.website, value: profile.blog, href: normalizeUrl(profile.blog) } : null,
-    profile.company ? { label: t.github.company, value: profile.company } : null,
-  ].filter(Boolean) : [];
-
   const navLinks = [
-    { href: "#oMne", label: lang === "cz" ? "proč já" : "why me" },
-    { href: "#dovednosti", label: lang === "cz" ? "dovednosti" : "skills" },
-    { href: "#zkusenosti", label: lang === "cz" ? "zkušenosti" : "experience" },
-    { href: "#certifikaty", label: lang === "cz" ? "certifikáty" : "certs" },
-    { href: "#projekty", label: lang === "cz" ? "projekty" : "projects" },
-    { href: "#kontakt", label: lang === "cz" ? "kontakt" : "contact" },
+    { href: "#oMne",        label: lang === "cz" ? "proč já"    : "why me"    },
+    { href: "#dovednosti",  label: lang === "cz" ? "dovednosti" : "skills"    },
+    { href: "#zkusenosti",  label: lang === "cz" ? "zkušenosti" : "experience"},
+    { href: "#certifikaty", label: lang === "cz" ? "certifikáty": "certs"     },
+    { href: "#projekty",    label: lang === "cz" ? "projekty"   : "projects"  },
+    { href: "#kontakt",     label: lang === "cz" ? "kontakt"    : "contact"   },
   ];
 
   return (
@@ -89,72 +279,38 @@ export function Navbar({ profile }: NavbarProps) {
         ))}
       </nav>
 
-      {/* Right: GitHub popover + lang switch + CTA */}
+      {/* Right: e-vizitka + lang switch + CTA */}
       <div className="flex items-center gap-3">
-        {/* GitHub popover */}
-        {profileItems.length > 0 && (
-          <div ref={popoverRef} className="relative hidden sm:block">
-            <button
-              type="button"
-              onClick={() => setPopoverOpen(v => !v)}
-              aria-expanded={popoverOpen}
-              className="font-mono flex items-center gap-1.5 transition-all duration-150"
-              style={{
-                fontSize: ".68rem",
-                padding: ".4rem .95rem",
-                border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
-                borderRadius: 4,
-                color: popoverOpen ? "var(--cyan)" : "var(--sub)",
-                background: "transparent",
-                cursor: "pointer",
-                letterSpacing: ".03em",
-              }}
-              onMouseEnter={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b2)"; e.currentTarget.style.color = "var(--txt)"; } }}
-              onMouseLeave={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; } }}
-            >
-              <GitHubIcon className="w-3.5 h-3.5" />
-              GitHub
-            </button>
-            {popoverOpen && (
-              <div
-                className="absolute right-0 top-full mt-2 rounded-xl border p-4 z-50"
-                style={{
-                  width: "min(300px, calc(100vw - 32px))",
-                  background: "rgba(4,4,16,.96)",
-                  borderColor: "var(--b1)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: "0 20px 60px rgba(0,0,0,.6)",
-                }}
-              >
-                <p className="font-mono text-center mb-3" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".1em", textTransform: "uppercase" }}>
-                  {t.github.publicInfo}
-                </p>
-                {profile?.bio && (
-                  <p className="text-center text-xs mb-3" style={{ color: "var(--sub)", lineHeight: 1.6, fontSize: ".8rem" }}>{profile.bio}</p>
-                )}
-                <div className="flex flex-col gap-1.5">
-                  {profileItems.map((item, i) => {
-                    if (!item) return null;
-                    const Tag = item.href ? "a" : "div";
-                    return (
-                      <Tag
-                        key={i}
-                        {...(item.href ? { href: item.href, target: "_blank", rel: "noreferrer" } : {})}
-                        className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg border transition-all duration-150"
-                        style={{ borderColor: "var(--b0)", background: "var(--s1)", textDecoration: "none" }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,.3)"; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b0)"; }}
-                      >
-                        <span className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".08em", textTransform: "uppercase" }}>{item.label}</span>
-                        <span style={{ fontSize: ".78rem", color: "var(--txt)", fontWeight: 500 }}>{item.value}</span>
-                      </Tag>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+
+        {/* E-vizitka popover */}
+        <div ref={popoverRef} className="relative hidden sm:block">
+          <button
+            type="button"
+            onClick={() => setPopoverOpen(v => !v)}
+            aria-expanded={popoverOpen}
+            aria-label="Otevřít e-vizitku"
+            className="font-mono flex items-center gap-1.5 transition-all duration-150"
+            style={{
+              fontSize: ".68rem",
+              padding: ".4rem .95rem",
+              border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
+              borderRadius: 4,
+              color: popoverOpen ? "var(--cyan)" : "var(--sub)",
+              background: "transparent",
+              cursor: "pointer",
+              letterSpacing: ".03em",
+            }}
+            onMouseEnter={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b2)"; e.currentTarget.style.color = "var(--txt)"; } }}
+            onMouseLeave={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; } }}
+          >
+            <GitHubIcon className="w-3.5 h-3.5" />
+            kontakt
+          </button>
+
+          {popoverOpen && (
+            <BusinessCard onClose={() => setPopoverOpen(false)} />
+          )}
+        </div>
 
         {/* Lang switch */}
         <div
@@ -202,13 +358,5 @@ export function Navbar({ profile }: NavbarProps) {
         </a>
       </div>
     </header>
-  );
-}
-
-function GitHubIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-      <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.5 7.5 0 0 1 8 4.84c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
-    </svg>
   );
 }
