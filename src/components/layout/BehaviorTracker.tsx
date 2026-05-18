@@ -20,7 +20,10 @@ export function BehaviorTracker() {
   // Scroll speed bot detection
   const lastScrollY    = useRef(0);
   const lastScrollTime = useRef(Date.now());
-  const maxScrollSpeed = useRef(0);   // px/s
+  const maxScrollSpeed = useRef(0);    // px/s, peak
+  const scrollSamples  = useRef<number[]>([]);  // rychlosti vzorků (max 300)
+  const lastScrollDir  = useRef(0);    // 1 = dolů, -1 = nahoru
+  const reversals      = useRef(0);    // počet otočení směru (zpět nahoru = čte)
 
   // Section dwell: sectionId → enter timestamp
   const sectionEnter   = useRef<Record<string, number>>({});
@@ -47,9 +50,24 @@ export function BehaviorTracker() {
     // ── 2. Scroll speed + depth ──────────────────────────────────────────────
     const onScroll = () => {
       const now    = Date.now();
-      const dy     = Math.abs(window.scrollY - lastScrollY.current);
+      const rawDy  = window.scrollY - lastScrollY.current;
+      const dy     = Math.abs(rawDy);
       const dt     = Math.max(now - lastScrollTime.current, 1);
       const speed  = Math.round((dy / dt) * 1000);  // px/s
+
+      // Detekce otočení směru (scrollování zpět nahoru = čte)
+      if (dy > 10) {  // ignoruj drobné otřesy
+        const dir = rawDy > 0 ? 1 : -1;
+        if (lastScrollDir.current !== 0 && dir !== lastScrollDir.current) {
+          reversals.current++;
+        }
+        lastScrollDir.current = dir;
+      }
+
+      // Vzorky rychlosti (max 300, ignoruj nulové události)
+      if (speed > 0 && scrollSamples.current.length < 300) {
+        scrollSamples.current.push(speed);
+      }
 
       if (speed > maxScrollSpeed.current) maxScrollSpeed.current = speed;
       lastScrollY.current    = window.scrollY;
@@ -125,9 +143,22 @@ export function BehaviorTracker() {
         trackEvent("scroll", { depth: scrollDepth.current });
       }
 
-      // Rychlost scrollu (pro detekci botů)
+      // Rychlost scrollu — distribuce pro detekci botů vs čtenářů
       if (maxScrollSpeed.current > 0) {
-        trackEvent("scroll_speed", { max_pps: maxScrollSpeed.current });
+        const samples = scrollSamples.current;
+        const n = samples.length;
+        const avg_pps  = n > 0 ? Math.round(samples.reduce((a, b) => a + b, 0) / n) : 0;
+        // < 500 px/s = pomalé čtení; > 2000 px/s = rychlé skenování/bot
+        const slow_pct = n > 0 ? Math.round(samples.filter(s => s <  500).length / n * 100) : 0;
+        const fast_pct = n > 0 ? Math.round(samples.filter(s => s > 2000).length / n * 100) : 0;
+        trackEvent("scroll_speed", {
+          max_pps:   maxScrollSpeed.current,
+          avg_pps,
+          slow_pct,
+          fast_pct,
+          reversals: reversals.current,
+          samples:   n,
+        });
       }
 
       // Čas na stránce
