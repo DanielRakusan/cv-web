@@ -30,8 +30,8 @@ export function Hero({ profile }: HeroProps) {
   return (
     <section
       id="oMne"
-      className="relative z-10 min-h-screen flex items-center"
-      style={{ padding: "88px 5vw 3rem", maxWidth: 1060, margin: "0 auto" }}
+      className="relative z-10 min-h-screen flex items-center px-[5vw] pt-[88px] pb-[88px] sm:pb-12"
+      style={{ maxWidth: 1060, margin: "0 auto" }}
     >
       {/* 2-col grid: photo left | text right — stacks on mobile */}
       <div className="w-full grid items-center hero-grid">
@@ -56,7 +56,7 @@ export function Hero({ profile }: HeroProps) {
                 />
                 {/* Hover overlay */}
                 <div
-                  className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-4"
+                  className="absolute inset-0 hidden sm:flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-4"
                   style={{ background: "rgba(2,2,10,0.82)" }}
                 >
                   <a
