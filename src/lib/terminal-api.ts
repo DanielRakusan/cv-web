@@ -60,6 +60,21 @@ export async function fetchProjectTree(id: string): Promise<{ path: string; type
   }
 }
 
+export async function fetchFileContent(projectId: string, path: string): Promise<{ content: string | null; tooLarge?: boolean; size?: number }> {
+  if (!siteConfig.renderApiUrl) return { content: null };
+  try {
+    const res = await fetch(
+      `${siteConfig.renderApiUrl}/projects/${projectId}/file?path=${encodeURIComponent(path)}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return { content: null };
+    const data = await res.json();
+    return { content: data.content ?? null, tooLarge: data.too_large, size: data.size };
+  } catch {
+    return { content: null };
+  }
+}
+
 // Spustí projekt přes WebSocket, vrátí instanci WebSocket
 // Backend přijímá:
 //   { type: "run", projectId: string }

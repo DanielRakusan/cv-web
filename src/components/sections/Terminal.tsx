@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 import { siteConfig } from "@/config/site";
-import { fetchProjectReadme, fetchProjectTree } from "@/lib/terminal-api";
+import { fetchProjectReadme, fetchProjectTree, fetchFileContent } from "@/lib/terminal-api";
 import type { BackendProject } from "@/hooks/useTerminal";
 
 // ── ANSI parser ───────────────────────────────────────────────────────────────
@@ -88,40 +88,56 @@ function buildTree(items: { path: string; type: string }[]): TreeNode[] {
   return root;
 }
 
-function FileNode({ node, depth }: { node: TreeNode; depth: number }) {
+function FileNode({ node, depth, path, onFileClick, activeFile }: {
+  node: TreeNode; depth: number; path: string;
+  onFileClick: (path: string) => void;
+  activeFile: string | null;
+}) {
   const [open, setOpen] = useState(depth < 1);
   const isDir = node.type === "tree";
+  const fullPath = path ? `${path}/${node.name}` : node.name;
+  const isActive = !isDir && fullPath === activeFile;
   return (
     <div>
       <button
         type="button"
-        onClick={() => isDir && setOpen(!open)}
-        className="flex items-center gap-1.5 w-full text-left hover:bg-white/5 rounded px-1 py-0.5 transition-colors"
-        style={{ paddingLeft: `${depth * 14 + 4}px` }}
+        onClick={() => isDir ? setOpen(!open) : onFileClick(fullPath)}
+        className="flex items-center gap-1.5 w-full text-left rounded px-1 py-0.5 transition-colors"
+        style={{
+          paddingLeft: `${depth * 14 + 4}px`,
+          background: isActive ? "rgba(34,211,238,.12)" : undefined,
+        }}
+        onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)"; }}
+        onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = ""; }}
       >
-        <span style={{ fontSize: ".7rem", color: isDir ? "#fbbf24" : "rgba(255,255,255,0.4)", flexShrink: 0 }}>
+        <span style={{ fontSize: ".7rem", color: isDir ? "#fbbf24" : isActive ? "#22d3ee" : "rgba(255,255,255,0.4)", flexShrink: 0 }}>
           {isDir ? (open ? "▾" : "▸") : "·"}
         </span>
         <span className="font-mono truncate" style={{
           fontSize: ".72rem",
-          color: isDir ? "#e2e8f0" : "rgba(255,255,255,0.65)",
+          color: isDir ? "#e2e8f0" : isActive ? "#22d3ee" : "rgba(255,255,255,0.65)",
         }}>
           {node.name}
         </span>
       </button>
       {isDir && open && node.children?.map((child) => (
-        <FileNode key={child.name} node={child} depth={depth + 1} />
+        <FileNode key={child.name} node={child} depth={depth + 1} path={fullPath} onFileClick={onFileClick} activeFile={activeFile} />
       ))}
     </div>
   );
 }
 
-function FileTree({ items, noFilesLabel }: { items: { path: string; type: string }[]; noFilesLabel: string }) {
+function FileTree({ items, noFilesLabel, onFileClick, activeFile }: {
+  items: { path: string; type: string }[];
+  noFilesLabel: string;
+  onFileClick: (path: string) => void;
+  activeFile: string | null;
+}) {
   const tree = buildTree(items);
   if (!tree.length) return <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{noFilesLabel}</p>;
   return (
     <div className="overflow-y-auto" style={{ maxHeight: 240 }}>
-      {tree.map((node) => <FileNode key={node.name} node={node} depth={0} />)}
+      {tree.map((node) => <FileNode key={node.name} node={node} depth={0} path="" onFileClick={onFileClick} activeFile={activeFile} />)}
     </div>
   );
 }
@@ -189,6 +205,120 @@ function ReadmeView({ content, onLangSwitch }: { content: string; onLangSwitch: 
   return (
     <div className="overflow-y-auto" style={{ maxHeight: 280, padding: "1rem", fontSize: ".82rem", lineHeight: 1.7, color: "rgba(255,255,255,0.75)" }}>
       <SimpleMarkdown content={content} onLangSwitch={onLangSwitch} />
+    </div>
+  );
+}
+
+// ── Code viewer ───────────────────────────────────────────────────────────────
+
+const PY_KW = new Set([
+  "def","class","import","from","return","if","else","elif","for","while","in",
+  "not","and","or","True","False","None","try","except","finally","with","as",
+  "pass","break","continue","lambda","yield","raise","del","global","nonlocal",
+  "assert","async","await","is","self",
+]);
+
+type Tok = { t: string; c: string };
+
+function tokenizePyLine(line: string): Tok[] {
+  const out: Tok[] = [];
+  let i = 0;
+  let buf = "";
+  const flush = (c = "rgba(255,255,255,0.82)") => { if (buf) { out.push({ t: buf, c }); buf = ""; } };
+
+  while (i < line.length) {
+    const ch = line[i];
+
+    // Comment
+    if (ch === "#") { flush(); out.push({ t: line.slice(i), c: "#4ade80" }); break; }
+
+    // Triple-quoted string (inline only — skip multiline edge-case)
+    if ((ch === '"' || ch === "'") && line[i + 1] === ch && line[i + 2] === ch) {
+      flush();
+      const q = ch.repeat(3); let s = q; i += 3;
+      const end = line.indexOf(q, i);
+      if (end !== -1) { s += line.slice(i, end + 3); i = end + 3; }
+      else { s += line.slice(i); i = line.length; }
+      out.push({ t: s, c: "#fbbf24" }); continue;
+    }
+
+    // Single-quoted string
+    if (ch === '"' || ch === "'") {
+      flush();
+      const q = ch; let s = q; i++;
+      while (i < line.length && line[i] !== q && line[i] !== "\n") {
+        if (line[i] === "\\") { s += line[i++] || ""; }
+        s += line[i++] ?? "";
+      }
+      s += line[i] ?? ""; i++;
+      out.push({ t: s, c: "#fbbf24" }); continue;
+    }
+
+    // Identifier / keyword
+    if (/[a-zA-Z_]/.test(ch)) {
+      flush();
+      let w = "";
+      while (i < line.length && /\w/.test(line[i])) w += line[i++];
+      out.push({ t: w, c: PY_KW.has(w) ? "#a78bfa" : "rgba(255,255,255,0.82)" }); continue;
+    }
+
+    // Number
+    if (/\d/.test(ch)) {
+      flush();
+      let n = "";
+      while (i < line.length && /[\d.]/.test(line[i])) n += line[i++];
+      out.push({ t: n, c: "#22d3ee" }); continue;
+    }
+
+    // Decorator (@name)
+    if (ch === "@") {
+      flush();
+      let d = "@"; i++;
+      while (i < line.length && /\w/.test(line[i])) d += line[i++];
+      out.push({ t: d, c: "#fb923c" }); continue;
+    }
+
+    buf += ch; i++;
+  }
+  flush();
+  return out;
+}
+
+function CodeView({ content, filename }: { content: string; filename: string }) {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  const isPy = ext === "py";
+  const lines = content.split("\n");
+  const padLen = String(lines.length).length;
+
+  return (
+    <div style={{ padding: "0.5rem 0" }}>
+      {lines.map((line, idx) => {
+        const toks = isPy ? tokenizePyLine(line) : [{ t: line, c: "rgba(255,255,255,0.82)" }];
+        return (
+          <div key={idx} className="flex" style={{ lineHeight: 1.65, minHeight: "1.65em" }}>
+            <span
+              style={{
+                minWidth: `${padLen + 2}ch`,
+                paddingRight: "0.75rem",
+                paddingLeft: "0.75rem",
+                textAlign: "right",
+                color: "rgba(255,255,255,0.18)",
+                fontSize: ".63rem",
+                fontFamily: "'Fira Code', monospace",
+                userSelect: "none",
+                flexShrink: 0,
+              }}
+            >
+              {idx + 1}
+            </span>
+            <span style={{ fontFamily: "'Fira Code', monospace", fontSize: ".68rem", whiteSpace: "pre", paddingRight: "1rem" }}>
+              {toks.length ? toks.map((tok, i) => (
+                <span key={i} style={{ color: tok.c }}>{tok.t}</span>
+              )) : " "}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -281,9 +411,12 @@ export function Terminal() {
   const [readme, setReadme] = useState<string | null>(null);
   const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
   const [loadingInfo, setLoadingInfo] = useState(false);
+  const [openFile, setOpenFile] = useState<{ path: string; content: string } | null>(null);
+  const [loadingFile, setLoadingFile] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
+  const fileReqRef = useRef(0);
   const outputRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
@@ -348,6 +481,7 @@ export function Terminal() {
   const handleSelectProject = useCallback(async (project: BackendProject) => {
     if (running) return;
     setPendingProject(project);
+    setOpenFile(null);
     setLoadingInfo(true);
     setReadme(null);
     setTree([]);
@@ -365,6 +499,19 @@ export function Terminal() {
     if (!pendingProject || running) return;
     fetchProjectReadme(pendingProject.id, lang).then(setReadme);
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Klik na soubor v tree → načte obsah a zobrazí ho
+  const handleFileClick = useCallback(async (filePath: string) => {
+    if (!pendingProject) return;
+    const reqId = ++fileReqRef.current;
+    setLoadingFile(true);
+    setOpenFile(null);
+    setActiveTab("files");
+    const { content } = await fetchFileContent(pendingProject.id, filePath);
+    if (reqId !== fileReqRef.current) return; // stale request
+    setOpenFile(content !== null ? { path: filePath, content } : null);
+    setLoadingFile(false);
+  }, [pendingProject]);
 
   // Tlačítko Start: skutečně spustí
   const handleStart = useCallback(() => {
@@ -483,8 +630,59 @@ const activeProject = pendingProject;
                       <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>{t.terminal.readmeNotFound}</p>
                     )
                   ) : (
-                    <div className="p-3 h-full overflow-y-auto">
-                      <FileTree items={tree} noFilesLabel={t.terminal.noFiles} />
+                    /* Files tab — split: tree left | code right */
+                    <div className="flex h-full overflow-hidden">
+                      {/* Tree panel */}
+                      <div
+                        className="overflow-y-auto flex-shrink-0 p-3"
+                        style={{
+                          width: openFile || loadingFile ? 185 : "100%",
+                          borderRight: openFile || loadingFile ? "1px solid rgba(255,255,255,0.06)" : "none",
+                          transition: "width .15s ease",
+                        }}
+                      >
+                        <FileTree
+                          items={tree}
+                          noFilesLabel={t.terminal.noFiles}
+                          onFileClick={handleFileClick}
+                          activeFile={openFile?.path ?? null}
+                        />
+                      </div>
+
+                      {/* Code panel */}
+                      {(openFile || loadingFile) && (
+                        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                          {/* Breadcrumb header */}
+                          <div
+                            className="flex items-center justify-between flex-shrink-0 border-b px-3 py-1.5"
+                            style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(0,0,0,.25)" }}
+                          >
+                            <span className="font-mono truncate" style={{ fontSize: ".63rem", color: "rgba(255,255,255,0.38)" }}>
+                              {openFile?.path ?? "…"}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => { setOpenFile(null); setLoadingFile(false); }}
+                              className="font-mono ml-2 flex-shrink-0 hover:opacity-60 transition-opacity"
+                              style={{ fontSize: ".72rem", color: "rgba(255,255,255,0.28)", lineHeight: 1 }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+
+                          {/* Content */}
+                          <div className="overflow-y-auto overflow-x-auto flex-1">
+                            {loadingFile ? (
+                              <div className="flex items-center justify-center" style={{ height: "100%" }}>
+                                <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin"
+                                  style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+                              </div>
+                            ) : openFile ? (
+                              <CodeView content={openFile.content} filename={openFile.path} />
+                            ) : null}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
