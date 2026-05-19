@@ -136,7 +136,7 @@ function FileTree({ items, noFilesLabel, onFileClick, activeFile }: {
   const tree = buildTree(items);
   if (!tree.length) return <p className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{noFilesLabel}</p>;
   return (
-    <div className="overflow-y-auto" style={{ maxHeight: 240 }}>
+    <div className="overflow-y-auto h-full">
       {tree.map((node) => <FileNode key={node.name} node={node} depth={0} path="" onFileClick={onFileClick} activeFile={activeFile} />)}
     </div>
   );
@@ -203,7 +203,7 @@ function SimpleMarkdown({ content, onLangSwitch }: { content: string; onLangSwit
 
 function ReadmeView({ content, onLangSwitch }: { content: string; onLangSwitch: (lang: "cz" | "en") => void }) {
   return (
-    <div className="overflow-y-auto" style={{ maxHeight: 280, padding: "1rem", fontSize: ".82rem", lineHeight: 1.7, color: "rgba(255,255,255,0.75)" }}>
+    <div className="overflow-y-auto h-full" style={{ padding: "1.25rem 1.5rem", fontSize: ".82rem", lineHeight: 1.7, color: "rgba(255,255,255,0.75)" }}>
       <SimpleMarkdown content={content} onLangSwitch={onLangSwitch} />
     </div>
   );
@@ -411,6 +411,7 @@ export function Terminal() {
   const [readme, setReadme] = useState<string | null>(null);
   const [tree, setTree] = useState<{ path: string; type: string }[]>([]);
   const [loadingInfo, setLoadingInfo] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [openFile, setOpenFile] = useState<{ path: string; content: string } | null>(null);
   const [loadingFile, setLoadingFile] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -430,6 +431,18 @@ export function Terminal() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // Modal: scroll lock + Escape
+  useEffect(() => {
+    if (!modalOpen) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setModalOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [modalOpen]);
 
   // Wake backend when section enters viewport
   const onSectionVisible = useCallback(() => {
@@ -480,8 +493,12 @@ export function Terminal() {
   // Karta: jen vybere projekt a načte info, nespustí ho
   const handleSelectProject = useCallback(async (project: BackendProject) => {
     if (running) return;
+    // Re-click na stejný projekt jen otevře modal bez nového načítání
+    if (pendingProject?.id === project.id) { setModalOpen(true); return; }
     setPendingProject(project);
     setOpenFile(null);
+    setActiveTab("readme");
+    setModalOpen(true);
     setLoadingInfo(true);
     setReadme(null);
     setTree([]);
@@ -492,7 +509,7 @@ export function Terminal() {
     setReadme(rm);
     setTree(tr);
     setLoadingInfo(false);
-  }, [running, lang]);
+  }, [running, lang, pendingProject]);
 
   // Při přepnutí jazyka znovu načti README pro aktuálně vybraný projekt
   useEffect(() => {
@@ -519,6 +536,17 @@ export function Terminal() {
     if (!project) return;
     clearLines();
     runProject(project);
+  }, [pendingProject, clearLines, runProject]);
+
+  // Start z modálu: zavře modal a spustí
+  const handleModalStart = useCallback(() => {
+    setModalOpen(false);
+    const project = pendingProject;
+    if (!project) return;
+    clearLines();
+    runProject(project);
+    // Scroll to terminal
+    setTimeout(() => document.getElementById("projekty")?.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
   }, [pendingProject, clearLines, runProject]);
 
   function handleMobileInputKey(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -585,109 +613,6 @@ const activeProject = pendingProject;
               )}
             </div>
 
-            {/* Inline info panel — fixed height, no AnimatePresence, no page jump */}
-            {activeProject && (
-              <div className="border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                {/* Tab bar */}
-                <div
-                  className="flex items-center gap-1 px-4 border-b"
-                  style={{ height: 38, background: "rgba(0,0,0,.25)", borderColor: "rgba(255,255,255,0.05)" }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("readme")}
-                    className="font-mono px-3 py-1 rounded text-xs transition-colors"
-                    style={{
-                      color: activeTab === "readme" ? "#22d3ee" : "rgba(255,255,255,0.4)",
-                      background: activeTab === "readme" ? "rgba(34,211,238,.08)" : "transparent",
-                    }}
-                  >
-                    README.md
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("files")}
-                    className="font-mono px-3 py-1 rounded text-xs transition-colors"
-                    style={{
-                      color: activeTab === "files" ? "#22d3ee" : "rgba(255,255,255,0.4)",
-                      background: activeTab === "files" ? "rgba(34,211,238,.08)" : "transparent",
-                    }}
-                  >
-                    {t.terminal.filesTab}
-                  </button>
-                </div>
-
-                {/* Fixed-height content area */}
-                <div style={{ height: 260, overflow: "hidden", background: "#0e0e16" }}>
-                  {loadingInfo ? (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
-                    </div>
-                  ) : activeTab === "readme" ? (
-                    readme ? (
-                      <ReadmeView content={readme} onLangSwitch={setLang} />
-                    ) : (
-                      <p className="font-mono text-xs p-4" style={{ color: "rgba(255,255,255,0.3)" }}>{t.terminal.readmeNotFound}</p>
-                    )
-                  ) : (
-                    /* Files tab — split: tree left | code right */
-                    <div className="flex h-full overflow-hidden">
-                      {/* Tree panel */}
-                      <div
-                        className="overflow-y-auto flex-shrink-0 p-3"
-                        style={{
-                          width: openFile || loadingFile ? 185 : "100%",
-                          borderRight: openFile || loadingFile ? "1px solid rgba(255,255,255,0.06)" : "none",
-                          transition: "width .15s ease",
-                        }}
-                      >
-                        <FileTree
-                          items={tree}
-                          noFilesLabel={t.terminal.noFiles}
-                          onFileClick={handleFileClick}
-                          activeFile={openFile?.path ?? null}
-                        />
-                      </div>
-
-                      {/* Code panel */}
-                      {(openFile || loadingFile) && (
-                        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-                          {/* Breadcrumb header */}
-                          <div
-                            className="flex items-center justify-between flex-shrink-0 border-b px-3 py-1.5"
-                            style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(0,0,0,.25)" }}
-                          >
-                            <span className="font-mono truncate" style={{ fontSize: ".63rem", color: "rgba(255,255,255,0.38)" }}>
-                              {openFile?.path ?? "…"}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => { setOpenFile(null); setLoadingFile(false); }}
-                              className="font-mono ml-2 flex-shrink-0 hover:opacity-60 transition-opacity"
-                              style={{ fontSize: ".72rem", color: "rgba(255,255,255,0.28)", lineHeight: 1 }}
-                            >
-                              ✕
-                            </button>
-                          </div>
-
-                          {/* Content */}
-                          <div className="overflow-y-auto overflow-x-auto flex-1">
-                            {loadingFile ? (
-                              <div className="flex items-center justify-center" style={{ height: "100%" }}>
-                                <div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin"
-                                  style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
-                              </div>
-                            ) : openFile ? (
-                              <CodeView content={openFile.content} filename={openFile.path} />
-                            ) : null}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         )}
 
@@ -835,6 +760,155 @@ const activeProject = pendingProject;
           )}
         </div>
       </div>
+      {/* ── Info modal ── */}
+      {modalOpen && pendingProject && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0"
+            style={{ zIndex: 50, background: "rgba(0,0,0,0.72)", backdropFilter: "blur(5px)" }}
+            onClick={() => setModalOpen(false)}
+          />
+
+          {/* Modal window */}
+          <div
+            className="fixed flex flex-col rounded-2xl border overflow-hidden"
+            style={{
+              zIndex: 51,
+              top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+              width: "min(920px, 95vw)",
+              height: "min(700px, 88vh)",
+              background: "#0d0d15",
+              borderColor: "rgba(255,255,255,0.1)",
+              boxShadow: "0 32px 96px rgba(0,0,0,0.7), 0 0 0 1px rgba(34,211,238,.06)",
+            }}
+          >
+            {/* Header */}
+            <div
+              className="flex items-center gap-3 px-5 flex-shrink-0 border-b"
+              style={{ height: 52, background: "rgba(0,0,0,.35)", borderColor: "rgba(255,255,255,0.07)" }}
+            >
+              {/* Traffic lights */}
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <button type="button" onClick={() => setModalOpen(false)} aria-label="Zavřít"
+                  className="w-3 h-3 rounded-full hover:opacity-75 transition-opacity"
+                  style={{ background: "#ff5f57" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "#ffbd2e" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "#28c840" }} />
+              </div>
+
+              <span className="font-mono font-bold" style={{ color: "#22d3ee", fontSize: ".85rem" }}>
+                {pendingProject.name}
+              </span>
+              <span className="font-mono flex-1 truncate" style={{ fontSize: ".68rem", color: "rgba(255,255,255,0.3)" }}>
+                {pendingProject.description}
+              </span>
+
+              {/* Start button */}
+              {!running && (
+                <button
+                  type="button"
+                  onClick={handleModalStart}
+                  className="font-mono font-bold flex-shrink-0 transition-all duration-150"
+                  style={{ background: "#030f06", color: "#4ade80", border: "1.5px solid rgba(74,222,128,.28)", fontSize: ".68rem", letterSpacing: ".04em", padding: "4px 14px", borderRadius: 5 }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 22px 4px rgba(74,222,128,.5)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.5)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = ""; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.28)"; }}
+                >
+                  ▶ {t.terminal.run}
+                </button>
+              )}
+            </div>
+
+            {/* Tab bar */}
+            <div
+              className="flex items-center gap-1 px-4 border-b flex-shrink-0"
+              style={{ height: 38, background: "rgba(0,0,0,.2)", borderColor: "rgba(255,255,255,0.05)" }}
+            >
+              {["readme", "files"].map(tab => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab as "readme" | "files")}
+                  className="font-mono px-3 py-1 rounded text-xs transition-colors"
+                  style={{
+                    color: activeTab === tab ? "#22d3ee" : "rgba(255,255,255,0.38)",
+                    background: activeTab === tab ? "rgba(34,211,238,.08)" : "transparent",
+                  }}
+                >
+                  {tab === "readme" ? "README.md" : t.terminal.filesTab}
+                </button>
+              ))}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-hidden" style={{ background: "#0e0e16" }}>
+              {loadingInfo ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin"
+                    style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+                </div>
+              ) : activeTab === "readme" ? (
+                readme
+                  ? <ReadmeView content={readme} onLangSwitch={setLang} />
+                  : <p className="font-mono text-xs p-6" style={{ color: "rgba(255,255,255,0.28)" }}>{t.terminal.readmeNotFound}</p>
+              ) : (
+                /* Files tab — split: tree vlevo | kód vpravo */
+                <div className="flex h-full overflow-hidden">
+                  {/* Tree panel */}
+                  <div
+                    className="flex-shrink-0 overflow-y-auto p-3 border-r"
+                    style={{
+                      width: openFile || loadingFile ? 220 : "100%",
+                      borderColor: "rgba(255,255,255,0.06)",
+                      transition: "width .15s ease",
+                    }}
+                  >
+                    <FileTree
+                      items={tree}
+                      noFilesLabel={t.terminal.noFiles}
+                      onFileClick={handleFileClick}
+                      activeFile={openFile?.path ?? null}
+                    />
+                  </div>
+
+                  {/* Code panel */}
+                  {(openFile || loadingFile) && (
+                    <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                      {/* Breadcrumb */}
+                      <div
+                        className="flex items-center justify-between flex-shrink-0 border-b px-4 py-2"
+                        style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(0,0,0,.2)" }}
+                      >
+                        <span className="font-mono truncate" style={{ fontSize: ".65rem", color: "rgba(255,255,255,0.38)" }}>
+                          {openFile?.path ?? "…"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => { setOpenFile(null); setLoadingFile(false); }}
+                          className="font-mono ml-3 flex-shrink-0 hover:opacity-60 transition-opacity"
+                          style={{ fontSize: ".75rem", color: "rgba(255,255,255,0.28)" }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className="overflow-y-auto overflow-x-auto flex-1">
+                        {loadingFile ? (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="w-5 h-5 rounded-full border-2 border-t-transparent animate-spin"
+                              style={{ borderColor: "rgba(34,211,238,.3)", borderTopColor: "#22d3ee" }} />
+                          </div>
+                        ) : openFile ? (
+                          <CodeView content={openFile.content} filename={openFile.path} />
+                        ) : null}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </SectionWrapper>
   );
 }
