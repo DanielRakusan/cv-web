@@ -546,7 +546,7 @@ export function Terminal() {
     clearLines();
     runProject(project);
     // Scroll to terminal
-    setTimeout(() => document.getElementById("projekty")?.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+    setTimeout(() => terminalRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
   }, [pendingProject, clearLines, runProject]);
 
   function handleMobileInputKey(e: React.KeyboardEvent<HTMLInputElement>) {
