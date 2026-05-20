@@ -498,6 +498,7 @@ export function Terminal() {
     if (pendingProject?.id === project.id) { setModalOpen(true); return; }
     setPendingProject(project);
     setOpenFile(null);
+    setTreeCollapsed(false);
     setActiveTab("readme");
     setModalOpen(true);
     setLoadingInfo(true);
