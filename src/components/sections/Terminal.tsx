@@ -414,6 +414,7 @@ export function Terminal() {
   const [modalOpen, setModalOpen] = useState(false);
   const [openFile, setOpenFile] = useState<{ path: string; content: string } | null>(null);
   const [loadingFile, setLoadingFile] = useState(false);
+  const [treeCollapsed, setTreeCollapsed] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -528,6 +529,7 @@ export function Terminal() {
     if (reqId !== fileReqRef.current) return; // stale request
     setOpenFile(content !== null ? { path: filePath, content } : null);
     setLoadingFile(false);
+    setTreeCollapsed(true);
   }, [pendingProject]);
 
   // Tlačítko Start: skutečně spustí
@@ -852,23 +854,72 @@ const activeProject = pendingProject;
                   ? <ReadmeView content={readme} onLangSwitch={setLang} />
                   : <p className="font-mono text-xs p-6" style={{ color: "rgba(255,255,255,0.28)" }}>{t.terminal.readmeNotFound}</p>
               ) : (
-                /* Files tab — split: tree vlevo | kód vpravo */
+                /* Files tab — split: tree vlevo (sbalitelný) | kód vpravo */
                 <div className="flex h-full overflow-hidden">
-                  {/* Tree panel */}
+
+                  {/* Tree panel — sbalitelný */}
                   <div
-                    className="flex-shrink-0 overflow-y-auto p-3 border-r"
+                    className="flex-shrink-0 border-r flex flex-col"
                     style={{
-                      width: openFile || loadingFile ? 220 : "100%",
+                      width: treeCollapsed ? 32 : (openFile || loadingFile ? 220 : "100%"),
                       borderColor: "rgba(255,255,255,0.06)",
-                      transition: "width .15s ease",
+                      transition: "width .18s ease",
+                      overflow: "hidden",
                     }}
                   >
-                    <FileTree
-                      items={tree}
-                      noFilesLabel={t.terminal.noFiles}
-                      onFileClick={handleFileClick}
-                      activeFile={openFile?.path ?? null}
-                    />
+                    {treeCollapsed ? (
+                      /* Sbalený stav — klikací pruh */
+                      <button
+                        type="button"
+                        onClick={() => setTreeCollapsed(false)}
+                        title="Zobrazit soubory"
+                        className="flex-1 flex items-center justify-center hover:bg-white/5 transition-colors"
+                        style={{ width: 32 }}
+                      >
+                        <span
+                          className="font-mono select-none"
+                          style={{
+                            fontSize: ".6rem",
+                            color: "rgba(255,255,255,0.3)",
+                            writingMode: "vertical-lr",
+                            letterSpacing: ".08em",
+                          }}
+                        >
+                          FILES ▸
+                        </span>
+                      </button>
+                    ) : (
+                      /* Rozbalený stav */
+                      <>
+                        {(openFile || loadingFile) && (
+                          <div
+                            className="flex items-center justify-between flex-shrink-0 border-b px-3 py-1.5"
+                            style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(0,0,0,.2)" }}
+                          >
+                            <span className="font-mono" style={{ fontSize: ".6rem", color: "rgba(255,255,255,0.25)", letterSpacing: ".06em" }}>
+                              FILES
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setTreeCollapsed(true)}
+                              title="Skrýt"
+                              className="font-mono hover:opacity-60 transition-opacity"
+                              style={{ fontSize: ".7rem", color: "rgba(255,255,255,0.28)" }}
+                            >
+                              ◂
+                            </button>
+                          </div>
+                        )}
+                        <div className="overflow-y-auto flex-1 p-3">
+                          <FileTree
+                            items={tree}
+                            noFilesLabel={t.terminal.noFiles}
+                            onFileClick={handleFileClick}
+                            activeFile={openFile?.path ?? null}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Code panel */}
@@ -884,7 +935,7 @@ const activeProject = pendingProject;
                         </span>
                         <button
                           type="button"
-                          onClick={() => { setOpenFile(null); setLoadingFile(false); }}
+                          onClick={() => { setOpenFile(null); setLoadingFile(false); setTreeCollapsed(false); }}
                           className="font-mono ml-3 flex-shrink-0 hover:opacity-60 transition-opacity"
                           style={{ fontSize: ".75rem", color: "rgba(255,255,255,0.28)" }}
                         >
