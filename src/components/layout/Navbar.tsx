@@ -129,59 +129,63 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Action buttons — velké, snadno kliknutelné */}
-        <div className="flex flex-col gap-3 px-6 py-5">
+        <div className="flex flex-col gap-2 px-5 py-5">
           <a
             href={`mailto:${CARD.email}`}
             onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 transition-all duration-150"
-            style={{ background: "var(--cyan)", color: "#02020a", textDecoration: "none", fontWeight: 700 }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 active:opacity-80"
+            style={{ background: "var(--cyan)", color: "#02020a", textDecoration: "none" }}
           >
             <MailIcon />
-            <div>
-              <div style={{ fontSize: ".85rem", fontWeight: 700 }}>Napište mi e-mail</div>
-              <div className="font-mono" style={{ fontSize: ".68rem", opacity: .7 }}>{CARD.email}</div>
+            <div className="flex-1 min-w-0">
+              <div style={{ fontSize: ".9rem", fontWeight: 700 }}>Napište mi e-mail</div>
+              <div className="font-mono truncate" style={{ fontSize: ".7rem", opacity: .65 }}>{CARD.email}</div>
             </div>
+            <span style={{ fontSize: ".8rem", opacity: .5 }}>↗</span>
           </a>
 
           <a
             href={CARD.linkedin}
             target="_blank" rel="noreferrer"
             onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150"
-            style={{ borderColor: "var(--b1)", background: "var(--s1)", color: "var(--txt)", textDecoration: "none" }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80"
+            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", textDecoration: "none" }}
           >
             <LinkedInIcon />
-            <div>
-              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>LinkedIn</div>
-              <div className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
+            <div className="flex-1 min-w-0">
+              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>LinkedIn</div>
+              <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
             </div>
+            <span style={{ fontSize: ".8rem", color: "var(--sub)" }}>↗</span>
           </a>
 
           <a
             href={CARD.github}
             target="_blank" rel="noreferrer"
             onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150"
-            style={{ borderColor: "var(--b1)", background: "var(--s1)", color: "var(--txt)", textDecoration: "none" }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80"
+            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", textDecoration: "none" }}
           >
             <GitHubIcon className="w-4 h-4" />
-            <div>
-              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>GitHub</div>
-              <div className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>@DanielRakusan</div>
+            <div className="flex-1 min-w-0">
+              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>GitHub</div>
+              <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>@DanielRakusan</div>
             </div>
+            <span style={{ fontSize: ".8rem", color: "var(--sub)" }}>↗</span>
           </a>
 
           <button
             type="button"
             onClick={() => { downloadVcard(); onClose(); }}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150 w-full"
-            style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.05)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80 w-full"
+            style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
           >
             <DownloadIcon />
-            <div>
-              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>Uložit kontakt</div>
-              <div className="font-mono" style={{ fontSize: ".68rem", opacity: .7 }}>stáhnout .vcf do telefonu</div>
+            <div className="flex-1 min-w-0">
+              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>Uložit kontakt</div>
+              <div className="font-mono" style={{ fontSize: ".7rem", opacity: .65 }}>stáhnout .vcf do telefonu</div>
             </div>
+            <span style={{ fontSize: ".8rem", opacity: .4 }}>↓</span>
           </button>
         </div>
 
