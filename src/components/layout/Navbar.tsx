@@ -92,10 +92,9 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, []);
 
-  // Otevře odkaz a až po 80ms zavře sheet — prohlížeč stihne navigaci
-  const openLink = useCallback((url: string) => {
-    window.open(url, "_blank", "noreferrer");
-    setTimeout(onClose, 80);
+  // Zavře sheet až 200ms po kliknutí — navigace href proběhne dřív
+  const delayClose = useCallback(() => {
+    setTimeout(onClose, 200);
   }, [onClose]);
 
   return (
@@ -150,35 +149,39 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
             </div>
           </a>
 
-          <button
-            type="button"
-            onClick={() => openLink(CARD.linkedin)}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
-            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", cursor: "pointer", textAlign: "left" }}
+          <a
+            href={CARD.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            onClick={delayClose}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
+            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", textDecoration: "none" }}
           >
             <LinkedInIcon />
             <div className="flex-1 min-w-0">
               <div style={{ fontSize: ".9rem", fontWeight: 600 }}>LinkedIn</div>
               <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
             </div>
-          </button>
+          </a>
 
-          <button
-            type="button"
-            onClick={() => openLink(CARD.github)}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
-            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", cursor: "pointer", textAlign: "left" }}
+          <a
+            href={CARD.github}
+            target="_blank"
+            rel="noreferrer"
+            onClick={delayClose}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
+            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", textDecoration: "none" }}
           >
             <GitHubIcon className="w-4 h-4" />
             <div className="flex-1 min-w-0">
               <div style={{ fontSize: ".9rem", fontWeight: 600 }}>GitHub</div>
               <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>@DanielRakusan</div>
             </div>
-          </button>
+          </a>
 
           <button
             type="button"
-            onClick={() => { downloadVcard(); setTimeout(onClose, 300); }}
+            onClick={() => { downloadVcard(); setTimeout(onClose, 400); }}
             className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
             style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
           >
