@@ -92,10 +92,6 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, []);
 
-  // Zavře sheet až 200ms po kliknutí — navigace href proběhne dřív
-  const delayClose = useCallback(() => {
-    setTimeout(onClose, 200);
-  }, [onClose]);
 
   return (
     <>
@@ -151,9 +147,6 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
 
           <a
             href={CARD.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            onClick={delayClose}
             className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
             style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", textDecoration: "none" }}
           >
@@ -166,9 +159,6 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
 
           <a
             href={CARD.github}
-            target="_blank"
-            rel="noreferrer"
-            onClick={delayClose}
             className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
             style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", textDecoration: "none" }}
           >
