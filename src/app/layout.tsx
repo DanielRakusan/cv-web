@@ -101,33 +101,58 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         {/* Render backend NENÍ preconnect — free tier spí, timeout by škodil skóre */}
 
-        {/* JSON-LD Person schema — Google bere jako autoritativní zdroj jména a variant */}
+        {/* JSON-LD — ProfilePage + Person + WebSite */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Daniel Rakušan",
-              alternateName: [
-                "Daniel Rakusan",       // bez háčků — nejčastější přepis
-                "Rakušan Daniel",       // příjmení napřed
-                "Rakusan Daniel",
-              ],
-              url: SITE_URL,
-              jobTitle: "Junior Python Backend Developer",
-              description:
-                "Junior Python backend developer z Prahy s IT zázemím. Python, Django, SQLite.",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Praha",
-                addressCountry: "CZ",
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "ProfilePage",
+                name: "Daniel Rakušan — Junior Python Developer",
+                url: SITE_URL,
+                description:
+                  "Osobní portfolio a CV Daniela Rakušana, junior Python backend developera z Prahy.",
+                mainEntity: {
+                  "@type": "Person",
+                  "@id": `${SITE_URL}#daniel-rakusan`,
+                  name: "Daniel Rakušan",
+                  alternateName: [
+                    "Daniel Rakusan",
+                    "Rakušan Daniel",
+                    "Rakusan Daniel",
+                  ],
+                  url: SITE_URL,
+                  image: "https://github.com/DanielRakusan.png",
+                  jobTitle: "Junior Python Backend Developer",
+                  description:
+                    "Junior Python backend developer z Prahy s IT zázemím. Stavím vlastní projekty v Pythonu, Djangu a SQLite.",
+                  knowsAbout: [
+                    "Python", "Django", "SQLite", "Git",
+                    "Backend Development", "REST API", "OOP",
+                    "JavaScript", "HTML", "CSS", "Linux",
+                  ],
+                  address: {
+                    "@type": "PostalAddress",
+                    addressLocality: "Praha",
+                    addressCountry: "CZ",
+                  },
+                  sameAs: [
+                    "https://github.com/DanielRakusan",
+                    "https://linkedin.com/in/daniel-rakusan",
+                  ],
+                },
               },
-              sameAs: [
-                "https://github.com/DanielRakusan",
-                "https://linkedin.com/in/daniel-rakusan",
-              ],
-            }),
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Daniel Rakušan",
+                url: SITE_URL,
+                description:
+                  "Portfolio junior Python backend developera Daniela Rakušana z Prahy.",
+                inLanguage: ["cs", "en"],
+              },
+            ]),
           }}
         />
       </head>
