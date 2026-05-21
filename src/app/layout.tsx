@@ -41,7 +41,12 @@ export const metadata: Metadata = {
     "Junior Python backend developer · Praha / Prague. Python, Django, SQLite, Git. IT background, přecházím do vývoje. Ihned k dispozici.",
 
   keywords: [
+    // Varianty jména — s diakritikou i bez
     "Daniel Rakušan",
+    "Daniel Rakusan",
+    "Rakušan",
+    "Rakusan",
+    // Role
     "junior Python developer",
     "Python backend developer",
     "backend developer Praha",
@@ -102,6 +107,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Preconnect — připraví TCP spojení dříve, než je komponenta potřebuje */}
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         {/* Render backend NENÍ preconnect — free tier spí, timeout by škodil skóre */}
+
+        {/* JSON-LD Person schema — Google bere jako autoritativní zdroj jména a variant */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Daniel Rakušan",
+              alternateName: [
+                "Daniel Rakusan",       // bez háčků — nejčastější přepis
+                "Rakušan Daniel",       // příjmení napřed
+                "Rakusan Daniel",
+              ],
+              url: SITE_URL,
+              jobTitle: "Junior Python Backend Developer",
+              description:
+                "Junior Python backend developer z Prahy s IT zázemím. Python, Django, SQLite.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Praha",
+                addressCountry: "CZ",
+              },
+              sameAs: [
+                "https://github.com/DanielRakusan",
+                "https://linkedin.com/in/daniel-rakusan",
+              ],
+            }),
+          }}
+        />
       </head>
       <body>
         {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
