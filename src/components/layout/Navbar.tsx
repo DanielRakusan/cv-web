@@ -350,17 +350,20 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const onKey   = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { setPopoverOpen(false); setMenuOpen(false); }
     };
-    const onClick = (e: MouseEvent)    => {
+    const onMouseDown = (e: MouseEvent) => {
+      // Na mobilu je MobileContactSheet mimo popoverRef → nechej ho zavřít přes backdrop,
+      // ne přes tento listener (jinak mousedown uzavře modal dřív než <a> stihne navigovat).
+      if (window.innerWidth < 640) return;
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) setPopoverOpen(false);
     };
-    document.addEventListener("keydown",    onKey);
-    document.addEventListener("mousedown",  onClick);
+    document.addEventListener("keydown",   onKey);
+    document.addEventListener("mousedown", onMouseDown);
     return () => {
       document.removeEventListener("keydown",   onKey);
-      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("mousedown", onMouseDown);
     };
   }, []);
 
