@@ -35,7 +35,70 @@ export function BehaviorTracker() {
       return;
     }
     console.log("[BehaviorTracker] ✓ aktivní, backend:", siteConfig.renderApiUrl);
-    trackEvent("page_load" as never, { path: window.location.pathname });
+
+    // ── Referrer + zdroj ────────────────────────────────────────────────────
+    const ref = document.referrer;
+    const refDomain = ref
+      ? (() => {
+          try { return new URL(ref).hostname.replace(/^www\./, ""); }
+          catch { return ref.slice(0, 100); }
+        })()
+      : "";
+
+    // Kategorizace zdroje
+    const getSource = (domain: string): string => {
+      if (!domain) return "direct";
+      if (/google\./i.test(domain))    return "google";
+      if (/linkedin\.com/i.test(domain)) return "linkedin";
+      if (/github\.com/i.test(domain))   return "github";
+      if (/facebook\.|fb\.com/i.test(domain)) return "facebook";
+      if (/instagram\.com/i.test(domain)) return "instagram";
+      if (/t\.co|twitter\.com|x\.com/i.test(domain)) return "twitter/x";
+      if (/wa\.me|whatsapp/i.test(domain)) return "whatsapp";
+      if (/bing\./i.test(domain))      return "bing";
+      if (/duckduckgo\./i.test(domain)) return "duckduckgo";
+      return "other";
+    };
+
+    // UTM parametry z URL
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Detekce zařízení
+    const ua = navigator.userAgent;
+    const isMob = /Mobi|Android|iPhone|iPod/i.test(ua);
+    const isTab = /iPad/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua));
+    const device = isTab ? "tablet" : isMob ? "mobile" : "desktop";
+
+    // Detekce prohlížeče
+    const getBrowser = (s: string): string => {
+      if (/Edg\//i.test(s))             return "Edge";
+      if (/OPR\/|Opera\//i.test(s))     return "Opera";
+      if (/SamsungBrowser/i.test(s))    return "Samsung";
+      if (/Firefox\//i.test(s))         return "Firefox";
+      if (/CriOS\//i.test(s))           return "Chrome iOS";
+      if (/FxiOS\//i.test(s))           return "Firefox iOS";
+      if (/Chrome\//i.test(s))          return "Chrome";
+      if (/Safari\//i.test(s))          return "Safari";
+      return "Other";
+    };
+
+    const source = urlParams.get("utm_source") || getSource(refDomain);
+
+    trackEvent("page_load" as never, {
+      path:            window.location.pathname,
+      referrer:        ref.slice(0, 300),
+      referrer_domain: refDomain,
+      source,
+      utm_source:      urlParams.get("utm_source")   ?? "",
+      utm_medium:      urlParams.get("utm_medium")   ?? "",
+      utm_campaign:    urlParams.get("utm_campaign") ?? "",
+      utm_content:     urlParams.get("utm_content")  ?? "",
+      device,
+      screen:          `${screen.width}x${screen.height}`,
+      browser:         getBrowser(ua),
+      lang:            navigator.language,
+      tz:              Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
 
     // ── 1. Mouse movement / touch → human_signal ────────────────────────────
     const sendHuman = () => {
