@@ -217,117 +217,110 @@ function BusinessCard({ onClose }: { onClose: () => void }) {
   }, []);
 
   const contactRows = [
-    { icon: <GitHubIcon className="w-3 h-3" />, label: "github",   value: "@DanielRakusan",      href: CARD.github },
-    { icon: <MailIcon />,                        label: "mail",     value: CARD.email,             href: `mailto:${CARD.email}` },
-    { icon: <LinkedInIcon />,                    label: "linkedin", value: "/in/daniel-rakusan",   href: CARD.linkedin },
-    { icon: <GlobeIcon />,                       label: "web",      value: "danielrakusan.cz",     href: CARD.web },
+    { icon: <GitHubIcon className="w-3 h-3" />, key: "github",   label: "github",   value: "@DanielRakusan",    href: CARD.github,              color: "var(--txt)",  accent: "rgba(255,255,255,.15)" },
+    { icon: <MailIcon />,                        key: "mail",     label: "email",    value: CARD.email,          href: `mailto:${CARD.email}`,   color: "var(--cyan)", accent: "rgba(34,211,238,.18)"  },
+    { icon: <LinkedInIcon />,                    key: "linkedin", label: "linkedin", value: "/in/daniel-rakusan",href: CARD.linkedin,            color: "#93c5fd",     accent: "rgba(147,197,253,.15)" },
+    { icon: <GlobeIcon />,                       key: "web",      label: "web",      value: "danielrakusan.cz",  href: CARD.web,                 color: "var(--green)",accent: "rgba(74,222,128,.15)"  },
   ];
 
   return (
     <div
-      className="absolute right-0 top-full mt-2 rounded-xl border z-50"
+      className="absolute right-0 top-full mt-2 rounded-2xl border z-50 overflow-hidden"
       style={{
         width: "min(340px, calc(100vw - 32px))",
-        background: "rgba(4,4,18,.97)",
-        borderColor: "var(--b1)",
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 24px 64px rgba(0,0,0,.65)",
+        background: "rgba(3,3,14,.98)",
+        borderColor: "rgba(255,255,255,.09)",
+        backdropFilter: "blur(24px)",
+        boxShadow: "0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(34,211,238,.06)",
       }}
     >
-      {/* Hlavička — jméno + role */}
-      <div
-        className="px-5 pt-5 pb-4"
-        style={{ borderBottom: "1px solid var(--b0)" }}
-      >
-        <p
-          className="font-mono"
-          style={{ fontSize: ".6rem", color: "var(--cyan)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: ".35rem" }}
-        >
-          // e-vizitka
+      {/* Hlavička */}
+      <div className="px-5 pt-5 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,.05)" }}>
+        <p className="font-mono" style={{ fontSize: ".58rem", color: "var(--green)", letterSpacing: ".14em", marginBottom: ".5rem" }}>
+          <span style={{ color: "var(--dim)" }}>const </span>
+          <span style={{ color: "var(--cyan)" }}>contact</span>
+          <span style={{ color: "var(--dim)" }}> = </span>
+          <span style={{ color: "var(--green)" }}>&#123;</span>
         </p>
-        <p style={{ fontSize: "1rem", fontWeight: 700, color: "var(--txt)", lineHeight: 1.2, marginBottom: ".2rem" }}>
+        <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", lineHeight: 1.15, marginBottom: ".25rem" }}>
           {CARD.name}
         </p>
-        <p className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)", letterSpacing: ".02em" }}>
-          {CARD.role} · {CARD.city}
+        <p className="font-mono" style={{ fontSize: ".66rem", color: "var(--sub)", letterSpacing: ".01em" }}>
+          {CARD.role} <span style={{ color: "var(--dim)" }}>·</span> {CARD.city}
         </p>
       </div>
 
       {/* Tělo — QR + kontakty */}
-      <div className="flex gap-4 px-5 py-4" style={{ borderBottom: "1px solid var(--b0)" }}>
+      <div className="flex gap-4 px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,.05)" }}>
 
         {/* QR kód */}
-        <div className="flex-shrink-0 flex flex-col items-center gap-1.5">
+        <div className="flex-shrink-0 flex flex-col items-center gap-2">
           <div
-            className="rounded-lg p-2"
-            style={{ background: "#fff" }}
+            className="rounded-xl p-1.5"
+            style={{ background: "#fff", boxShadow: "0 0 0 1px rgba(34,211,238,.2)" }}
             title="Naskenuj pro uložení kontaktu"
           >
-            <QRCodeSVG
-              value={VCARD}
-              size={88}
-              bgColor="#ffffff"
-              fgColor="#02020a"
-              level="M"
-            />
+            <QRCodeSVG value={VCARD} size={82} bgColor="#ffffff" fgColor="#02020a" level="M" />
           </div>
-          <p className="font-mono text-center" style={{ fontSize: ".52rem", color: "var(--dim)", lineHeight: 1.3 }}>
-            scan →<br />uložit kontakt
+          <p className="font-mono text-center" style={{ fontSize: ".5rem", color: "var(--dim)", lineHeight: 1.4 }}>
+            scan → save
           </p>
         </div>
 
-        {/* Kontaktní řádky */}
-        <div className="flex flex-col justify-center gap-1.5 flex-1 min-w-0">
-          {contactRows.map(({ icon, label, value, href }) => (
+        {/* Kontaktní řádky — kódový styl */}
+        <div className="flex flex-col justify-center gap-1 flex-1 min-w-0">
+          {contactRows.map(({ icon, key, label, value, href, color, accent }) => (
             <a
-              key={label}
+              key={key}
               href={href}
               target={href.startsWith("mailto") ? undefined : "_blank"}
               rel="noreferrer"
-              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 border transition-all duration-150"
-              style={{
-                borderColor: "var(--b0)",
-                background: "var(--s1)",
-                textDecoration: "none",
-                minWidth: 0,
+              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 transition-all duration-150 group"
+              style={{ textDecoration: "none", minWidth: 0, border: "1px solid transparent" }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = accent;
+                el.style.borderColor = color.replace("var(--cyan)", "rgba(34,211,238,.3)").replace("var(--green)", "rgba(74,222,128,.3)").replace("var(--txt)", "rgba(255,255,255,.12)").replace("#93c5fd", "rgba(147,197,253,.3)");
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,.3)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b0)"; }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = "";
+                el.style.borderColor = "transparent";
+              }}
             >
-              <span style={{ color: "var(--dim)", flexShrink: 0 }}>{icon}</span>
-              <span
-                className="font-mono truncate"
-                style={{ fontSize: ".72rem", color: "var(--txt)" }}
-                title={value}
-              >
-                {value}
-              </span>
+              <span style={{ color, flexShrink: 0, opacity: .8 }}>{icon}</span>
+              <div className="min-w-0">
+                <span className="font-mono block" style={{ fontSize: ".58rem", color: "var(--dim)", letterSpacing: ".06em" }}>{label}:</span>
+                <span className="font-mono truncate block" style={{ fontSize: ".72rem", color, fontWeight: 500 }} title={value}>{value}</span>
+              </div>
             </a>
           ))}
         </div>
       </div>
 
-      {/* Footer — stažení vCard */}
-      <div className="px-5 py-3">
+      {/* Footer */}
+      <div className="px-5 py-3" style={{ background: "rgba(34,211,238,.03)" }}>
         <button
           type="button"
           onClick={downloadVcard}
-          className="w-full flex items-center justify-center gap-2 rounded-lg py-2 border font-mono transition-all duration-150"
+          className="w-full flex items-center justify-center gap-2 rounded-lg py-2 font-mono transition-all duration-150"
           style={{
-            fontSize: ".72rem",
+            fontSize: ".7rem", letterSpacing: ".06em",
             color: "var(--cyan)",
-            borderColor: "rgba(34,211,238,.25)",
-            background: "rgba(34,211,238,.04)",
+            border: "1px solid rgba(34,211,238,.2)",
+            background: "transparent",
             cursor: "pointer",
-            letterSpacing: ".04em",
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(34,211,238,.1)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.5)"; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(34,211,238,.04)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.25)"; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(34,211,238,.09)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.45)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,211,238,.2)"; }}
           title="Stáhnout .vcf soubor — otevře se v aplikaci Kontakty"
         >
           <DownloadIcon />
           uložit kontakt (.vcf)
         </button>
+        <p className="font-mono text-center" style={{ fontSize: ".52rem", color: "var(--dim)", marginTop: ".4rem" }}>
+          <span style={{ color: "var(--green)" }}>&#125;</span>
+        </p>
       </div>
     </div>
   );
