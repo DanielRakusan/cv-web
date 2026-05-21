@@ -112,45 +112,94 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 name: "Daniel Rakušan — Junior Python Developer",
                 url: SITE_URL,
                 description:
-                  "Osobní portfolio a CV Daniela Rakušana, junior Python backend developera z Prahy.",
+                  "Osobní portfolio a CV Daniela Rakušana, junior Python backend developera z Prahy. Python, Django, SQLite.",
+                inLanguage: ["cs", "en"],
                 mainEntity: {
                   "@type": "Person",
                   "@id": `${SITE_URL}#daniel-rakusan`,
+
+                  // Jméno ve všech variantách
                   name: "Daniel Rakušan",
                   alternateName: [
-                    "Daniel Rakusan",
-                    "Rakušan Daniel",
+                    "Daniel Rakusan",      // bez háčků — nejčastější přepis
+                    "Rakušan Daniel",      // příjmení napřed
                     "Rakusan Daniel",
+                    "D. Rakušan",
+                    "D. Rakusan",
                   ],
+
                   url: SITE_URL,
                   image: "https://github.com/DanielRakusan.png",
+
+                  // Role
                   jobTitle: "Junior Python Backend Developer",
                   description:
-                    "Junior Python backend developer z Prahy s IT zázemím. Stavím vlastní projekty v Pythonu, Djangu a SQLite.",
-                  knowsAbout: [
-                    "Python", "Django", "SQLite", "Git",
-                    "Backend Development", "REST API", "OOP",
-                    "JavaScript", "HTML", "CSS", "Linux",
-                  ],
+                    "Junior Python backend developer z Prahy / Prague. IT background, vlastní projekty v Pythonu, Djangu a SQLite. Hledám první pozici v IT. Looking for first dev role.",
+
+                  // Poloha
+                  nationality: "CZ",
+                  homeLocation: {
+                    "@type": "Place",
+                    name: "Praha, Česká republika",
+                  },
                   address: {
                     "@type": "PostalAddress",
                     addressLocality: "Praha",
+                    addressRegion: "Hlavní město Praha",
                     addressCountry: "CZ",
                   },
+
+                  // Technologie a dovednosti
+                  knowsAbout: [
+                    "Python", "Django", "SQLite", "Git", "GitHub",
+                    "Backend Development", "REST API", "OOP",
+                    "JavaScript", "HTML", "CSS", "Linux",
+                    "IT Support", "Troubleshooting",
+                  ],
+                  hasOccupation: {
+                    "@type": "Occupation",
+                    name: "Python Backend Developer",
+                    description: "Vývoj backendových aplikací v Pythonu s využitím Django a SQLite.",
+                    occupationLocation: {
+                      "@type": "City",
+                      name: "Praha",
+                    },
+                    skills: "Python, Django, SQLite, Git, REST API, OOP, JavaScript",
+                    estimatedSalary: {
+                      "@type": "MonetaryAmountDistribution",
+                      currency: "CZK",
+                      unitText: "MONTH",
+                    },
+                  },
+
+                  // Hledám práci
+                  seeks: {
+                    "@type": "Demand",
+                    name: "Junior Python Backend Developer position",
+                    description:
+                      "Hledám první pozici junior Python / backend developera v Praze nebo remote. Looking for a junior Python backend developer role in Prague or remote.",
+                  },
+
+                  // Kontakt a profily
+                  email: "daniel@danielrakusan.cz",
                   sameAs: [
                     "https://github.com/DanielRakusan",
                     "https://linkedin.com/in/daniel-rakusan",
+                    SITE_URL,
                   ],
                 },
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
+                "@id": `${SITE_URL}#website`,
                 name: "Daniel Rakušan",
+                alternateName: "Daniel Rakusan",
                 url: SITE_URL,
                 description:
-                  "Portfolio junior Python backend developera Daniela Rakušana z Prahy.",
+                  "Portfolio a CV junior Python backend developera Daniela Rakušana z Prahy.",
                 inLanguage: ["cs", "en"],
+                author: { "@id": `${SITE_URL}#daniel-rakusan` },
               },
             ]),
           }}
