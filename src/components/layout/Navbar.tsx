@@ -233,14 +233,26 @@ function BusinessCard({ onClose }: { onClose: () => void }) {
         boxShadow: "0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(34,211,238,.06)",
       }}
     >
+      {/* Editor tab bar */}
+      <div style={{
+        background: "rgba(255,255,255,.03)",
+        borderBottom: "1px solid rgba(255,255,255,.07)",
+        padding: ".42rem 1.1rem",
+        display: "flex",
+        alignItems: "center",
+        gap: ".38rem",
+      }}>
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5f57", flexShrink: 0 }} />
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#febc2e", flexShrink: 0 }} />
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#28c840", flexShrink: 0 }} />
+        <span className="font-mono" style={{ fontSize: ".6rem", color: "var(--sub)", marginLeft: ".55rem", letterSpacing: ".04em" }}>
+          contact.ts
+        </span>
+        <span style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: "var(--cyan)", opacity: .7 }} />
+      </div>
+
       {/* Hlavička */}
-      <div className="px-5 pt-5 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,.05)" }}>
-        <p className="font-mono" style={{ fontSize: ".58rem", color: "var(--green)", letterSpacing: ".14em", marginBottom: ".5rem" }}>
-          <span style={{ color: "var(--dim)" }}>const </span>
-          <span style={{ color: "var(--cyan)" }}>contact</span>
-          <span style={{ color: "var(--dim)" }}> = </span>
-          <span style={{ color: "var(--green)" }}>&#123;</span>
-        </p>
+      <div className="px-5 pt-4 pb-3.5" style={{ borderBottom: "1px solid rgba(255,255,255,.05)" }}>
         <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", lineHeight: 1.15, marginBottom: ".25rem" }}>
           {CARD.name}
         </p>
@@ -259,7 +271,7 @@ function BusinessCard({ onClose }: { onClose: () => void }) {
             style={{ background: "#fff", boxShadow: "0 0 0 1px rgba(34,211,238,.2)" }}
             title="Naskenuj pro uložení kontaktu"
           >
-            <QRCodeSVG value={VCARD} size={82} bgColor="#ffffff" fgColor="#02020a" level="M" />
+            <QRCodeSVG value={VCARD} size={70} bgColor="#ffffff" fgColor="#02020a" level="M" />
           </div>
           <p className="font-mono text-center" style={{ fontSize: ".5rem", color: "var(--dim)", lineHeight: 1.4 }}>
             scan → save
@@ -317,9 +329,6 @@ function BusinessCard({ onClose }: { onClose: () => void }) {
           <DownloadIcon />
           uložit kontakt (.vcf)
         </button>
-        <p className="font-mono text-center" style={{ fontSize: ".52rem", color: "var(--dim)", marginTop: ".4rem" }}>
-          <span style={{ color: "var(--green)" }}>&#125;</span>
-        </p>
       </div>
     </div>
   );
