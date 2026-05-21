@@ -86,9 +86,17 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
     const a    = document.createElement("a");
     a.href     = url;
     a.download = "daniel-rakusan.vcf";
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, []);
+
+  // Otevře odkaz a až po 80ms zavře sheet — prohlížeč stihne navigaci
+  const openLink = useCallback((url: string) => {
+    window.open(url, "_blank", "noreferrer");
+    setTimeout(onClose, 80);
+  }, [onClose]);
 
   return (
     <>
@@ -132,8 +140,7 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col gap-2 px-5 py-5">
           <a
             href={`mailto:${CARD.email}`}
-            onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 active:opacity-80"
+            className="flex items-center gap-3 rounded-xl px-4 py-4 active:opacity-75"
             style={{ background: "var(--cyan)", color: "#02020a", textDecoration: "none" }}
           >
             <MailIcon />
@@ -141,43 +148,38 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
               <div style={{ fontSize: ".9rem", fontWeight: 700 }}>Napište mi e-mail</div>
               <div className="font-mono truncate" style={{ fontSize: ".7rem", opacity: .65 }}>{CARD.email}</div>
             </div>
-            <span style={{ fontSize: ".8rem", opacity: .5 }}>↗</span>
           </a>
 
-          <a
-            href={CARD.linkedin}
-            target="_blank" rel="noreferrer"
-            onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80"
-            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", textDecoration: "none" }}
+          <button
+            type="button"
+            onClick={() => openLink(CARD.linkedin)}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
+            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", cursor: "pointer", textAlign: "left" }}
           >
             <LinkedInIcon />
             <div className="flex-1 min-w-0">
               <div style={{ fontSize: ".9rem", fontWeight: 600 }}>LinkedIn</div>
               <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
             </div>
-            <span style={{ fontSize: ".8rem", color: "var(--sub)" }}>↗</span>
-          </a>
+          </button>
 
-          <a
-            href={CARD.github}
-            target="_blank" rel="noreferrer"
-            onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80"
-            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", textDecoration: "none" }}
+          <button
+            type="button"
+            onClick={() => openLink(CARD.github)}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
+            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", cursor: "pointer", textAlign: "left" }}
           >
             <GitHubIcon className="w-4 h-4" />
             <div className="flex-1 min-w-0">
               <div style={{ fontSize: ".9rem", fontWeight: 600 }}>GitHub</div>
               <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>@DanielRakusan</div>
             </div>
-            <span style={{ fontSize: ".8rem", color: "var(--sub)" }}>↗</span>
-          </a>
+          </button>
 
           <button
             type="button"
-            onClick={() => { downloadVcard(); onClose(); }}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-80 w-full"
+            onClick={() => { downloadVcard(); setTimeout(onClose, 300); }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
             style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
           >
             <DownloadIcon />
@@ -185,7 +187,6 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
               <div style={{ fontSize: ".9rem", fontWeight: 600 }}>Uložit kontakt</div>
               <div className="font-mono" style={{ fontSize: ".7rem", opacity: .65 }}>stáhnout .vcf do telefonu</div>
             </div>
-            <span style={{ fontSize: ".8rem", opacity: .4 }}>↓</span>
           </button>
         </div>
 
