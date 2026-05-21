@@ -94,23 +94,29 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
 
 
   return (
-    <>
-      {/* Backdrop */}
+    /* Jeden fixed container: top flex-1 = backdrop, bottom flex-shrink-0 = sheet.
+       Žádné překrývání DOM prvků → žádný iOS click-passthrough bug. */
+    <div
+      className="fixed inset-0 z-50 flex flex-col"
+      style={{ touchAction: "none" }}
+    >
+      {/* Horní část — tap zavře */}
       <div
-        className="fixed inset-0 z-40"
+        className="flex-1"
         style={{ background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }}
         onClick={onClose}
       />
 
       {/* Bottom sheet */}
       <div
-        className="fixed left-0 right-0 bottom-0 z-50 rounded-t-2xl"
+        className="rounded-t-2xl flex-shrink-0"
         style={{
           background: "rgba(4,4,18,.98)",
           border: "1px solid var(--b1)",
           borderBottom: "none",
           boxShadow: "0 -24px 64px rgba(0,0,0,.7)",
           animation: "sheet-up .28s cubic-bezier(.22,1,.36,1) both",
+          touchAction: "auto",
         }}
       >
         {/* Drag handle */}
@@ -193,7 +199,7 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
           to   { transform: translateY(0); }
         }
       `}</style>
-    </>
+    </div>
   );
 }
 
