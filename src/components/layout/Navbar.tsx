@@ -93,103 +93,95 @@ function MobileContactSheet({ onClose }: { onClose: () => void }) {
   }, []);
 
 
+  // Styl pro každý řádek — konzistentní
+  const rowStyle: React.CSSProperties = {
+    display: "flex", alignItems: "center", gap: "0.75rem",
+    borderRadius: 14, padding: "0.85rem 1rem",
+    background: "rgba(255,255,255,.05)",
+    border: "1px solid rgba(255,255,255,.09)",
+    textDecoration: "none", color: "var(--txt)",
+    touchAction: "manipulation",   // žádné 300ms delay, bez ovlivnění click
+  };
+
   return (
-    /* Jeden fixed container: top flex-1 = backdrop, bottom flex-shrink-0 = sheet.
-       Žádné překrývání DOM prvků → žádný iOS click-passthrough bug. */
-    <div
-      className="fixed inset-0 z-50 flex flex-col"
-      style={{ touchAction: "none" }}
-    >
-      {/* Horní část — tap zavře */}
+    // Jeden flex-col kontejner — horní část = backdrop, dolní = sheet.
+    // ŽÁDNÝ touchAction: none na outer divu → iOS Chrome syntetizuje click normálně.
+    <div className="fixed inset-0 z-50 flex flex-col">
+      {/* Backdrop — tap zavře */}
       <div
         className="flex-1"
-        style={{ background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }}
+        style={{ background: "rgba(0,0,0,.55)", backdropFilter: "blur(3px)" }}
         onClick={onClose}
       />
 
-      {/* Bottom sheet */}
+      {/* Sheet */}
       <div
         className="rounded-t-2xl flex-shrink-0"
         style={{
           background: "rgba(4,4,18,.98)",
-          border: "1px solid var(--b1)",
-          borderBottom: "none",
+          borderTop: "1px solid rgba(255,255,255,.1)",
           boxShadow: "0 -24px 64px rgba(0,0,0,.7)",
-          animation: "sheet-up .28s cubic-bezier(.22,1,.36,1) both",
-          touchAction: "auto",
+          animation: "sheet-up .26s cubic-bezier(.22,1,.36,1) both",
         }}
       >
-        {/* Drag handle */}
+        {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
-          <div style={{ width: 36, height: 4, borderRadius: 2, background: "var(--b2)" }} />
+          <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(255,255,255,.15)" }} />
         </div>
 
         {/* Header */}
-        <div className="px-6 pt-3 pb-5" style={{ borderBottom: "1px solid var(--b0)" }}>
-          <p className="font-mono" style={{ fontSize: ".58rem", color: "var(--cyan)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: ".3rem" }}>
+        <div className="px-6 pt-2 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,.07)" }}>
+          <p className="font-mono" style={{ fontSize: ".58rem", color: "var(--cyan)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: ".35rem" }}>
             // kontakt
           </p>
-          <p style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--txt)", lineHeight: 1.2, marginBottom: ".2rem" }}>
+          <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--txt)", lineHeight: 1.2, marginBottom: ".2rem" }}>
             {CARD.name}
           </p>
-          <p className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>
+          <p className="font-mono" style={{ fontSize: ".67rem", color: "var(--sub)" }}>
             {CARD.role}
           </p>
         </div>
 
-        {/* Action buttons — velké, snadno kliknutelné */}
-        <div className="flex flex-col gap-2 px-5 py-5">
-          <a
-            href={`mailto:${CARD.email}`}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 active:opacity-75"
-            style={{ background: "var(--cyan)", color: "#02020a", textDecoration: "none" }}
-          >
-            <MailIcon />
-            <div className="flex-1 min-w-0">
-              <div style={{ fontSize: ".9rem", fontWeight: 700 }}>Napište mi e-mail</div>
-              <div className="font-mono truncate" style={{ fontSize: ".7rem", opacity: .65 }}>{CARD.email}</div>
+        {/* Řádky — stejný styl jako desktop */}
+        <div className="flex flex-col gap-2 px-5 py-4">
+          <a href={`mailto:${CARD.email}`} style={rowStyle}>
+            <span style={{ color: "var(--cyan)", flexShrink: 0 }}><MailIcon /></span>
+            <div className="min-w-0 flex-1">
+              <div className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".05em", marginBottom: ".1rem" }}>email:</div>
+              <div className="font-mono truncate" style={{ fontSize: ".82rem", color: "var(--cyan)", fontWeight: 500 }}>{CARD.email}</div>
             </div>
           </a>
 
-          <a
-            href={CARD.linkedin}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
-            style={{ borderColor: "rgba(99,102,241,.4)", background: "rgba(99,102,241,.08)", color: "var(--txt)", textDecoration: "none" }}
-          >
-            <LinkedInIcon />
-            <div className="flex-1 min-w-0">
-              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>LinkedIn</div>
-              <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
+          <a href={CARD.linkedin} style={rowStyle}>
+            <span style={{ color: "#93c5fd", flexShrink: 0 }}><LinkedInIcon /></span>
+            <div className="min-w-0 flex-1">
+              <div className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".05em", marginBottom: ".1rem" }}>linkedin:</div>
+              <div className="font-mono" style={{ fontSize: ".82rem", color: "#93c5fd", fontWeight: 500 }}>/in/daniel-rakusan</div>
             </div>
           </a>
 
-          <a
-            href={CARD.github}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75"
-            style={{ borderColor: "var(--b2)", background: "var(--s2)", color: "var(--txt)", textDecoration: "none" }}
-          >
-            <GitHubIcon className="w-4 h-4" />
-            <div className="flex-1 min-w-0">
-              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>GitHub</div>
-              <div className="font-mono" style={{ fontSize: ".7rem", color: "var(--sub)" }}>@DanielRakusan</div>
+          <a href={CARD.github} style={rowStyle}>
+            <span style={{ color: "var(--txt)", flexShrink: 0 }}><GitHubIcon className="w-3.5 h-3.5" /></span>
+            <div className="min-w-0 flex-1">
+              <div className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".05em", marginBottom: ".1rem" }}>github:</div>
+              <div className="font-mono" style={{ fontSize: ".82rem", color: "var(--txt)", fontWeight: 500 }}>@DanielRakusan</div>
             </div>
           </a>
 
           <button
             type="button"
             onClick={() => { downloadVcard(); setTimeout(onClose, 400); }}
-            className="flex items-center gap-3 rounded-xl px-4 py-4 border active:opacity-75 w-full"
-            style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.06)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
+            style={{ ...rowStyle, cursor: "pointer", width: "100%", textAlign: "left", border: "1px solid rgba(34,211,238,.25)", background: "rgba(34,211,238,.05)" }}
           >
-            <DownloadIcon />
-            <div className="flex-1 min-w-0">
-              <div style={{ fontSize: ".9rem", fontWeight: 600 }}>Uložit kontakt</div>
-              <div className="font-mono" style={{ fontSize: ".7rem", opacity: .65 }}>stáhnout .vcf do telefonu</div>
+            <span style={{ color: "var(--cyan)", flexShrink: 0 }}><DownloadIcon /></span>
+            <div className="min-w-0 flex-1">
+              <div className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".05em", marginBottom: ".1rem" }}>vcard:</div>
+              <div className="font-mono" style={{ fontSize: ".82rem", color: "var(--cyan)", fontWeight: 500 }}>uložit kontakt (.vcf)</div>
             </div>
           </button>
         </div>
 
-        {/* Safe area spacing pro iPhone */}
+        {/* Safe area */}
         <div style={{ height: "env(safe-area-inset-bottom, 16px)", minHeight: 16 }} />
       </div>
 
@@ -372,11 +364,11 @@ export function Navbar() {
     };
   }, []);
 
-  // Zamknout scroll při otevřeném menu
+  // Zamknout scroll při otevřeném menu nebo sheetu
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = (menuOpen || (popoverOpen && isMobile)) ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+  }, [menuOpen, popoverOpen, isMobile]);
 
   const closeMenu = () => setMenuOpen(false);
 
