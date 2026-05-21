@@ -34,8 +34,8 @@ export function SectionWrapper({ id, children, className = "" }: Props) {
     <section
       ref={ref}
       id={id}
-      className={`section-fade ${className}`}
-      style={{ padding: "5rem 5vw", maxWidth: 1060, margin: "0 auto" }}
+      className={`section-fade section-padding ${className}`}
+      style={{ maxWidth: 1060, margin: "0 auto" }}
     >
       {children}
     </section>

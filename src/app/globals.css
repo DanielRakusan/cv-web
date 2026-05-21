@@ -163,6 +163,11 @@ body {
   50%       { transform: translateY(4px); }
 }
 
+/* ── Section padding (responsive) ── */
+.section-padding { padding: 3rem 1.25rem; }
+@media (min-width: 540px) { .section-padding { padding: 4rem 5vw; } }
+@media (min-width: 768px) { .section-padding { padding: 5rem 5vw; } }
+
 /* ── Section scroll reveal (replaces framer-motion whileInView) ── */
 .section-fade {
   opacity: 0;
