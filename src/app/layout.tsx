@@ -38,26 +38,17 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Junior Python backend developer · Praha / Prague. Python, Django, SQLite, Git. IT background, přecházím do vývoje. Ihned k dispozici.",
+    "Daniel Rakušan — junior Python developer z Prahy. Stavím backend projekty v Pythonu, Djangu a SQLite. Hledám první pozici v IT. Ihned k dispozici.",
 
   keywords: [
-    // Varianty jména — s diakritikou i bez
     "Daniel Rakušan",
     "Daniel Rakusan",
-    "Rakušan",
-    "Rakusan",
-    // Role
     "junior Python developer",
-    "Python backend developer",
+    "Python developer Praha",
+    "Python developer Prague",
     "backend developer Praha",
-    "backend developer Prague",
-    "Django developer",
-    "SQLite developer",
-    "IT support to developer",
-    "junior developer Praha",
-    "junior developer Prague",
-    "Python portfolio",
-    "Python Django portfolio",
+    "Python Django developer",
+    "junior backend developer",
   ],
 
   authors: [{ name: "Daniel Rakušan", url: SITE_URL }],
@@ -84,14 +75,14 @@ export const metadata: Metadata = {
     siteName: "Daniel Rakušan",
     title: "Daniel Rakušan — Junior Python Developer",
     description:
-      "Junior Python backend developer from Prague with IT background. Python, Django, SQLite. Available now.",
+      "Daniel Rakusan — junior Python developer from Prague. Python, Django, SQLite. Looking for first dev role. Available now.",
   },
 
   twitter: {
     card: "summary_large_image",
     title: "Daniel Rakušan — Junior Python Developer",
     description:
-      "Junior Python backend developer from Prague. Python, Django, SQLite. Available now.",
+      "Daniel Rakusan — junior Python developer from Prague. Python, Django, SQLite. Available now.",
   },
 
   alternates: {
