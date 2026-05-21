@@ -367,6 +367,26 @@ export function Navbar() {
             {t.hero.ctaContact} →
           </a>
 
+          {/* GitHub icon — pouze mobil (< 640px), kde je kontakt popover skrytý */}
+          <a
+            href={siteConfig.social.github}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+            className="sm:hidden flex items-center justify-center flex-shrink-0"
+            style={{
+              width: 32, height: 32, borderRadius: "50%",
+              border: "1px solid var(--b1)",
+              background: "var(--s1)",
+              color: "var(--sub)",
+              textDecoration: "none",
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--cyan)"; (e.currentTarget as HTMLElement).style.color = "var(--cyan)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b1)"; (e.currentTarget as HTMLElement).style.color = "var(--sub)"; }}
+          >
+            <GitHubIcon className="w-3.5 h-3.5" />
+          </a>
+
           {/* Hamburger button — mobile only */}
           <button
             type="button"
