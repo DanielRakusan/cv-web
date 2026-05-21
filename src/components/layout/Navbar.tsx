@@ -213,6 +213,7 @@ export function Navbar() {
   const t = useContent();
   const [scrolled,    setScrolled]    = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [menuOpen,    setMenuOpen]    = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -222,7 +223,9 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const onKey   = (e: KeyboardEvent) => { if (e.key === "Escape") setPopoverOpen(false); };
+    const onKey   = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setPopoverOpen(false); setMenuOpen(false); }
+    };
     const onClick = (e: MouseEvent)    => {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) setPopoverOpen(false);
     };
@@ -234,6 +237,14 @@ export function Navbar() {
     };
   }, []);
 
+  // Zamknout scroll při otevřeném menu
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   const navLinks = [
     { href: "#oMne",        label: lang === "cz" ? "proč já"    : "why me"    },
     { href: "#dovednosti",  label: lang === "cz" ? "dovednosti" : "skills"    },
@@ -244,119 +255,195 @@ export function Navbar() {
   ];
 
   return (
-    <header
-      className="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 transition-all duration-300"
-      style={{
-        padding: ".85rem 5vw",
-        background: scrolled ? "rgba(2,2,10,.85)" : "rgba(2,2,10,.6)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderBottom: `1px solid ${scrolled ? "var(--b0)" : "transparent"}`,
-      }}
-    >
-      {/* Logo */}
-      <a
-        href="#oMne"
-        className="font-mono flex-shrink-0"
-        style={{ fontSize: ".78rem", color: "var(--cyan)", textDecoration: "none", letterSpacing: ".06em" }}
+    <>
+      <header
+        className="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 transition-all duration-300"
+        style={{
+          padding: ".85rem 5vw",
+          background: scrolled || menuOpen ? "rgba(2,2,10,.97)" : "rgba(2,2,10,.6)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: `1px solid ${scrolled || menuOpen ? "var(--b0)" : "transparent"}`,
+        }}
       >
-        dr.rakusan_
-      </a>
+        {/* Logo */}
+        <a
+          href="#oMne"
+          className="font-mono flex-shrink-0"
+          style={{ fontSize: ".78rem", color: "var(--cyan)", textDecoration: "none", letterSpacing: ".06em" }}
+          onClick={closeMenu}
+        >
+          dr.rakusan_
+        </a>
 
-      {/* Nav links */}
-      <nav aria-label="Hlavní navigace" className="hidden md:flex items-center gap-6">
-        {navLinks.map((l) => (
-          <a
-            key={l.href}
-            href={l.href}
-            className="font-mono transition-colors duration-150"
-            style={{ fontSize: ".65rem", color: "var(--sub)", textDecoration: "none", letterSpacing: ".05em" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--cyan)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--sub)")}
+        {/* Nav links — desktop */}
+        <nav aria-label="Hlavní navigace" className="hidden md:flex items-center gap-6">
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="font-mono transition-colors duration-150"
+              style={{ fontSize: ".65rem", color: "var(--sub)", textDecoration: "none", letterSpacing: ".05em" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--cyan)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--sub)")}
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Right: e-vizitka + lang switch + CTA + hamburger */}
+        <div className="flex items-center gap-3">
+
+          {/* E-vizitka popover — desktop only */}
+          <div ref={popoverRef} className="relative hidden sm:block">
+            <button
+              type="button"
+              onClick={() => setPopoverOpen(v => !v)}
+              aria-expanded={popoverOpen}
+              aria-label="Otevřít e-vizitku"
+              className="font-mono flex items-center gap-1.5 transition-all duration-150"
+              style={{
+                fontSize: ".68rem",
+                padding: ".4rem .95rem",
+                border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
+                borderRadius: 4,
+                color: popoverOpen ? "var(--cyan)" : "var(--sub)",
+                background: "transparent",
+                cursor: "pointer",
+                letterSpacing: ".03em",
+              }}
+              onMouseEnter={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b2)"; e.currentTarget.style.color = "var(--txt)"; } }}
+              onMouseLeave={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; } }}
+            >
+              <GitHubIcon className="w-3.5 h-3.5" />
+              kontakt
+            </button>
+            {popoverOpen && <BusinessCard onClose={() => setPopoverOpen(false)} />}
+          </div>
+
+          {/* Lang switch */}
+          <div
+            className="flex rounded-full p-1"
+            style={{ border: "1px solid var(--b1)", background: "var(--s1)" }}
           >
-            {l.label}
-          </a>
-        ))}
-      </nav>
+            {(["cz", "en"] as const).map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLang(l)}
+                className="font-mono px-3 py-1.5 rounded-full transition-all duration-150"
+                style={{
+                  fontSize: ".72rem",
+                  fontWeight: 700,
+                  background: lang === l ? "#ffffff" : "transparent",
+                  color: lang === l ? "#02020a" : "var(--sub)",
+                  border: "none",
+                  cursor: "pointer",
+                  letterSpacing: ".04em",
+                }}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
 
-      {/* Right: e-vizitka + lang switch + CTA */}
-      <div className="flex items-center gap-3">
-
-        {/* E-vizitka popover */}
-        <div ref={popoverRef} className="relative hidden sm:block">
-          <button
-            type="button"
-            onClick={() => setPopoverOpen(v => !v)}
-            aria-expanded={popoverOpen}
-            aria-label="Otevřít e-vizitku"
-            className="font-mono flex items-center gap-1.5 transition-all duration-150"
+          {/* CTA button — desktop */}
+          <a
+            href="#kontakt"
+            className="font-mono hidden md:inline-block transition-all duration-150"
             style={{
               fontSize: ".68rem",
               padding: ".4rem .95rem",
-              border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
+              border: "1px solid var(--cyan)",
               borderRadius: 4,
-              color: popoverOpen ? "var(--cyan)" : "var(--sub)",
-              background: "transparent",
-              cursor: "pointer",
+              color: "var(--cyan)",
+              textDecoration: "none",
               letterSpacing: ".03em",
             }}
-            onMouseEnter={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b2)"; e.currentTarget.style.color = "var(--txt)"; } }}
-            onMouseLeave={e => { if (!popoverOpen) { e.currentTarget.style.borderColor = "var(--b1)"; e.currentTarget.style.color = "var(--sub)"; } }}
+            onMouseEnter={e => { e.currentTarget.style.background = "var(--cyan)"; e.currentTarget.style.color = "#02020a"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--cyan)"; }}
           >
-            <GitHubIcon className="w-3.5 h-3.5" />
-            kontakt
+            {t.hero.ctaContact} →
+          </a>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            type="button"
+            aria-label={menuOpen ? "Zavřít menu" : "Otevřít menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(v => !v)}
+            className="md:hidden flex flex-col justify-center items-center gap-[5px] w-8 h-8 flex-shrink-0"
+            style={{ background: "transparent", border: "none", cursor: "pointer", padding: 4 }}
+          >
+            <span style={{
+              display: "block", width: 20, height: 1.5, borderRadius: 2,
+              background: "var(--cyan)",
+              transition: "transform .22s, opacity .22s",
+              transform: menuOpen ? "translateY(6.5px) rotate(45deg)" : "none",
+            }} />
+            <span style={{
+              display: "block", width: 20, height: 1.5, borderRadius: 2,
+              background: "var(--cyan)",
+              transition: "opacity .22s",
+              opacity: menuOpen ? 0 : 1,
+            }} />
+            <span style={{
+              display: "block", width: 20, height: 1.5, borderRadius: 2,
+              background: "var(--cyan)",
+              transition: "transform .22s, opacity .22s",
+              transform: menuOpen ? "translateY(-6.5px) rotate(-45deg)" : "none",
+            }} />
           </button>
-
-          {popoverOpen && (
-            <BusinessCard onClose={() => setPopoverOpen(false)} />
-          )}
         </div>
+      </header>
 
-        {/* Lang switch */}
+      {/* ── Mobile full-screen menu ── */}
+      {menuOpen && (
         <div
-          className="flex rounded-full p-1"
-          style={{ border: "1px solid var(--b1)", background: "var(--s1)" }}
+          className="fixed inset-0 z-40 flex flex-col md:hidden"
+          style={{ background: "rgba(2,2,10,.97)", paddingTop: 64 }}
         >
-          {(["cz", "en"] as const).map((l) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setLang(l)}
-              className="font-mono px-3 py-1.5 rounded-full transition-all duration-150"
+          <nav className="flex flex-col items-center justify-center flex-1 gap-0 pb-16">
+            {navLinks.map((l, i) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={closeMenu}
+                className="font-mono w-full text-center py-5 transition-colors duration-150"
+                style={{
+                  fontSize: "1rem",
+                  color: "var(--sub)",
+                  textDecoration: "none",
+                  letterSpacing: ".1em",
+                  borderBottom: "1px solid var(--b0)",
+                  animation: `fade-up .3s cubic-bezier(.22,1,.36,1) ${i * .04}s both`,
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
+
+            {/* CTA */}
+            <a
+              href={`mailto:${siteConfig.social.email}`}
+              onClick={closeMenu}
+              className="font-mono mt-10 px-10 py-3 rounded"
               style={{
-                fontSize: ".72rem",
+                fontSize: ".82rem",
+                background: "var(--cyan)",
+                color: "#02020a",
+                textDecoration: "none",
                 fontWeight: 700,
-                background: lang === l ? "#ffffff" : "transparent",
-                color: lang === l ? "#02020a" : "var(--sub)",
-                border: "none",
-                cursor: "pointer",
                 letterSpacing: ".04em",
+                animation: "fade-up .3s cubic-bezier(.22,1,.36,1) .26s both",
               }}
             >
-              {l.toUpperCase()}
-            </button>
-          ))}
+              {t.hero.ctaContact} ↗
+            </a>
+          </nav>
         </div>
-
-        {/* CTA button */}
-        <a
-          href="#kontakt"
-          className="font-mono hidden md:inline-block transition-all duration-150"
-          style={{
-            fontSize: ".68rem",
-            padding: ".4rem .95rem",
-            border: "1px solid var(--cyan)",
-            borderRadius: 4,
-            color: "var(--cyan)",
-            textDecoration: "none",
-            letterSpacing: ".03em",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = "var(--cyan)"; e.currentTarget.style.color = "#02020a"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--cyan)"; }}
-        >
-          {t.hero.ctaContact} →
-        </a>
-      </div>
-    </header>
+      )}
+    </>
   );
 }
