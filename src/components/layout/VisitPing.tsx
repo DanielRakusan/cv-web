@@ -17,15 +17,31 @@ function getVisitId(): string {
   return vid;
 }
 
+function getOwnerToken(): string {
+  // Přečte ?owner=<token> z URL a uloží do localStorage
+  const params = new URLSearchParams(window.location.search);
+  const tokenFromUrl = params.get("owner");
+  if (tokenFromUrl) {
+    localStorage.setItem("dr_owner", tokenFromUrl);
+    // Odstraní token z URL bez reloadu (čistší URL)
+    const clean = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, "", clean);
+  }
+  return localStorage.getItem("dr_owner") ?? "";
+}
+
 export function VisitPing() {
   useEffect(() => {
     if (!siteConfig.renderApiUrl) return;
 
     let cancelled = false;
     const vid = getVisitId();
+    const ownerToken = getOwnerToken();
 
-    const buildUrl = () =>
-      `${siteConfig.renderApiUrl}/health?lang=${getLang()}&vid=${vid}`;
+    const buildUrl = () => {
+      const base = `${siteConfig.renderApiUrl}/health?lang=${getLang()}&vid=${vid}`;
+      return ownerToken ? `${base}&owner_token=${ownerToken}` : base;
+    };
 
     const ping = () => {
       if (cancelled) return;
