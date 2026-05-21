@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const securityHeaders = [
-  { key: "X-Frame-Options",          value: "SAMEORIGIN" },
+  // Allow framing from own origin + Render admin panel (*.onrender.com)
+  // frame-ancestors takes precedence over X-Frame-Options in modern browsers
+  { key: "Content-Security-Policy",  value: "frame-ancestors 'self' https://*.onrender.com" },
   { key: "X-Content-Type-Options",   value: "nosniff" },
   { key: "Referrer-Policy",          value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy",       value: "camera=(), microphone=(), geolocation=()" },
