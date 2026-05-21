@@ -78,6 +78,127 @@ function DownloadIcon() {
   );
 }
 
+// ── E-vizitka mobile bottom sheet ───────────────────────────────────
+function MobileContactSheet({ onClose }: { onClose: () => void }) {
+  const downloadVcard = useCallback(() => {
+    const blob = new Blob([VCARD], { type: "text/vcard;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = "daniel-rakusan.vcf";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-40"
+        style={{ background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }}
+        onClick={onClose}
+      />
+
+      {/* Bottom sheet */}
+      <div
+        className="fixed left-0 right-0 bottom-0 z-50 rounded-t-2xl"
+        style={{
+          background: "rgba(4,4,18,.98)",
+          border: "1px solid var(--b1)",
+          borderBottom: "none",
+          boxShadow: "0 -24px 64px rgba(0,0,0,.7)",
+          animation: "sheet-up .28s cubic-bezier(.22,1,.36,1) both",
+        }}
+      >
+        {/* Drag handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div style={{ width: 36, height: 4, borderRadius: 2, background: "var(--b2)" }} />
+        </div>
+
+        {/* Header */}
+        <div className="px-6 pt-3 pb-5" style={{ borderBottom: "1px solid var(--b0)" }}>
+          <p className="font-mono" style={{ fontSize: ".58rem", color: "var(--cyan)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: ".3rem" }}>
+            // kontakt
+          </p>
+          <p style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--txt)", lineHeight: 1.2, marginBottom: ".2rem" }}>
+            {CARD.name}
+          </p>
+          <p className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>
+            {CARD.role}
+          </p>
+        </div>
+
+        {/* Action buttons — velké, snadno kliknutelné */}
+        <div className="flex flex-col gap-3 px-6 py-5">
+          <a
+            href={`mailto:${CARD.email}`}
+            onClick={onClose}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 transition-all duration-150"
+            style={{ background: "var(--cyan)", color: "#02020a", textDecoration: "none", fontWeight: 700 }}
+          >
+            <MailIcon />
+            <div>
+              <div style={{ fontSize: ".85rem", fontWeight: 700 }}>Napište mi e-mail</div>
+              <div className="font-mono" style={{ fontSize: ".68rem", opacity: .7 }}>{CARD.email}</div>
+            </div>
+          </a>
+
+          <a
+            href={CARD.linkedin}
+            target="_blank" rel="noreferrer"
+            onClick={onClose}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150"
+            style={{ borderColor: "var(--b1)", background: "var(--s1)", color: "var(--txt)", textDecoration: "none" }}
+          >
+            <LinkedInIcon />
+            <div>
+              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>LinkedIn</div>
+              <div className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>/in/daniel-rakusan</div>
+            </div>
+          </a>
+
+          <a
+            href={CARD.github}
+            target="_blank" rel="noreferrer"
+            onClick={onClose}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150"
+            style={{ borderColor: "var(--b1)", background: "var(--s1)", color: "var(--txt)", textDecoration: "none" }}
+          >
+            <GitHubIcon className="w-4 h-4" />
+            <div>
+              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>GitHub</div>
+              <div className="font-mono" style={{ fontSize: ".68rem", color: "var(--sub)" }}>@DanielRakusan</div>
+            </div>
+          </a>
+
+          <button
+            type="button"
+            onClick={() => { downloadVcard(); onClose(); }}
+            className="flex items-center gap-3 rounded-xl px-4 py-4 border transition-all duration-150 w-full"
+            style={{ borderColor: "rgba(34,211,238,.3)", background: "rgba(34,211,238,.05)", color: "var(--cyan)", cursor: "pointer", textAlign: "left" }}
+          >
+            <DownloadIcon />
+            <div>
+              <div style={{ fontSize: ".85rem", fontWeight: 600 }}>Uložit kontakt</div>
+              <div className="font-mono" style={{ fontSize: ".68rem", opacity: .7 }}>stáhnout .vcf do telefonu</div>
+            </div>
+          </button>
+        </div>
+
+        {/* Safe area spacing pro iPhone */}
+        <div style={{ height: "env(safe-area-inset-bottom, 16px)", minHeight: 16 }} />
+      </div>
+
+      <style>{`
+        @keyframes sheet-up {
+          from { transform: translateY(100%); }
+          to   { transform: translateY(0); }
+        }
+      `}</style>
+    </>
+  );
+}
+
 // ── E-vizitka (popover) ─────────────────────────────────────────────
 function BusinessCard({ onClose }: { onClose: () => void }) {
   const downloadVcard = useCallback(() => {
@@ -214,7 +335,15 @@ export function Navbar() {
   const [scrolled,    setScrolled]    = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [menuOpen,    setMenuOpen]    = useState(false);
+  const [isMobile,    setIsMobile]    = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -321,12 +450,11 @@ export function Navbar() {
               kontakt
             </button>
 
-            {/* Mobilní kulatý icon */}
+            {/* Mobilní kulatý icon — otevře bottom sheet */}
             <button
               type="button"
               onClick={() => setPopoverOpen(v => !v)}
-              aria-expanded={popoverOpen}
-              aria-label="Otevřít e-vizitku"
+              aria-label="Otevřít kontakt"
               className="sm:hidden flex items-center justify-center flex-shrink-0"
               style={{
                 width: 32, height: 32, borderRadius: "50%",
@@ -339,7 +467,8 @@ export function Navbar() {
               <GitHubIcon className="w-3.5 h-3.5" />
             </button>
 
-            {popoverOpen && <BusinessCard onClose={() => setPopoverOpen(false)} />}
+            {/* Desktop popover */}
+            {popoverOpen && !isMobile && <BusinessCard onClose={() => setPopoverOpen(false)} />}
           </div>
 
           {/* Lang switch */}
@@ -417,6 +546,11 @@ export function Navbar() {
           </button>
         </div>
       </header>
+
+      {/* ── Mobile kontakt bottom sheet ── */}
+      {popoverOpen && isMobile && (
+        <MobileContactSheet onClose={() => setPopoverOpen(false)} />
+      )}
 
       {/* ── Mobile full-screen menu ── */}
       {menuOpen && (
