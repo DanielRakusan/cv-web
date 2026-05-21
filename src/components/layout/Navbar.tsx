@@ -295,14 +295,15 @@ export function Navbar() {
         {/* Right: e-vizitka + lang switch + CTA + hamburger */}
         <div className="flex items-center gap-3">
 
-          {/* E-vizitka popover — desktop only */}
-          <div ref={popoverRef} className="relative hidden sm:block">
+          {/* E-vizitka popover — desktop: text button / mobil: kulatý icon */}
+          <div ref={popoverRef} className="relative">
+            {/* Desktop tlačítko s textem */}
             <button
               type="button"
               onClick={() => setPopoverOpen(v => !v)}
               aria-expanded={popoverOpen}
               aria-label="Otevřít e-vizitku"
-              className="font-mono flex items-center gap-1.5 transition-all duration-150"
+              className="font-mono hidden sm:flex items-center gap-1.5 transition-all duration-150"
               style={{
                 fontSize: ".68rem",
                 padding: ".4rem .95rem",
@@ -319,6 +320,25 @@ export function Navbar() {
               <GitHubIcon className="w-3.5 h-3.5" />
               kontakt
             </button>
+
+            {/* Mobilní kulatý icon */}
+            <button
+              type="button"
+              onClick={() => setPopoverOpen(v => !v)}
+              aria-expanded={popoverOpen}
+              aria-label="Otevřít e-vizitku"
+              className="sm:hidden flex items-center justify-center flex-shrink-0"
+              style={{
+                width: 32, height: 32, borderRadius: "50%",
+                border: `1px solid ${popoverOpen ? "var(--cyan)" : "var(--b1)"}`,
+                background: popoverOpen ? "rgba(34,211,238,.08)" : "var(--s1)",
+                color: popoverOpen ? "var(--cyan)" : "var(--sub)",
+                cursor: "pointer",
+              }}
+            >
+              <GitHubIcon className="w-3.5 h-3.5" />
+            </button>
+
             {popoverOpen && <BusinessCard onClose={() => setPopoverOpen(false)} />}
           </div>
 
@@ -365,26 +385,6 @@ export function Navbar() {
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--cyan)"; }}
           >
             {t.hero.ctaContact} →
-          </a>
-
-          {/* GitHub icon — pouze mobil (< 640px), kde je kontakt popover skrytý */}
-          <a
-            href={siteConfig.social.github}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-            className="sm:hidden flex items-center justify-center flex-shrink-0"
-            style={{
-              width: 32, height: 32, borderRadius: "50%",
-              border: "1px solid var(--b1)",
-              background: "var(--s1)",
-              color: "var(--sub)",
-              textDecoration: "none",
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--cyan)"; (e.currentTarget as HTMLElement).style.color = "var(--cyan)"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--b1)"; (e.currentTarget as HTMLElement).style.color = "var(--sub)"; }}
-          >
-            <GitHubIcon className="w-3.5 h-3.5" />
           </a>
 
           {/* Hamburger button — mobile only */}
