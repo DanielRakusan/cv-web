@@ -25,14 +25,22 @@ export type TerminalMessage =
   | { type: "exit"; code: number }
   | { type: "error"; message: string };
 
-// Ping backend, vrátí true pokud odpovídá
+// Ping backend, vrátí true pokud odpovídá.
+// Předáváme vid ze sessionStorage — backend pak deduplikuje se stejným klíčem jako VisitPing
+// a nevytváří druhý záznam návštěvy.
 export async function pingBackend(signal?: AbortSignal): Promise<boolean> {
   if (!siteConfig.renderApiUrl) return false;
   try {
-    const res = await fetchWithTimeout(
-      `${siteConfig.renderApiUrl}/health`,
-      { signal, cache: "no-store" },
-    );
+    const vid =
+      typeof sessionStorage !== "undefined"
+        ? (sessionStorage.getItem("dr_vid") ?? "")
+        : "";
+    const lang =
+      typeof window !== "undefined" && window.location.hash === "#/en"
+        ? "en"
+        : "cz";
+    const url = `${siteConfig.renderApiUrl}/health?lang=${lang}${vid ? `&vid=${encodeURIComponent(vid)}` : ""}`;
+    const res = await fetchWithTimeout(url, { signal, cache: "no-store" });
     return res.ok;
   } catch {
     return false;
