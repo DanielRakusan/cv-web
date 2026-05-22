@@ -9,10 +9,11 @@ function getLang() {
 
 function getVisitId(): string {
   const key = "dr_vid";
-  let vid = localStorage.getItem(key);
+  // sessionStorage: vymaže se při zavření tabu → každé nové otevření = nová návštěva
+  let vid = sessionStorage.getItem(key);
   if (!vid) {
     vid = crypto.randomUUID();
-    localStorage.setItem(key, vid);
+    sessionStorage.setItem(key, vid);
   }
   return vid;
 }
