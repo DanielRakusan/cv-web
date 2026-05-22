@@ -162,9 +162,12 @@ function parseInline(text: string, onLangSwitch: (lang: "cz" | "en") => void): R
     else if (m[4]) parts.push(<code key={m.index} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 3, padding: "1px 5px", fontSize: ".78rem", color: "#22d3ee" }}>{m[4]}</code>);
     else if (m[5] && m[6]) {
       const targetLang = README_LANG_MAP[m[6].toLowerCase()];
+      // Sanitize href — only allow https://, http://, mailto:, # (prevent javascript: URLs)
+      const rawHref = m[6];
+      const safeHref = /^(https?:\/\/|mailto:|#)/i.test(rawHref) ? rawHref : "#";
       parts.push(targetLang
         ? <a key={m.index} href="#" onClick={(e) => { e.preventDefault(); onLangSwitch(targetLang); }} style={{ color: "#60a5fa", textDecoration: "underline", cursor: "pointer" }}>{m[5]}</a>
-        : <a key={m.index} href={m[6]} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{m[5]}</a>
+        : <a key={m.index} href={safeHref} target="_blank" rel="noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>{m[5]}</a>
       );
     }
     last = m.index + m[0].length;
