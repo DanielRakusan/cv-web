@@ -38,8 +38,10 @@ export function VisitPing() {
     const vid = getVisitId();
     const ownerToken = getOwnerToken();
 
+    const ref = encodeURIComponent(document.referrer || "");
+
     const buildUrl = () => {
-      const base = `${siteConfig.renderApiUrl}/health?lang=${getLang()}&vid=${vid}`;
+      const base = `${siteConfig.renderApiUrl}/health?lang=${getLang()}&vid=${vid}&ref=${ref}`;
       return ownerToken ? `${base}&owner_token=${ownerToken}` : base;
     };
 
