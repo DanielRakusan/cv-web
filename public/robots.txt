@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://danielrakusan.cz/sitemap.xml
+Sitemap: https://www.danielrakusan.cz/sitemap.xml
