@@ -3,6 +3,7 @@ import { Space_Grotesk, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { VisitPing } from "@/components/layout/VisitPing";
+import { PushSubscriber } from "@/components/layout/PushSubscriber";
 import { BehaviorTracker } from "@/components/layout/BehaviorTracker";
 
 const spaceGrotesk = Space_Grotesk({
@@ -214,6 +215,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LanguageProvider>
           <VisitPing />
           <BehaviorTracker />
+          <PushSubscriber />
           {children}
         </LanguageProvider>
       </body>
