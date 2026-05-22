@@ -14,7 +14,10 @@ function _sendPing(url: string): void {
   const now = Date.now();
   if (now - _lastPingMs < 10_000) return;
   _lastPingMs = now;
-  fetch(url, { method: "GET" }).catch(() => {});
+  // Timeout 8 s — při přepínání sítě (WiFi → data) fetch jinak visí donekonečna
+  const ctrl = new AbortController();
+  setTimeout(() => ctrl.abort(), 8_000);
+  fetch(url, { method: "GET", signal: ctrl.signal }).catch(() => {});
 }
 
 function getVisitId(): string {
@@ -74,9 +77,17 @@ export function VisitPing() {
           _lastPingMs = now;
         }
         // Retries (attempt > 0) obcházejí throttle — backend spal, musíme se probít
-        const r = await fetch(url, { method: "GET" });
-        if (r.ok) return;
-      } catch { /* backend spi */ }
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 8_000);
+        let succeeded = false;
+        try {
+          const r = await fetch(url, { method: "GET", signal: ctrl.signal });
+          succeeded = r.ok;
+        } finally {
+          clearTimeout(timer);
+        }
+        if (succeeded) return;
+      } catch { /* backend spi nebo timeout sítě */ }
       const next = delays[attempt + 1];
       if (next !== undefined && !cancelled) setTimeout(() => tryPing(attempt + 1), next);
     };
