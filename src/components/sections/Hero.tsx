@@ -30,7 +30,7 @@ export function Hero({ profile }: HeroProps) {
   return (
     <section
       id="oMne"
-      className="relative z-10 min-h-screen flex items-center px-[5vw] pt-[88px] pb-[88px] sm:pb-12"
+      className="relative z-10 min-h-screen flex items-center px-[5vw] pt-[88px] pb-[100px] sm:pb-24"
       style={{ maxWidth: 1060, margin: "0 auto" }}
     >
       {/* 2-col grid: photo left | text right — stacks on mobile */}
@@ -202,7 +202,7 @@ export function Hero({ profile }: HeroProps) {
 
           {/* CTA buttons */}
           <FadeUp delay={0.5}>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-10 sm:mb-0">
               <a
                 href={`mailto:${siteConfig.social.email}`}
                 className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
