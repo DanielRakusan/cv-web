@@ -7,6 +7,16 @@ function getLang() {
   return window.location.hash === "#/en" ? "en" : "cz";
 }
 
+// Modul-level throttle — zabrání dvěma ping requestům do 10 sekund.
+// Resetuje se jen při plném reloadu stránky (ne při re-renderech).
+let _lastPingMs = 0;
+function _sendPing(url: string): void {
+  const now = Date.now();
+  if (now - _lastPingMs < 10_000) return;
+  _lastPingMs = now;
+  fetch(url, { method: "GET" }).catch(() => {});
+}
+
 function getVisitId(): string {
   const key = "dr_vid";
   // sessionStorage: vymaže se při zavření tabu → každé nové otevření = nová návštěva
@@ -48,15 +58,23 @@ export function VisitPing() {
 
     const ping = () => {
       if (cancelled) return;
-      fetch(buildUrl(), { method: "GET" }).catch(() => {});
+      _sendPing(buildUrl());  // throttlováno — max 1x za 10s
     };
 
-    // Úvodní ping s retry (cold start)
+    // Úvodní ping s retry (cold start Render)
     const delays = [0, 8_000, 20_000, 45_000, 90_000];
     const tryPing = async (attempt: number) => {
       if (cancelled) return;
       try {
-        const r = await fetch(buildUrl(), { method: "GET" });
+        const url = buildUrl();
+        if (attempt === 0) {
+          // První pokus: throttle (ochrana před React Strict Mode double-mount a rychlým hashchange)
+          const now = Date.now();
+          if (now - _lastPingMs < 10_000) return;
+          _lastPingMs = now;
+        }
+        // Retries (attempt > 0) obcházejí throttle — backend spal, musíme se probít
+        const r = await fetch(url, { method: "GET" });
         if (r.ok) return;
       } catch { /* backend spi */ }
       const next = delays[attempt + 1];
