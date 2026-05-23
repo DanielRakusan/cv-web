@@ -120,12 +120,30 @@ body {
 }
 
 @keyframes run-breathe {
-  0%,100% { box-shadow: 0 0 4px 0    rgba(74,222,128,.2),  inset 0 0 0   0 rgba(74,222,128,.04); }
-  50%      { box-shadow: 0 0 16px 3px rgba(74,222,128,.5),  inset 0 0 8px 0 rgba(74,222,128,.06); }
+  0%, 100% {
+    box-shadow: 0 0 4px 0 rgba(74,222,128,.15);
+    border-color: rgba(74,222,128,.22);
+    background: #030f06;
+  }
+  50% {
+    box-shadow: 0 0 18px 5px rgba(74,222,128,.55), 0 0 6px 0 rgba(74,222,128,.3);
+    border-color: rgba(74,222,128,.6);
+    background: rgba(74,222,128,.06);
+  }
 }
 
 .run-btn {
-  animation: run-breathe 3.5s ease-in-out infinite;
+  background: #030f06;
+  color: #4ade80;
+  border: 1.5px solid rgba(74,222,128,.22);
+  animation: run-breathe 2s ease-in-out infinite;
+}
+
+.run-btn:hover {
+  box-shadow: 0 0 26px 7px rgba(74,222,128,.65) !important;
+  border-color: rgba(74,222,128,.7) !important;
+  background: rgba(74,222,128,.08) !important;
+  animation-play-state: paused;
 }
 
 /* ── skip-to-main link (accessibility) ── */

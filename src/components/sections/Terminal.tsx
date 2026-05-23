@@ -665,9 +665,7 @@ const activeProject = pendingProject;
                   type="button"
                   onClick={(e) => { e.stopPropagation(); handleStart(); }}
                   className="run-btn font-mono font-bold"
-                  style={{ background: "#030f06", color: "#4ade80", border: "1.5px solid rgba(74,222,128,.25)", fontSize: ".69rem", letterSpacing: ".04em", padding: "3px 11px", borderRadius: 4 }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 22px 4px rgba(74,222,128,.55)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.5)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.25)"; }}
+                  style={{ fontSize: ".69rem", letterSpacing: ".04em", padding: "3px 13px", borderRadius: 4 }}
                 >
                   ▶ {t.terminal.run}
                 </button>
