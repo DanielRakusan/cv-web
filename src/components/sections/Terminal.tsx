@@ -813,10 +813,8 @@ const activeProject = pendingProject;
                 <button
                   type="button"
                   onClick={handleModalStart}
-                  className="font-mono font-bold flex-shrink-0 transition-all duration-150"
-                  style={{ background: "#030f06", color: "#4ade80", border: "1.5px solid rgba(74,222,128,.28)", fontSize: ".68rem", letterSpacing: ".04em", padding: "4px 14px", borderRadius: 5 }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 22px 4px rgba(74,222,128,.5)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.5)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = ""; (e.currentTarget as HTMLElement).style.borderColor = "rgba(74,222,128,.28)"; }}
+                  className="run-btn font-mono font-bold flex-shrink-0"
+                  style={{ fontSize: ".68rem", letterSpacing: ".04em", padding: "4px 14px", borderRadius: 5 }}
                 >
                   ▶ {t.terminal.run}
                 </button>
