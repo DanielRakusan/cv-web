@@ -1,36 +1,165 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# dr.rakusan_ — interaktivní portfolio
 
-## Getting Started
+> 🌐 **[danielrakusan.cz](https://danielrakusan.cz)** &nbsp;·&nbsp; [English version →](./README.en.md)
 
-First, run the development server:
+Osobní portfolio / CV jako single-page webová aplikace. Tmavý design s monospace estetikou, plynulé animace, interaktivní Python terminál a oboustranná komunikace s FastAPI backendem.
+
+---
+
+## Funkce
+
+- **Dvojjazyčnost** — přepínání CZ / EN bez refreshe stránky
+- **Interaktivní Python terminál** — spouštění Python projektů z GitHubu přímo v prohlížeči přes WebSocket
+- **Live stav backendu** — indikátor probuzení Render.com serveru (waking / ready / error)
+- **Behavior tracking** — anonymní sledování pohybu myši, scrollu, kliků a doby zobrazení sekcí
+- **PWA ready** — manifest, service worker, push notifikace (admin panel)
+- **SEO** — OpenGraph, sitemap, robots.txt, strukturovaná metadata
+- **Bezpečnostní hlavičky** — CSP, HSTS, X-Content-Type-Options, Permissions-Policy
+
+---
+
+## Tech stack
+
+| Vrstva | Technologie |
+|--------|-------------|
+| Framework | Next.js 16 (App Router) |
+| Jazyk | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Animace | Framer Motion |
+| Markdown | react-markdown |
+| QR kódy | qrcode.react |
+| Deployment | Vercel |
+| Backend | FastAPI na Render.com → [cv-backend](https://github.com/DanielRakusan/cv-backend) |
+
+---
+
+## Struktura projektu
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx          # Root layout, fonty, metadata
+│   ├── page.tsx            # Hlavní stránka
+│   ├── sitemap.ts
+│   └── robots.ts
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.tsx          # Navigace s přepínačem jazyka
+│   │   ├── VisitPing.tsx       # Wake-up ping backendu při načtení
+│   │   └── BehaviorTracker.tsx # Anonymní tracking chování
+│   ├── sections/
+│   │   ├── Hero.tsx            # Úvodní sekce s animovaným terminálem
+│   │   ├── Skills.tsx          # Technické dovednosti
+│   │   ├── Experience.tsx      # Pracovní zkušenosti
+│   │   ├── Terminal.tsx        # Python terminál (WebSocket)
+│   │   ├── AISection.tsx       # AI & vibe coding sekce
+│   │   ├── VibeCoding.tsx
+│   │   ├── WhyMe.tsx
+│   │   ├── MasterPlan.tsx
+│   │   ├── Certifications.tsx
+│   │   └── Contact.tsx
+│   └── background/
+│       └── StarField.tsx       # Animované hvězdy na pozadí
+├── config/
+│   └── site.ts             # Centrální konfigurace (URL, sociální sítě)
+├── content/
+│   └── content.ts          # Veškerý text v CZ i EN
+├── lib/
+│   ├── terminal-api.ts     # API volání backendu (REST + WebSocket)
+│   └── track.ts            # Behavior tracking helper
+└── hooks/
+    └── useTerminal.ts      # Hook pro WebSocket terminál
+```
+
+---
+
+## Lokální vývoj
+
+### Požadavky
+
+- Node.js 20+
+- npm
+
+### Instalace
+
+```bash
+git clone https://github.com/DanielRakusan/cv-web.git
+cd cv-web
+npm install
+```
+
+### Proměnné prostředí
+
+Vytvoř `.env.local`:
+
+```env
+# URL backendu (FastAPI na Render.com)
+# Pro lokální vývoj bez backendu nechej prázdné — terminál nebude funkční
+NEXT_PUBLIC_RENDER_API_URL=https://api.danielrakusan.cz
+```
+
+### Spuštění
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikace běží na [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+Projekt je nasazen na **Vercel** s automatickým deployem při push na `main`.
 
-To learn more about Next.js, take a look at the following resources:
+Nastavení na Vercelu:
+- **Framework preset:** Next.js
+- **Environment variable:** `NEXT_PUBLIC_RENDER_API_URL` — URL Render.com backendu
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Python terminál
 
-## Deploy on Vercel
+Sekce "Projekty" umožňuje spouštět Python skripty z GitHub repozitářů přímo v prohlížeči:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Backend (Render.com) naklonuje repozitář pomocí `GITHUB_TOKEN`
+2. Spustí zadaný skript v sandboxu
+3. `stdout` / `stderr` jsou posílány přes WebSocket do prohlížeče v reálném čase
+4. Podporuje interaktivní vstup (`input()`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Projekty se registrují v admin panelu backendu nebo v `src/config/site.ts`.
+
+---
+
+## Backend
+
+Komunikace s FastAPI backendem probíhá přes:
+
+| Endpoint | Popis |
+|----------|-------|
+| `GET /health` | Wake-up ping, zaznamenání návštěvy |
+| `GET /projects` | Seznam dostupných Python projektů |
+| `GET /projects/{id}/readme` | README projektu (CZ/EN) |
+| `GET /projects/{id}/tree` | Souborový strom repozitáře |
+| `GET /projects/{id}/file` | Obsah souboru |
+| `WS /ws/run` | WebSocket pro spuštění a komunikaci se skriptem |
+| `POST /track` | Anonymní behavior events |
+
+Zdrojový kód backendu: **[cv-backend](https://github.com/DanielRakusan/cv-backend)**
+
+---
+
+## Dostupné skripty
+
+```bash
+npm run dev      # Vývojový server s hot reload
+npm run build    # Produkční build
+npm run start    # Spuštění produkčního buildu
+npm run lint     # ESLint kontrola
+```
+
+---
+
+## Licence
+
+Kód je veřejný pro inspiraci. Nepoužívej obsah (texty, životopis, fotografie) bez svolení.
