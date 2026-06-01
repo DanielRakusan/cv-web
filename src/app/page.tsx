@@ -84,6 +84,18 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
     },
   ];
 
+  graph.push({
+    "@type": "SoftwareApplication",
+    "@id": `${SITE_URL}/#python-terminal`,
+    name: "Živé Python demo",
+    description: "Interaktivní Python terminál běžící přímo v prohlížeči. Projekty jsou spouštěny živě na backendu — skutečný spustitelný kód, ne jen ukázka textu. Každý projekt lze spustit, zadat vstup a sledovat výstup v reálném čase.",
+    applicationCategory: "DeveloperApplication",
+    programmingLanguage: "Python",
+    featureList: ["Živé spouštění kódu", "Interaktivní vstup", "WebSocket streaming výstupu", "ANSI barevný výstup"],
+    author: { "@id": `${SITE_URL}/#person` },
+    url: SITE_URL,
+  });
+
   if (projects.length > 0) {
     graph.push({
       "@type": "ItemList",
@@ -154,6 +166,7 @@ export default async function Page() {
           <Experience />
           <SectionDivider />
 
+          <PythonDemoMeta />
           <Terminal />
           {projects.length > 0 && <ProjectsList projects={projects} />}
           <SectionDivider />
@@ -173,6 +186,25 @@ export default async function Page() {
         <Footer />
       </div>
     </>
+  );
+}
+
+function PythonDemoMeta() {
+  return (
+    <div
+      aria-hidden="false"
+      itemScope
+      itemType="https://schema.org/SoftwareApplication"
+      style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
+    >
+      <h2 itemProp="name">Živé Python demo</h2>
+      <meta itemProp="applicationCategory" content="DeveloperApplication" />
+      <meta itemProp="programmingLanguage" content="Python" />
+      <p itemProp="description">
+        Interaktivní Python terminál běžící přímo v prohlížeči. Projekty jsou spouštěny živě na backendu —
+        jde o skutečný spustitelný kód, ne jen ukázku textu. Každý projekt lze spustit, zadat vstup a sledovat výstup v reálném čase.
+      </p>
+    </div>
   );
 }
 
