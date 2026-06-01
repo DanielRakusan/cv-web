@@ -194,7 +194,11 @@ export default async function Page() {
           <Contact />
         </main>
 
-        <Footer />
+        <Footer lastUpdated={(() => {
+          const raw = process.env.VERCEL_GIT_COMMIT_CREATED ?? process.env.NEXT_PUBLIC_BUILD_TIME;
+          const d = raw ? new Date(raw) : new Date();
+          return d.toLocaleDateString("cs-CZ", { day: "numeric", month: "long", year: "numeric" });
+        })()} />
       </div>
     </>
   );

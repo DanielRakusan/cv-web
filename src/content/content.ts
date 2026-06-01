@@ -299,6 +299,7 @@ export const content = {
     footer: {
       built: "Postaveno v Next.js · Nasazeno na Vercel",
       available: "Ihned k dispozici",
+      lastUpdated: "Naposledy aktualizováno:",
     },
 
     github: {
@@ -607,6 +608,7 @@ export const content = {
     footer: {
       built: "Built with Next.js · Deployed on Vercel",
       available: "Immediately available",
+      lastUpdated: "Last updated:",
     },
 
     github: {
