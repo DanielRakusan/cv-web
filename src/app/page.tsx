@@ -22,12 +22,10 @@ const Certifications = dynamic(() =>
   import("@/components/sections/Certifications").then(m => ({ default: m.Certifications }))
 );
 
-// Schema.org @graph — Google preferuje propojené entity přes @id
 const SITE_URL = "https://www.danielrakusan.cz";
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
+function buildJsonLd(projects: { id: string; name: string; description: string }[]) {
+  const graph: object[] = [
     {
       "@type": "Person",
       "@id": `${SITE_URL}/#person`,
@@ -53,10 +51,7 @@ const jsonLd = {
       hasOccupation: {
         "@type": "Occupation",
         name: "Junior Python Developer",
-        occupationLocation: {
-          "@type": "City",
-          name: "Praha",
-        },
+        occupationLocation: { "@type": "City", name: "Praha" },
         skills: "Python, Django, SQLite, SQL, Git, JavaScript, HTML, CSS",
       },
       knowsAbout: ["Python", "Django", "SQLite", "SQL", "Git", "JavaScript", "HTML", "CSS", "OOP", "Backend development"],
@@ -87,15 +82,41 @@ const jsonLd = {
       about: { "@id": `${SITE_URL}/#person` },
       inLanguage: ["cs", "en"],
     },
-  ],
-};
+  ];
+
+  if (projects.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${SITE_URL}/#projects`,
+      name: "Python projekty",
+      description: "Interaktivní Python projekty spustitelné přímo v prohlížeči.",
+      author: { "@id": `${SITE_URL}/#person` },
+      itemListElement: projects.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "SoftwareApplication",
+          "@id": `${SITE_URL}/#project-${p.id}`,
+          name: p.name,
+          description: p.description,
+          applicationCategory: "DeveloperApplication",
+          programmingLanguage: "Python",
+          author: { "@id": `${SITE_URL}/#person` },
+          url: SITE_URL,
+        },
+      })),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
 
 async function fetchProjectsSSR(): Promise<{ id: string; name: string; description: string }[]> {
   const apiUrl = process.env.NEXT_PUBLIC_RENDER_API_URL;
   if (!apiUrl) return [];
   try {
     const res = await fetch(`${apiUrl}/projects`, {
-      next: { revalidate: 300 },
+      cache: "force-cache",        // obnoví se jen při deployi — backend se nevolá zbytečně
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) return [];
@@ -110,6 +131,7 @@ export default async function Page() {
     fetchGitHubProfile(siteConfig.githubUsername),
     fetchProjectsSSR(),
   ]);
+  const jsonLd = buildJsonLd(projects);
 
   return (
     <>
@@ -157,29 +179,30 @@ export default async function Page() {
 function ProjectsList({ projects }: { projects: { id: string; name: string; description: string }[] }) {
   return (
     <section
-      aria-label="Projekty"
-      style={{ maxWidth: 1060, margin: "0 auto", padding: "0 1.5rem 2rem" }}
+      aria-label="Python projekty"
+      itemScope
+      itemType="https://schema.org/ItemList"
+      style={{ maxWidth: 1060, margin: "0 auto", padding: "0 1.5rem 2rem", visibility: "hidden", height: 0, overflow: "hidden" }}
     >
-      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        {projects.map((p) => (
+      <meta itemProp="name" content="Python projekty" />
+      <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        {projects.map((p, i) => (
           <li
             key={p.id}
-            style={{
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--surface)",
-            }}
+            itemScope
+            itemType="https://schema.org/SoftwareApplication"
+            itemProp="itemListElement"
           >
-            <strong style={{ color: "var(--text)", fontSize: "0.9rem" }}>{p.name}</strong>
+            <meta itemProp="position" content={String(i + 1)} />
+            <h3 itemProp="name" style={{ margin: 0, fontSize: "1rem" }}>{p.name}</h3>
             {p.description && (
-              <p style={{ margin: "0.2rem 0 0", color: "var(--text-muted)", fontSize: "0.8rem", lineHeight: 1.5 }}>
-                {p.description}
-              </p>
+              <p itemProp="description" style={{ margin: 0 }}>{p.description}</p>
             )}
+            <meta itemProp="applicationCategory" content="DeveloperApplication" />
+            <meta itemProp="programmingLanguage" content="Python" />
           </li>
         ))}
-      </ul>
+      </ol>
     </section>
   );
 }
