@@ -167,7 +167,22 @@ export function Hero({ profile }: HeroProps) {
           {/* Body */}
           <FadeUp delay={0.38}>
             <p style={{ fontSize: ".9rem", color: "var(--sub)", lineHeight: 1.85, maxWidth: 470 }}>
-              {t.hero.description}
+              {t.hero.description}{" "}
+              <a
+                href="#projekty"
+                className="font-mono"
+                style={{
+                  color: "var(--green)",
+                  textDecoration: "none",
+                  fontSize: ".85rem",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.textDecoration = "underline"; }}
+                onMouseLeave={e => { e.currentTarget.style.textDecoration = "none"; }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block", verticalAlign: "middle", marginRight: 4, animation: "pulse-dot 2.2s ease-in-out infinite" }} />
+                {t.hero.liveDemo}
+              </a>
             </p>
           </FadeUp>
 
@@ -221,31 +236,6 @@ export function Hero({ profile }: HeroProps) {
                 onMouseLeave={e => (e.currentTarget.style.background = "var(--cyan)")}
               >
                 {t.hero.ctaContact} ↗
-              </a>
-              <a
-                href="#projekty"
-                className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
-                style={{
-                  fontSize: ".7rem",
-                  padding: ".54rem 1.18rem",
-                  borderRadius: 4,
-                  background: "transparent",
-                  color: "var(--green)",
-                  border: "1px solid rgba(74,222,128,.4)",
-                  letterSpacing: ".03em",
-                  textDecoration: "none",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = "var(--green)";
-                  e.currentTarget.style.background = "rgba(74,222,128,.06)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = "rgba(74,222,128,.4)";
-                  e.currentTarget.style.background = "transparent";
-                }}
-              >
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", animation: "pulse-dot 2.2s ease-in-out infinite", flexShrink: 0 }} />
-                {t.hero.liveDemo}
               </a>
               <a
                 href={siteConfig.social.github}

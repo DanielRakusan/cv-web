@@ -45,7 +45,7 @@ export const content = {
       ctaGithub: "GitHub",
       ctaLinkedin: "LinkedIn",
       scrollHint: "Zjistit více",
-      liveDemo: "Python projekty ke spuštění",
+      liveDemo: "Spusť si je →",
     },
 
     whyMe: {
@@ -354,7 +354,7 @@ export const content = {
       ctaGithub: "GitHub",
       ctaLinkedin: "LinkedIn",
       scrollHint: "Learn more",
-      liveDemo: "run Python projects",
+      liveDemo: "Run them →",
     },
 
     whyMe: {
