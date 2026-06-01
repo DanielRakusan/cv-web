@@ -116,7 +116,7 @@ async function fetchProjectsSSR(): Promise<{ id: string; name: string; descripti
   if (!apiUrl) return [];
   try {
     const res = await fetch(`${apiUrl}/projects`, {
-      cache: "force-cache",        // obnoví se jen při deployi — backend se nevolá zbytečně
+      next: { tags: ["projects"] }, // invaliduje se přes /api/revalidate, ne při každém requestu
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) return [];
