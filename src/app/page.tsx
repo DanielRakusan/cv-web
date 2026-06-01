@@ -90,8 +90,26 @@ const jsonLd = {
   ],
 };
 
+async function fetchProjectsSSR(): Promise<{ id: string; name: string; description: string }[]> {
+  const apiUrl = process.env.NEXT_PUBLIC_RENDER_API_URL;
+  if (!apiUrl) return [];
+  try {
+    const res = await fetch(`${apiUrl}/projects`, {
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
 export default async function Page() {
-  const profile = await fetchGitHubProfile(siteConfig.githubUsername);
+  const [profile, projects] = await Promise.all([
+    fetchGitHubProfile(siteConfig.githubUsername),
+    fetchProjectsSSR(),
+  ]);
 
   return (
     <>
@@ -115,6 +133,7 @@ export default async function Page() {
           <SectionDivider />
 
           <Terminal />
+          {projects.length > 0 && <ProjectsList projects={projects} />}
           <SectionDivider />
 
           <Skills />
@@ -132,6 +151,36 @@ export default async function Page() {
         <Footer />
       </div>
     </>
+  );
+}
+
+function ProjectsList({ projects }: { projects: { id: string; name: string; description: string }[] }) {
+  return (
+    <section
+      aria-label="Projekty"
+      style={{ maxWidth: 1060, margin: "0 auto", padding: "0 1.5rem 2rem" }}
+    >
+      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        {projects.map((p) => (
+          <li
+            key={p.id}
+            style={{
+              padding: "0.75rem 1rem",
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: "var(--surface)",
+            }}
+          >
+            <strong style={{ color: "var(--text)", fontSize: "0.9rem" }}>{p.name}</strong>
+            {p.description && (
+              <p style={{ margin: "0.2rem 0 0", color: "var(--text-muted)", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                {p.description}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
