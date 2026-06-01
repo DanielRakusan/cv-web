@@ -7,6 +7,7 @@ import { Hero } from "@/components/sections/Hero";
 import { WhyMe } from "@/components/sections/WhyMe";
 import { Skills } from "@/components/sections/Skills";
 import { Experience } from "@/components/sections/Experience";
+import { AISection } from "@/components/sections/AISection";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
 
@@ -53,9 +54,18 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
         "@type": "Occupation",
         name: "Junior Python Developer",
         occupationLocation: { "@type": "City", name: "Praha" },
-        skills: "Python, Django, SQLite, SQL, Git, JavaScript, HTML, CSS",
+        skills: "Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, AI-assisted development, Claude Code, Prompt engineering",
       },
-      knowsAbout: ["Python", "Django", "SQLite", "SQL", "Git", "JavaScript", "HTML", "CSS", "OOP", "Backend development"],
+      hasCredential: [
+        { "@type": "EducationalOccupationalCredential", name: "Django Foundations for Python", credentialCategory: "certificate" },
+        { "@type": "EducationalOccupationalCredential", name: "Python Fundamentals", credentialCategory: "certificate" },
+        { "@type": "EducationalOccupationalCredential", name: "SQLite Databases Step by Step", credentialCategory: "certificate" },
+      ],
+      knowsAbout: [
+        "Python", "Django", "SQLite", "SQL", "Git", "JavaScript", "HTML", "CSS", "OOP", "Backend development",
+        "AI-assisted development", "Claude Code", "ChatGPT", "Prompt engineering",
+        "FastAPI", "Next.js", "Web Push API", "WebSocket", "REST API",
+      ],
       availableLanguage: [
         { "@type": "Language", name: "Czech" },
         { "@type": "Language", name: "English" },
@@ -162,6 +172,9 @@ export default async function Page() {
           <SectionDivider />
 
           <WhyMe />
+          <SectionDivider />
+
+          <AISection />
           <SectionDivider />
 
           <Experience />

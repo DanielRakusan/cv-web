@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Daniel Rakušan — junior Python developer z Prahy / Prague. Python, Django, SQLite. Hledám první pozici v IT · looking for first dev role. Available now.",
+    "Daniel Rakušan — junior Python developer z Prahy. Python, Django, SQLite, AI-assisted development. Živé Python projekty ke spuštění přímo v prohlížeči. Ihned k dispozici.",
 
   keywords: [
     "Daniel Rakušan",
@@ -51,6 +51,11 @@ export const metadata: Metadata = {
     "backend developer Prague",
     "Python Django developer",
     "junior backend developer Czech Republic",
+    "AI assisted developer",
+    "Claude Code developer",
+    "AI workflow developer",
+    "Python live demo",
+    "interaktivní Python projekty",
   ],
 
   authors: [{ name: "Daniel Rakušan", url: SITE_URL }],
