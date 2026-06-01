@@ -202,7 +202,7 @@ export function Hero({ profile }: HeroProps) {
 
           {/* CTA buttons */}
           <FadeUp delay={0.5}>
-            <div className="flex flex-wrap gap-2 mb-10 sm:mb-0">
+            <div className="flex flex-wrap gap-2 mb-4 sm:mb-4">
               <a
                 href={`mailto:${siteConfig.social.email}`}
                 className="font-mono inline-flex items-center gap-1.5 transition-all duration-150"
@@ -261,6 +261,38 @@ export function Hero({ profile }: HeroProps) {
                 LinkedIn
               </a>
             </div>
+          </FadeUp>
+
+          {/* Live demo link */}
+          <FadeUp delay={0.58}>
+            <a
+              href="#projekty"
+              className="font-mono inline-flex items-center gap-2 transition-all duration-150 group mb-10 sm:mb-0"
+              style={{ textDecoration: "none", width: "fit-content" }}
+            >
+              <span
+                style={{
+                  width: 7, height: 7, borderRadius: "50%",
+                  background: "var(--green)",
+                  animation: "pulse-dot 2.2s ease-in-out infinite",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontSize: ".65rem",
+                  color: "var(--green)",
+                  letterSpacing: ".04em",
+                  borderBottom: "1px solid rgba(74,222,128,.3)",
+                  transition: "border-color .15s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = "var(--green)")}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(74,222,128,.3)")}
+              >
+                {t.hero.liveDemo}
+              </span>
+              <span style={{ fontSize: ".6rem", color: "rgba(74,222,128,.5)" }}>↓</span>
+            </a>
           </FadeUp>
         </div>
       </div>
