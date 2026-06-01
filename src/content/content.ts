@@ -30,7 +30,7 @@ export const content = {
       tagline: "Technické přemýšlení, backend logika.",
       pitch: "Technické přemýšlení, backend logika a chuť neustále věci zlepšovat.",
       description:
-        "Aktuálně rozvíjím Python, SQL a vlastní projekty —",
+        "Aktuálně rozvíjím Python, SQL a vlastní projekty s důrazem na funkčnost, jednoduchost a moderní workflow —",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "SQLite · SQL", color: "cyan" },
