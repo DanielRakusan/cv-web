@@ -13,10 +13,7 @@ import { Footer } from "@/components/layout/Footer";
 
 // Lazy-loaded sekce — JS chunky se načtou odděleně, nezablokují
 // initial render Hero/WhyMe/Experience a sníží TBT.
-const Terminal = dynamic(() =>
-  import("@/components/sections/Terminal").then(m => ({ default: m.Terminal })),
-  { ssr: false }
-);
+import { TerminalClient } from "@/components/sections/TerminalClient";
 const VibeCoding = dynamic(() =>
   import("@/components/sections/VibeCoding").then(m => ({ default: m.VibeCoding }))
 );
@@ -181,7 +178,7 @@ export default async function Page() {
           <SectionDivider />
 
           <PythonDemoMeta />
-          <Terminal />
+          <TerminalClient />
           {projects.length > 0 && <ProjectsList projects={projects} />}
           <SectionDivider />
 
