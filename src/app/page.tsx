@@ -116,7 +116,7 @@ async function fetchProjectsSSR(): Promise<{ id: string; name: string; descripti
   if (!apiUrl) return [];
   try {
     const res = await fetch(`${apiUrl}/projects`, {
-      next: { tags: ["projects"] }, // invaliduje se přes /api/revalidate, ne při každém requestu
+      next: { tags: ["projects"], revalidate: 3600 }, // invaliduje se okamžitě při změně projektu, jinak max 1x za hodinu
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) return [];
