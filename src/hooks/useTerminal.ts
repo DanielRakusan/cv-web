@@ -130,24 +130,6 @@ export function useTerminal(lang: "cz" | "en" = "cz") {
     }
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-retry po erroru — každé 2 minuty zkusí znovu
-  useEffect(() => {
-    if (status !== "error") return;
-    const t = setTimeout(() => { wakeBackend(); }, 2 * 60 * 1000);
-    return () => clearTimeout(t);
-  }, [status, wakeBackend]);
-
-  // Visibilitychange — když se uživatel vrátí do tabu a backend není ready, zkusí znovu
-  useEffect(() => {
-    const onVisible = () => {
-      if (document.visibilityState === "visible" && (status === "error" || status === "paused")) {
-        wakeBackend();
-      }
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => document.removeEventListener("visibilitychange", onVisible);
-  }, [status, wakeBackend]);
-
   // Cleanup při unmount
   useEffect(() => {
     return () => {
