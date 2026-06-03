@@ -126,7 +126,13 @@ export function useTerminal(lang: "cz" | "en" = "cz") {
   // Při změně jazyka přenačti projekty (jen pokud je backend už ready)
   useEffect(() => {
     if (status === "ready") {
-      fetchProjects(lang).then(setBackendProjects);
+      fetchProjects(lang).then((projects) => {
+        setBackendProjects(projects);
+        // Aktualizuj selectedProject na přeložený objekt (aby se title bar přeložil)
+        setSelectedProject((prev) =>
+          prev ? (projects.find((p) => p.id === prev.id) ?? prev) : null
+        );
+      });
     }
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
