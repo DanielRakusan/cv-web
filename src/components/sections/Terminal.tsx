@@ -407,7 +407,7 @@ function TerminalLoading() {
 export function Terminal() {
   const t = useContent();
   const { lang, setLang } = useLanguage();
-  const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal();
+  const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal(lang);
 
   const [liveInput, setLiveInput] = useState("");
   const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");

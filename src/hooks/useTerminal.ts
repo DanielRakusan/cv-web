@@ -13,7 +13,7 @@ export type BackendProject = {
   description: string;
 };
 
-export function useTerminal() {
+export function useTerminal(lang: "cz" | "en" = "cz") {
   const [status, setStatus] = useState<BackendStatus>("idle");
   const [outputText, setOutputText] = useState("");
   const [running, setRunning] = useState(false);
@@ -47,7 +47,7 @@ export function useTerminal() {
       if (abort.signal.aborted) return;
       const ok = await pingBackend(abort.signal);
       if (ok) {
-        const projects = await fetchProjects();
+        const projects = await fetchProjects(lang);
         setBackendProjects(projects);
         setStatus("ready");
         return;
@@ -116,6 +116,13 @@ export function useTerminal() {
     setRunning(false);
     appendOutput(`\x1b[2m\n[Stopped]\x1b[0m`);
   }, [appendOutput]);
+
+  // Při změně jazyka přenačti projekty (jen pokud je backend už ready)
+  useEffect(() => {
+    if (status === "ready") {
+      fetchProjects(lang).then(setBackendProjects);
+    }
+  }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cleanup při unmount
   useEffect(() => {

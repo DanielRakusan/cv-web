@@ -48,10 +48,10 @@ export async function pingBackend(signal?: AbortSignal): Promise<boolean> {
 }
 
 // Načte seznam projektů z backendu
-export async function fetchProjects(): Promise<{ id: string; name: string; description: string }[]> {
+export async function fetchProjects(lang: "cz" | "en" = "cz"): Promise<{ id: string; name: string; description: string }[]> {
   if (!siteConfig.renderApiUrl) return [];
   try {
-    const res = await fetchWithTimeout(`${siteConfig.renderApiUrl}/projects`, { cache: "no-store" });
+    const res = await fetchWithTimeout(`${siteConfig.renderApiUrl}/projects?lang=${lang}`, { cache: "no-store" });
     if (!res.ok) return [];
     return res.json();
   } catch {
