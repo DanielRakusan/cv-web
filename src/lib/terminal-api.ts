@@ -2,12 +2,12 @@ import { siteConfig } from "@/config/site";
 
 export type BackendStatus = "idle" | "waking" | "ready" | "error";
 
-// Wrapper kolem fetch s AbortController timeoutem (výchozí 8 s).
-// Při přepínání sítě (WiFi → mobilní data) fetch bez timeoutu visí donekonečna.
+// Wrapper kolem fetch s AbortController timeoutem (výchozí 15 s).
+// Render free tier může budit backend 30–60 s — 8 s bylo příliš krátké.
 function fetchWithTimeout(
   url: string,
   options: RequestInit = {},
-  timeoutMs = 8_000,
+  timeoutMs = 15_000,
 ): Promise<Response> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -25,11 +25,11 @@ export type TerminalMessage =
   | { type: "exit"; code: number }
   | { type: "error"; message: string };
 
-// Ping backend, vrátí true pokud odpovídá.
-// Předáváme vid ze sessionStorage — backend pak deduplikuje se stejným klíčem jako VisitPing
-// a nevytváří druhý záznam návštěvy.
-export async function pingBackend(signal?: AbortSignal): Promise<boolean> {
-  if (!siteConfig.renderApiUrl) return false;
+export type PingResult = "ok" | "paused" | "error";
+
+// Ping backend — vrátí "ok", "paused" (backend v sleep módu), nebo "error".
+export async function pingBackend(signal?: AbortSignal): Promise<PingResult> {
+  if (!siteConfig.renderApiUrl) return "error";
   try {
     const vid =
       typeof sessionStorage !== "undefined"
@@ -41,9 +41,11 @@ export async function pingBackend(signal?: AbortSignal): Promise<boolean> {
         : "cz";
     const url = `${siteConfig.renderApiUrl}/health?lang=${lang}${vid ? `&vid=${encodeURIComponent(vid)}` : ""}`;
     const res = await fetchWithTimeout(url, { signal, cache: "no-store" });
-    return res.ok;
+    if (!res.ok) return "error";
+    const data = await res.json().catch(() => ({}));
+    return data.paused ? "paused" : "ok";
   } catch {
-    return false;
+    return "error";
   }
 }
 

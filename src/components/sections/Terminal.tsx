@@ -593,9 +593,11 @@ const activeProject = pendingProject;
 
               {status === "idle" || (status === "waking" && !hasProjects) ? (
                 <WakingIndicator label={t.terminal.wakingBackend} />
-              ) : status === "error" ? (
+              ) : status === "error" || status === "paused" ? (
                 <div className="flex items-center gap-3">
-                  <span style={{ color: "#f87171", fontSize: ".82rem" }}>{t.terminal.backendUnavailable}</span>
+                  <span style={{ color: "#f87171", fontSize: ".82rem" }}>
+                    {status === "paused" ? t.terminal.paused : t.terminal.backendUnavailable}
+                  </span>
                   <button type="button" onClick={() => wakeBackend()} className="font-mono text-xs px-3 py-1 rounded border" style={{ borderColor: "rgba(248,113,113,.3)", color: "#f87171" }}>
                     {t.terminal.tryAgain}
                   </button>
@@ -686,11 +688,11 @@ const activeProject = pendingProject;
                 </span>
               )}
               <span className="flex items-center gap-1.5" style={{
-                color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : status === "error" ? "#f87171" : "rgba(255,255,255,0.35)",
+                color: status === "ready" ? "#4ade80" : status === "waking" ? "#fbbf24" : (status === "error" || status === "paused") ? "#f87171" : "rgba(255,255,255,0.35)",
               }}>
                 <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "currentColor", animation: status === "waking" ? "pulse 1s ease-in-out infinite" : "none" }} />
                 <span className="hidden sm:inline font-mono" style={{ fontSize: ".63rem" }}>
-                  {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : "—"}
+                  {status === "ready" ? t.terminal.ready : status === "waking" ? t.terminal.waking : status === "error" ? t.terminal.error : status === "paused" ? t.terminal.paused : "—"}
                 </span>
               </span>
             </div>

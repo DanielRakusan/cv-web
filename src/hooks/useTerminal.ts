@@ -5,7 +5,7 @@ import { pingBackend, fetchProjects, createTerminalSocket } from "@/lib/terminal
 import { trackEvent } from "@/lib/track";
 import { siteConfig } from "@/config/site";
 
-export type BackendStatus = "idle" | "waking" | "ready" | "error";
+export type BackendStatus = "idle" | "waking" | "ready" | "paused" | "error";
 
 export type BackendProject = {
   id: string;
@@ -22,6 +22,8 @@ export function useTerminal(lang: "cz" | "en" = "cz") {
 
   const wsRef = useRef<WebSocket | null>(null);
   const wakeAbortRef = useRef<AbortController | null>(null);
+  const langRef = useRef(lang);
+  langRef.current = lang;
 
   const appendOutput = useCallback((text: string) => {
     setOutputText((prev) => prev + text);
@@ -45,11 +47,15 @@ export function useTerminal(lang: "cz" | "en" = "cz") {
 
     while (Date.now() < deadline) {
       if (abort.signal.aborted) return;
-      const ok = await pingBackend(abort.signal);
-      if (ok) {
-        const projects = await fetchProjects(lang);
+      const result = await pingBackend(abort.signal);
+      if (result === "ok") {
+        const projects = await fetchProjects(langRef.current);
         setBackendProjects(projects);
         setStatus("ready");
+        return;
+      }
+      if (result === "paused") {
+        setStatus("paused");
         return;
       }
       await new Promise<void>((resolve) => {
@@ -123,6 +129,24 @@ export function useTerminal(lang: "cz" | "en" = "cz") {
       fetchProjects(lang).then(setBackendProjects);
     }
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-retry po erroru — každé 2 minuty zkusí znovu
+  useEffect(() => {
+    if (status !== "error") return;
+    const t = setTimeout(() => { wakeBackend(); }, 2 * 60 * 1000);
+    return () => clearTimeout(t);
+  }, [status, wakeBackend]);
+
+  // Visibilitychange — když se uživatel vrátí do tabu a backend není ready, zkusí znovu
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible" && (status === "error" || status === "paused")) {
+        wakeBackend();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [status, wakeBackend]);
 
   // Cleanup při unmount
   useEffect(() => {
