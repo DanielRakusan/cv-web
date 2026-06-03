@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 import { siteConfig } from "@/config/site";
-import { fetchProjectReadme, fetchProjectTree, fetchFileContent } from "@/lib/terminal-api";
+import { fetchProjectReadme, fetchProjectTree, fetchFileContent, fetchProjects } from "@/lib/terminal-api";
 import type { BackendProject } from "@/hooks/useTerminal";
 
 // ── ANSI parser ───────────────────────────────────────────────────────────────
@@ -516,10 +516,19 @@ export function Terminal() {
     setLoadingInfo(false);
   }, [running, lang, pendingProject]);
 
-  // Při přepnutí jazyka znovu načti README pro aktuálně vybraný projekt
+  // Při přepnutí jazyka znovu načti README + aktualizuj pendingProject (modal header)
   useEffect(() => {
     if (!pendingProject || running) return;
-    fetchProjectReadme(pendingProject.id, lang).then(setReadme);
+    const id = pendingProject.id;
+    // Fetch README a přeložené projekty paralelně
+    Promise.all([
+      fetchProjectReadme(id, lang),
+      fetchProjects(lang),
+    ]).then(([rm, projects]) => {
+      setReadme(rm);
+      const translated = projects.find((p) => p.id === id);
+      if (translated) setPendingProject(translated);
+    });
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Klik na soubor v tree → načte obsah a zobrazí ho
