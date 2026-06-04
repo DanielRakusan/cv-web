@@ -7,7 +7,8 @@ import { NextRequest, NextResponse, after } from "next/server";
  * after() garantuje dokončení fetch i po vrácení response (Next.js 15+).
  */
 
-const RENDER_API = process.env.NEXT_PUBLIC_RENDER_API_URL ?? "";
+const RENDER_API      = process.env.NEXT_PUBLIC_RENDER_API_URL ?? "";
+const CRAWL_SECRET    = process.env.CRAWL_SECRET ?? "";
 
 const CRAWLER_PATTERNS = [
   // Search engines
@@ -89,7 +90,10 @@ export function middleware(req: NextRequest) {
       try {
         await fetch(`${RENDER_API}/crawl-ping`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(CRAWL_SECRET ? { "x-crawl-secret": CRAWL_SECRET } : {}),
+          },
           body: JSON.stringify({
             ip,
             ua:      ua.slice(0, 200),
