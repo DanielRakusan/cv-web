@@ -106,6 +106,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         {/* Render backend NENÍ preconnect — free tier spí, timeout by škodil skóre */}
 
+        {/* hreflang — informuje vyhledávače o jazykových variantách */}
+        <link rel="alternate" hrefLang="cs" href="https://www.danielrakusan.cz/#/cz" />
+        <link rel="alternate" hrefLang="en" href="https://www.danielrakusan.cz/#/en" />
+        <link rel="alternate" hrefLang="x-default" href="https://www.danielrakusan.cz/" />
+
+        {/* AI-specific — llms.txt odkaz pro AI crawlery */}
+        <link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />
+
+        {/* Structured data pro AI — označení obsahu */}
+        <meta name="author" content="Daniel Rakušan" />
+        <meta name="subject" content="Python developer portfolio, CV, živé demo projekty" />
+        <meta name="language" content="cs, en" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="rating" content="general" />
+
         {/* JSON-LD — ProfilePage + Person + WebSite */}
         <script
           type="application/ld+json"

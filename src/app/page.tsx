@@ -54,7 +54,7 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
         skills: "Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, AI-assisted development, Claude Code, Prompt engineering",
       },
       hasCredential: [
-        { "@type": "EducationalOccupationalCredential", name: "Django Foundations for Python", credentialCategory: "certificate" },
+        { "@type": "EducationalOccupationalCredential", name: "Django Foundations for Python", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "Mimo Academy" } },
         { "@type": "EducationalOccupationalCredential", name: "Python Fundamentals", credentialCategory: "certificate" },
         { "@type": "EducationalOccupationalCredential", name: "SQLite Databases Step by Step", credentialCategory: "certificate" },
       ],
@@ -128,6 +128,58 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
     });
   }
 
+  graph.push({
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faq`,
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Je Daniel Rakušan dostupný pro práci?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Ano, Daniel Rakušan je ihned k dispozici pro první pozici junior Python/backend developera. Preferuje Praha nebo remote.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What technologies does Daniel Rakušan know?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, Next.js, PostgreSQL, REST API, WebSocket, Claude Code, AI-assisted development.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Kde najdu živé Python demo projekty Daniela Rakušana?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Přímo na https://danielrakusan.cz v sekci Python demo — spustitelné projekty streamované přes WebSocket z Render.com backendu.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is Daniel Rakušan's background?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Daniel Rakušan comes from IT support and is transitioning to software development. He builds Python backend projects using Django, FastAPI, SQLite and uses AI-assisted development workflows with Claude Code.",
+        },
+      },
+    ],
+  });
+
+  graph.push({
+    "@type": "BreadcrumbList",
+    "@id": `${SITE_URL}/#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Daniel Rakušan — Portfolio",
+        item: SITE_URL,
+      },
+    ],
+  });
+
   return { "@context": "https://schema.org", "@graph": graph };
 }
 
@@ -180,6 +232,26 @@ export default async function Page() {
           <PythonDemoMeta />
           <TerminalClient />
           {projects.length > 0 && <ProjectsList projects={projects} />}
+          {/* SSR obsah pro boty — klíčové informace o autorovi viditelné bez JS */}
+          <div
+            aria-hidden="false"
+            itemScope
+            itemType="https://schema.org/Person"
+            style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
+          >
+            <h1 itemProp="name">Daniel Rakušan — Junior Python Backend Developer</h1>
+            <p itemProp="description">
+              Junior Python backend developer z Prahy. Přechod z IT podpory do vývoje.
+              Python, Django, FastAPI, SQLite, Git, AI-assisted development s Claude Code.
+              Hledám první pozici. Ihned k dispozici.
+            </p>
+            <p>Technologie: <span itemProp="knowsAbout">Python</span>, <span itemProp="knowsAbout">Django</span>, <span itemProp="knowsAbout">FastAPI</span>, <span itemProp="knowsAbout">SQLite</span>, <span itemProp="knowsAbout">Git</span>, <span itemProp="knowsAbout">Claude Code</span>, <span itemProp="knowsAbout">AI-assisted development</span></p>
+            <p>Kontakt: <a itemProp="email" href="mailto:rakusan.dev@gmail.com">rakusan.dev@gmail.com</a></p>
+            <a itemProp="sameAs" href="https://github.com/DanielRakusan">GitHub</a>
+            <a itemProp="sameAs" href="https://linkedin.com/in/daniel-rakusan">LinkedIn</a>
+            <meta itemProp="jobTitle" content="Junior Python Backend Developer" />
+            <meta itemProp="nationality" content="CZ" />
+          </div>
           <SectionDivider />
 
           <Skills />
