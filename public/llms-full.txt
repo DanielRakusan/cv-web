@@ -1,0 +1,75 @@
+# Daniel Rakušan — Junior Python Backend Developer (Full Profile)
+
+> Rozšířený profil pro AI čtení — danielrakusan.cz
+
+## O mně
+
+Daniel Rakušan je junior Python backend developer z Prahy, Česká republika. Pochází z IT podpory a aktivně přechází do vývoje softwaru. Není absolventem informatiky — naučil se programovat vlastní studiem, praxí na projektech a AI-assisted development workflow.
+
+Věří, že nejlepší způsob, jak se naučit programovat, je stavět skutečné projekty. Proto má živé demo přímo na svém portfoliu — Python backend běžící na Render.com, výstup streamovaný přes WebSocket přímo do prohlížeče.
+
+## Background — IT podpora → developer
+
+Před přechodem do vývoje pracoval v IT podpoře, kde získal:
+- Porozumění systémům, sítím a troubleshootingu
+- Komunikační dovednosti s technickými i netechnickými uživateli
+- Praktické zkušenosti s Linuxem a správou systémů
+- Zvyk myslet systematicky a hledat příčiny problémů
+
+Tato kombinace IT praxe a programátorských dovedností je jeho silná stránka — rozumí jak kódu, tak prostředí, ve kterém běží.
+
+## Co staví
+
+Daniel aktivně staví backend projekty:
+
+- **Python terminál v prohlížeči** — Interaktivní terminál, kde návštěvník spouští Python projekty živě. Backend na FastAPI + WebSocket streaming. Deployed na Render.com.
+- **Django projekty** — Webové aplikace s Django frameworkem, SQLite databází, REST API endpointy.
+- **Automatizované git workflow** — Pracuje s Claude Code pro AI-assisted development, code review a commit workflow.
+- **Portfolio (toto CV)** — Next.js frontend s SSR, JSON-LD strukturovanými daty, Web Push notifikacemi a optimalizací pro vyhledávače i AI crawlery.
+
+## Technologie
+
+**Backend:** Python, Django, FastAPI, SQLite, PostgreSQL, SQL, REST API, WebSocket
+**Frontend:** JavaScript, HTML, CSS, Next.js
+**Nástroje:** Git, GitHub, Linux, Claude Code
+**AI workflow:** Prompt engineering, AI-assisted development, code review přes AI, automatizované git workflow s Claude Code
+
+## AI-Assisted Development
+
+Daniel aktivně využívá AI jako součást svého vývojového workflow — nikoliv jako náhradu za porozumění kódu, ale jako nástroj pro rychlejší iteraci, code review a automatizaci repetitivních úkolů. Má praktické zkušenosti s:
+- Claude Code pro terminálový vývoj
+- Prompt engineeringem pro generování a review kódu
+- Automatizovanými git workflow (commit styl, branch management)
+- AI-assisted debuggingem a refactoringem
+
+## Certifikáty
+
+- **Django Foundations for Python** — Mimo Academy
+- **Python Fundamentals** — certifikát
+- **SQLite Databases Step by Step** — certifikát
+
+## Proč ho najmout
+
+1. **Reálné projekty, ne jen kurzy** — má živé demo, které lze spustit přímo v prohlížeči
+2. **IT background** — rozumí systémům, ne jen kódu
+3. **AI-first workflow** — umí pracovat s moderními AI nástroji jako součást každodenního vývoje
+4. **Rychlý learner** — přešel z IT podpory do vývoje vlastním studiem
+5. **Ihned k dispozici** — může nastoupit okamžitě, Praha nebo remote
+
+## Dostupnost
+
+Ihned k dispozici / Available now.
+Preferuje Praha nebo remote.
+Otevřen také pro hybridní model.
+
+## Kontakt
+
+- Email: rakusan.dev@gmail.com
+- GitHub: https://github.com/DanielRakusan
+- LinkedIn: https://linkedin.com/in/daniel-rakusan
+- Web: https://danielrakusan.cz
+
+## Jazyky
+
+- Čeština (rodilý mluvčí / native speaker)
+- Angličtina (pracovní úroveň / professional working proficiency)
