@@ -10,18 +10,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
-      alternates: {
-        languages: {
-          cs: `${SITE_URL}/#/cz`,
-          en: `${SITE_URL}/#/en`,
-        },
-      },
     },
     {
       url: `${SITE_URL}/llms.txt`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.5,
+      priority: 0.4,
+    },
+    {
+      url: `${SITE_URL}/llms-full.txt`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.4,
     },
   ];
 }

@@ -8,6 +8,15 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/_next/"],
       },
+      // Bing / MSN crawlery — explicitně vítány
+      {
+        userAgent: "bingbot",
+        allow: "/",
+      },
+      {
+        userAgent: "msnbot",
+        allow: "/",
+      },
       // AI crawlery — explicitně vítány (indexují pro AI odpovědi)
       {
         userAgent: "GPTBot",

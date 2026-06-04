@@ -19,7 +19,7 @@ const firaCode = Fira_Code({
   display: "swap",
 });
 
-const SITE_URL = "https://danielrakusan.cz";
+const SITE_URL = "https://www.danielrakusan.cz";
 
 /* ── Viewport / theme-color ───────────────────────────────────── */
 export const viewport: Viewport = {
@@ -83,6 +83,14 @@ export const metadata: Metadata = {
     title: "Daniel Rakušan — Junior Python Developer",
     description:
       "Daniel Rakusan — junior Python developer from Prague. Python, Django, SQLite. Looking for first dev role. Available now.",
+    images: [
+      {
+        url: `${SITE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Daniel Rakušan — Junior Python Developer",
+      },
+    ],
   },
 
   twitter: {
@@ -95,6 +103,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+
+  icons: {
+    icon: [
+      { url: "/icon", type: "image/png", sizes: "48x48" },
+    ],
+    apple: [
+      { url: "/apple-icon", type: "image/png", sizes: "180x180" },
+    ],
+    shortcut: "/icon",
+  },
 };
 
 /* ── Root layout ──────────────────────────────────────────────── */
@@ -106,10 +124,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         {/* Render backend NENÍ preconnect — free tier spí, timeout by škodil skóre */}
 
+        {/* Bing Webmaster Tools — ověření vlastnictví */}
+        <meta name="msvalidate.01" content="71CD5D7278A7FB493F96B87B54952DDA" />
+
+        {/* Bing — explicitní direktivy pro bingbot (max-snippet, preview) */}
+        <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
         {/* hreflang — informuje vyhledávače o jazykových variantách */}
-        <link rel="alternate" hrefLang="cs" href="https://www.danielrakusan.cz/#/cz" />
-        <link rel="alternate" hrefLang="en" href="https://www.danielrakusan.cz/#/en" />
-        <link rel="alternate" hrefLang="x-default" href="https://www.danielrakusan.cz/" />
+        <link rel="alternate" hrefLang="cs" href={`${SITE_URL}/`} />
+        <link rel="alternate" hrefLang="en" href={`${SITE_URL}/`} />
+        <link rel="alternate" hrefLang="x-default" href={`${SITE_URL}/`} />
 
         {/* AI-specific — llms.txt odkaz pro AI crawlery */}
         <link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />

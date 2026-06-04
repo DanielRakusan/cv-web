@@ -5,7 +5,7 @@
 Daniel Rakušan je junior Python backend developer z Prahy (Česká republika), hledající první pozici v IT. Přechod z IT podpory do vývoje softwaru. Aktivně staví projekty v Pythonu, Djangu, FastAPI a SQLite.
 
 ## Kontakt
-- Email: rakusan.dev@gmail.com
+- Email: daniel@danielrakusan.cz
 - GitHub: https://github.com/DanielRakusan
 - LinkedIn: https://linkedin.com/in/daniel-rakusan
 - Web: https://danielrakusan.cz
