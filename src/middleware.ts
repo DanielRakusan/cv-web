@@ -8,7 +8,7 @@ import { NextRequest, NextResponse, after } from "next/server";
  */
 
 const RENDER_API      = process.env.NEXT_PUBLIC_RENDER_API_URL ?? "";
-const CRAWL_SECRET    = process.env.CRAWL_SECRET ?? "";
+const CRAWL_SECRET    = process.env.REVALIDATE_SECRET ?? "";
 
 const CRAWLER_PATTERNS = [
   // Search engines
