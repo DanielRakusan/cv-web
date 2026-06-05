@@ -23,7 +23,52 @@ export type TerminalMessage =
   | { type: "stdout"; data: string }
   | { type: "stderr"; data: string }
   | { type: "exit"; code: number }
-  | { type: "error"; message: string };
+  | { type: "error"; message: string }
+  // GUI messages from tkinter mock
+  | { type: "gui_open" }
+  | { type: "gui_close" }
+  | { type: "gui_title"; title: string }
+  | { type: "gui_widget"; id: string; kind: string; parent: string; text?: string; width?: number; height?: number; state?: string; values?: string[] }
+  | { type: "gui_layout"; id: string; method: string; opts: Record<string, unknown> }
+  | { type: "gui_update"; id: string; text?: string; state?: string }
+  | { type: "gui_destroy"; id: string }
+  | { type: "gui_file_dialog"; id: string; mode: "open" | "save" | "directory" | "open_multiple"; title?: string; filetypes?: [string, string][]; initialdir?: string; initialfile?: string; defaultextension?: string }
+  | { type: "gui_messagebox"; id?: string; kind: "info" | "warning" | "error" | "okcancel" | "yesno" | "yesnocancel"; title?: string; message?: string }
+  | { type: "gui_event_result"; event: string; widget_id: string }
+  | { type: "gui_geometry"; geometry: string }
+  | { type: "gui_simpledialog"; id: string; kind: string; title?: string; prompt?: string }
+  | { type: "gui_colorchooser"; id: string; title?: string; initial?: string }
+  | { type: "gui_file_saved"; id: string; path: string }
+  | { type: "gui_image"; id: string; b64: string | null; size: [number, number] }
+  | { type: "gui_image_zoom"; id: string; source_id: string; zoom_x: number; zoom_y: number }
+  | { type: "gui_canvas_image"; canvas_id: string; item_id: string; x: number; y: number; image_id: string | null; anchor: string }
+  | { type: "gui_canvas_update"; canvas_id: string; item_id: string; image_id: string | null }
+  | { type: "gui_canvas_delete"; canvas_id: string; item_id: string }
+  | { type: "gui_canvas_cmd"; canvas_id: string; item_id: string; cmd: string; coords: number[]; fill?: string; outline?: string; width?: number; text?: string; font?: string; anchor?: string; imageId?: string; dash?: number[] | null; arrow?: string; smooth?: boolean; start?: number; extent?: number; style?: string }
+  | { type: "gui_canvas_coords"; canvas_id: string; item_id: string; coords: number[] }
+  | { type: "gui_canvas_itemconfig"; canvas_id: string; item_id: string; fill?: string; outline?: string; width?: number; text?: string; font?: string }
+  | { type: "gui_canvas_move"; canvas_id: string; item_id: string; dx: number; dy: number }
+  | { type: "gui_canvas_scale"; canvas_id: string; tag: string; x: number; y: number; xscale: number; yscale: number }
+  | { type: "gui_canvas_config"; canvas_id: string; bg?: string; width?: number; height?: number; scrollregion?: unknown }
+  | { type: "gui_scrollbar_set"; id: string; lo: number; hi: number }
+  | { type: "gui_listbox_insert"; id: string; index: string; items: string[] }
+  | { type: "gui_listbox_delete"; id: string; first: string; last: string | null }
+  | { type: "gui_listbox_selection_set"; id: string; first: string; last: string | null }
+  | { type: "gui_listbox_see"; id: string; index: string }
+  | { type: "gui_text_insert"; id: string; index: string; chars: string }
+  | { type: "gui_text_delete"; id: string; index1: string; index2: string }
+  | { type: "gui_text_see"; id: string; index: string }
+  | { type: "gui_text_mark_set"; id: string; name: string; index: string }
+  | { type: "gui_text_tag_configure"; id: string; tagname: string; [key: string]: unknown }
+  | { type: "gui_text_tag_add"; id: string; tagname: string; index1: string; index2: string | null }
+  | { type: "gui_toplevel_open"; id: string; title: string }
+  | { type: "gui_menubar"; menu_id: string; items: Array<Record<string, unknown>> }
+  | { type: "gui_menu_item"; menu_id: string; item_id: string; kind: string; label?: string; accelerator?: string; state?: string; submenu_id?: string }
+  | { type: "gui_menu_popup"; menu_id: string; x: number; y: number }
+  | { type: "gui_file_download"; filename: string; data: string }
+  | { type: "gui_treeview_insert"; id: string; row_id: string; text: string; values: unknown[]; parent: string }
+  | { type: "gui_treeview_delete"; id: string; items: string[] }
+  | { type: "gui_treeview_heading"; id: string; col: string; text: string };
 
 export type PingResult = "ok" | "paused" | "error";
 

@@ -6,7 +6,8 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useTerminal } from "@/hooks/useTerminal";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 import { siteConfig } from "@/config/site";
-import { fetchProjectReadme, fetchProjectTree, fetchFileContent, fetchProjects } from "@/lib/terminal-api";
+import { fetchProjectReadme, fetchProjectTree, fetchFileContent } from "@/lib/terminal-api";
+import { TkinterModal } from "@/components/sections/TkinterModal";
 import type { BackendProject } from "@/hooks/useTerminal";
 
 // ── ANSI parser ───────────────────────────────────────────────────────────────
@@ -407,7 +408,11 @@ function TerminalLoading() {
 export function Terminal() {
   const t = useContent();
   const { lang, setLang } = useLanguage();
-  const { status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects } = useTerminal(lang);
+  const {
+    status, outputText, running, selectedProject, wakeBackend, runProject, sendInput, stopProcess, clearLines, backendProjects,
+    guiOpen, guiTitle, guiWidgets, guiMenubar, canvasImages, canvasItems, canvasCmds, fileDialogRequest, messageboxRequest,
+    sendGuiEvent, sendFileUpload, sendFileResponse, sendMessageboxResponse,
+  } = useTerminal(lang);
 
   const [liveInput, setLiveInput] = useState("");
   const [activeTab, setActiveTab] = useState<"readme" | "files">("readme");
@@ -516,19 +521,10 @@ export function Terminal() {
     setLoadingInfo(false);
   }, [running, lang, pendingProject]);
 
-  // Při přepnutí jazyka znovu načti README + aktualizuj pendingProject (modal header)
+  // Při přepnutí jazyka znovu načti README pro aktuálně vybraný projekt
   useEffect(() => {
     if (!pendingProject || running) return;
-    const id = pendingProject.id;
-    // Fetch README a přeložené projekty paralelně
-    Promise.all([
-      fetchProjectReadme(id, lang),
-      fetchProjects(lang),
-    ]).then(([rm, projects]) => {
-      setReadme(rm);
-      const translated = projects.find((p) => p.id === id);
-      if (translated) setPendingProject(translated);
-    });
+    fetchProjectReadme(pendingProject.id, lang).then(setReadme);
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Klik na soubor v tree → načte obsah a zobrazí ho
@@ -969,6 +965,50 @@ const activeProject = pendingProject;
               )}
             </div>
           </div>
+        </>
+      )}
+
+      {/* ── Tkinter GUI modal ── */}
+      {guiOpen && (
+        <>
+          <TkinterModal
+            widgets={guiWidgets}
+            title={guiTitle}
+            menubar={guiMenubar}
+            onEvent={sendGuiEvent}
+            onClose={() => sendGuiEvent("root", "close")}
+            fileDialogRequest={fileDialogRequest}
+            onFileResponse={sendFileResponse}
+            onFileUpload={sendFileUpload}
+            messageboxRequest={messageboxRequest}
+            onMessageboxResponse={sendMessageboxResponse}
+            canvasImages={canvasImages}
+            canvasItems={canvasItems}
+            canvasCmds={canvasCmds}
+          />
+          {running && (
+            <button
+              type="button"
+              onClick={stopProcess}
+              style={{
+                position: "fixed",
+                top: 16,
+                right: 16,
+                zIndex: 9999,
+                background: "rgba(239,68,68,0.15)",
+                border: "1px solid rgba(239,68,68,0.4)",
+                color: "#f87171",
+                borderRadius: 6,
+                padding: "6px 14px",
+                fontSize: ".75rem",
+                fontFamily: "monospace",
+                cursor: "pointer",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              ■ Zastavit
+            </button>
+          )}
         </>
       )}
     </SectionWrapper>
