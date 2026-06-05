@@ -336,19 +336,18 @@ export function Certifications() {
 
               {/* Certificate image */}
               <div className="flex-1 overflow-auto flex items-start justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
-                <div style={{ position: "relative", display: "inline-block", maxWidth: "100%" }}>
+                <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", borderRadius: 6, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,.5)" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
                     alt={lang === "cz" ? active.titleCz : active.titleEn}
-                    style={{ maxWidth: "100%", height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }}
+                    style={{ maxWidth: "100%", height: "auto", display: "block", transform: "scale(1.04)", transformOrigin: "center top" }}
                   />
-                  {/* Překryje "Přejít na kurz" v JPG — link je nefunkční (pixel v obrázku) */}
+                  {/* Zakryje "Přejít na kurz" v JPG — link je nefunkční */}
                   <div style={{
                     position: "absolute", bottom: 0, left: 0, right: 0,
-                    height: "7%",
-                    background: "linear-gradient(to bottom, transparent, #fff)",
-                    borderRadius: "0 0 6px 6px",
+                    height: "6%",
+                    background: "#fff",
                     pointerEvents: "none",
                   }} />
                 </div>
