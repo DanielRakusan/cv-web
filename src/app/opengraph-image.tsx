@@ -40,13 +40,13 @@ export default function Image() {
           padding: "0 80px",
         }}
       >
-        {/* Grid overlay — viditelnější */}
+        {/* Grid overlay */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "linear-gradient(rgba(34,211,238,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.07) 1px, transparent 1px)",
+              "linear-gradient(rgba(34,211,238,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.10) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -152,7 +152,7 @@ export default function Image() {
           />
         </div>
 
-        {/* ── RIGHT: Text ── */}
+        {/* ── MIDDLE: Text ── */}
         <div
           style={{
             display: "flex",
@@ -317,6 +317,69 @@ export default function Image() {
             }}
           >
             danielrakusan.cz
+          </div>
+        </div>
+
+        {/* ── RIGHT: Terminal dekorace ── */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            zIndex: 1,
+            marginLeft: 48,
+            width: 220,
+            flexShrink: 0,
+          }}
+        >
+          {/* Terminal okno */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              background: "rgba(13,17,23,.85)",
+              border: "1px solid rgba(74,222,128,.2)",
+              borderRadius: 8,
+              overflow: "hidden",
+            }}
+          >
+            {/* Title bar */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "8px 12px",
+                background: "rgba(74,222,128,.05)",
+                borderBottom: "1px solid rgba(74,222,128,.1)",
+              }}
+            >
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(255,95,87,.8)" }} />
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(255,189,46,.8)" }} />
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(74,222,128,.8)" }} />
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,.25)", fontFamily: "monospace", marginLeft: 6 }}>portfolio.py</span>
+            </div>
+            {/* Kód */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "14px 14px",
+                gap: 6,
+                fontFamily: "monospace",
+                fontSize: 12,
+                lineHeight: "1.6",
+              }}
+            >
+              <span style={{ color: "#475569" }}># 👋 o mně</span>
+              <span><span style={{ color: "#22d3ee" }}>name</span><span style={{ color: "#94a3b8" }}> = </span><span style={{ color: "#4ade80" }}>&quot;Daniel&quot;</span></span>
+              <span><span style={{ color: "#22d3ee" }}>stack</span><span style={{ color: "#94a3b8" }}> = [</span></span>
+              <span style={{ color: "#4ade80", paddingLeft: 12 }}>&quot;Python&quot;,</span>
+              <span style={{ color: "#4ade80", paddingLeft: 12 }}>&quot;Django&quot;,</span>
+              <span style={{ color: "#4ade80", paddingLeft: 12 }}>&quot;SQLite&quot;</span>
+              <span style={{ color: "#94a3b8" }}>]</span>
+              <span style={{ color: "#475569", marginTop: 4 }}># ihned k dispozici</span>
+              <span><span style={{ color: "#22d3ee" }}>status</span><span style={{ color: "#94a3b8" }}> = </span><span style={{ color: "#4ade80" }}>&quot;hiring&quot;</span></span>
+            </div>
           </div>
         </div>
       </div>
