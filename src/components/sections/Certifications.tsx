@@ -335,7 +335,7 @@ export function Certifications() {
               </div>
 
               {/* Certificate image */}
-              <div className="flex-1 overflow-auto flex items-start justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
+              <div className="flex-1 overflow-auto flex items-center justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
                 <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", borderRadius: 6, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,.5)" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
