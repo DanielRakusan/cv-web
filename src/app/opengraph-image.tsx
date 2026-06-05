@@ -7,6 +7,23 @@ export const contentType = "image/png";
 
 const AVATAR_URL = "https://github.com/DanielRakusan.png?size=400";
 
+// Statické hvězdy — deterministické pozice, různé velikosti a průhlednosti
+const STARS = [
+  { x: 3,   y: 8,   r: 1.5, o: 0.55 }, { x: 11,  y: 32,  r: 1,   o: 0.35 },
+  { x: 19,  y: 61,  r: 2,   o: 0.45 }, { x: 7,   y: 85,  r: 1,   o: 0.3  },
+  { x: 28,  y: 14,  r: 1.5, o: 0.5  }, { x: 35,  y: 72,  r: 1,   o: 0.4  },
+  { x: 42,  y: 41,  r: 2,   o: 0.35 }, { x: 51,  y: 91,  r: 1.5, o: 0.5  },
+  { x: 58,  y: 22,  r: 1,   o: 0.4  }, { x: 63,  y: 55,  r: 2,   o: 0.3  },
+  { x: 69,  y: 78,  r: 1,   o: 0.45 }, { x: 74,  y: 10,  r: 1.5, o: 0.55 },
+  { x: 79,  y: 38,  r: 1,   o: 0.35 }, { x: 84,  y: 67,  r: 2,   o: 0.4  },
+  { x: 89,  y: 18,  r: 1,   o: 0.3  }, { x: 93,  y: 82,  r: 1.5, o: 0.5  },
+  { x: 96,  y: 47,  r: 1,   o: 0.45 }, { x: 2,   y: 52,  r: 1,   o: 0.4  },
+  { x: 16,  y: 95,  r: 1.5, o: 0.35 }, { x: 46,  y: 6,   r: 1,   o: 0.55 },
+  { x: 72,  y: 96,  r: 2,   o: 0.3  }, { x: 88,  y: 4,   r: 1,   o: 0.5  },
+  { x: 55,  y: 88,  r: 1.5, o: 0.4  }, { x: 31,  y: 48,  r: 1,   o: 0.35 },
+  { x: 66,  y: 33,  r: 2,   o: 0.45 }, { x: 48,  y: 75,  r: 1,   o: 0.3  },
+];
+
 export default function Image() {
   return new ImageResponse(
     (
@@ -23,14 +40,44 @@ export default function Image() {
           padding: "0 80px",
         }}
       >
-        {/* Subtle grid overlay */}
+        {/* Grid overlay — viditelnější */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "linear-gradient(rgba(34,211,238,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.04) 1px, transparent 1px)",
+              "linear-gradient(rgba(34,211,238,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.07) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
+          }}
+        />
+
+        {/* Statické hvězdy */}
+        {STARS.map((s, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: `${s.x}%`,
+              top: `${s.y}%`,
+              width: s.r * 2,
+              height: s.r * 2,
+              borderRadius: "50%",
+              background: "#fff",
+              opacity: s.o,
+            }}
+          />
+        ))}
+
+        {/* Vertikální cyan accent čára — levý kraj */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: 3,
+            height: "100%",
+            background: "linear-gradient(to bottom, transparent, #22d3ee 30%, #22d3ee 70%, transparent)",
+            opacity: 0.6,
           }}
         />
 
@@ -43,7 +90,7 @@ export default function Image() {
             width: 520,
             height: 520,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(34,211,238,.10) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(34,211,238,.12) 0%, transparent 70%)",
           }}
         />
 
@@ -53,10 +100,10 @@ export default function Image() {
             position: "absolute",
             bottom: -80,
             right: -60,
-            width: 420,
-            height: 420,
+            width: 440,
+            height: 440,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(167,139,250,.09) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(167,139,250,.11) 0%, transparent 70%)",
           }}
         />
 
@@ -188,12 +235,12 @@ export default function Image() {
             ))}
           </div>
 
-          {/* Availability badge */}
+          {/* Availability badges */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 24,
+              gap: 16,
               marginBottom: 28,
             }}
           >
@@ -231,7 +278,6 @@ export default function Image() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 8,
                 padding: "7px 18px",
                 background: "rgba(34,211,238,.05)",
                 border: "1px solid rgba(34,211,238,.18)",
@@ -257,7 +303,7 @@ export default function Image() {
               display: "flex",
               width: 320,
               height: 1,
-              background: "rgba(255,255,255,.08)",
+              background: "rgba(255,255,255,.10)",
               marginBottom: 16,
             }}
           />
