@@ -336,20 +336,33 @@ export function Certifications() {
 
               {/* Certificate image */}
               <div className="flex-1 overflow-auto flex items-center justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
-                <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", borderRadius: 6, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,.5)" }}>
+                {/*
+                  Certifikáty jsou 2105×1489px s bílými okraji:
+                  vlevo 136px, vpravo 137px, nahoře 87px, dole 97px (kde je i nefunkční odkaz).
+                  Viditelná plocha: 1832×1305px → paddingTop = 1305/1832 = 71.23 %
+                  Obrázek je posunutý tak, aby se zobrazoval jen obsah bez okrajů.
+                */}
+                <div style={{
+                  position: "relative",
+                  width: "100%",
+                  paddingTop: "71.23%",
+                  overflow: "hidden",
+                  borderRadius: 6,
+                  boxShadow: "0 8px 40px rgba(0,0,0,.5)",
+                }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
                     alt={lang === "cz" ? active.titleCz : active.titleEn}
-                    style={{ maxWidth: "100%", height: "auto", display: "block", transform: "scale(1.18)", transformOrigin: "center center" }}
+                    style={{
+                      position: "absolute",
+                      top: "-6.67%",
+                      left: "-7.42%",
+                      width: "114.9%",
+                      height: "auto",
+                      display: "block",
+                    }}
                   />
-                  {/* Zakryje "Přejít na kurz" v JPG — link je nefunkční */}
-                  <div style={{
-                    position: "absolute", bottom: 0, left: 0, right: 0,
-                    height: "6%",
-                    background: "#fff",
-                    pointerEvents: "none",
-                  }} />
                 </div>
               </div>
             </motion.div>
