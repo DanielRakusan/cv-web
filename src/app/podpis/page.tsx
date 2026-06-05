@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     description: "Junior Python Backend Developer z Prahy. Ihned k dispozici.",
     url: "https://www.danielrakusan.cz/podpis",
   },
+  alternates: {
+    canonical: "https://www.danielrakusan.cz/podpis",
+  },
 };
 
 // Statická stránka — přegeneruje se když admin změní variantu
