@@ -341,7 +341,7 @@ export function Certifications() {
                   <img
                     src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
                     alt={lang === "cz" ? active.titleCz : active.titleEn}
-                    style={{ maxWidth: "100%", height: "auto", display: "block", transform: "scale(1.10)", transformOrigin: "center center" }}
+                    style={{ maxWidth: "100%", height: "auto", display: "block", transform: "scale(1.18)", transformOrigin: "center center" }}
                   />
                   {/* Zakryje "Přejít na kurz" v JPG — link je nefunkční */}
                   <div style={{
