@@ -269,10 +269,10 @@ export function Certifications() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 8 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full rounded-xl overflow-hidden flex flex-col"
+              className="relative w-full rounded-xl overflow-hidden"
               style={{
                 maxWidth: 860,
-                height: "min(90vh, 640px)",
+                maxHeight: "90vh",
                 background: "rgba(6,6,20,.98)",
                 border: "1px solid var(--b1)",
                 boxShadow: "0 32px 80px rgba(0,0,0,.7)",
@@ -301,19 +301,19 @@ export function Certifications() {
 
                 {/* Title */}
                 <span
-                  className="font-mono flex-1 text-center"
-                  style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".04em" }}
+                  className="font-mono flex-1 text-center truncate"
+                  style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".04em", minWidth: 0 }}
                 >
                   {lang === "cz" ? active.titleCz : active.titleEn}
                 </span>
 
-                {/* Přejít na kurz */}
+                {/* Přejít na kurz — skryto na mobilu */}
                 <a
                   href={active.courseUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono transition-colors duration-150"
-                  style={{ fontSize: ".6rem", color: "var(--green)", letterSpacing: ".04em", textDecoration: "none" }}
+                  className="font-mono transition-colors duration-150 hidden sm:block"
+                  style={{ fontSize: ".6rem", color: "var(--green)", letterSpacing: ".04em", textDecoration: "none", flexShrink: 0 }}
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#86efac")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--green)")}
                 >
@@ -326,16 +326,17 @@ export function Certifications() {
                   target="_blank"
                   rel="noreferrer"
                   className="font-mono transition-colors duration-150"
-                  style={{ fontSize: ".6rem", color: "var(--cyan)", letterSpacing: ".04em", textDecoration: "none" }}
+                  style={{ fontSize: ".6rem", color: "var(--cyan)", letterSpacing: ".04em", textDecoration: "none", flexShrink: 0 }}
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#67e8f9")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--cyan)")}
                 >
-                  {openLabel}
+                  <span className="hidden sm:inline">{openLabel}</span>
+                  <span className="sm:hidden">↗</span>
                 </a>
               </div>
 
               {/* Certificate image */}
-              <div className="flex-1 overflow-auto flex items-center justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
+              <div className="overflow-auto p-2 sm:p-4" style={{ background: "rgba(255,255,255,.04)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
