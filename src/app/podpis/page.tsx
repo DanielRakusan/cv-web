@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
-import { SignatureDisplay } from "@/components/sections/SignatureDisplay";
 import { signatures } from "@/data/signatures";
 import { siteConfig } from "@/config/site";
+import { BusinessCard } from "@/components/sections/BusinessCard";
 
 export const metadata: Metadata = {
-  title: "Email podpis — Daniel Rakušan",
-  description: "Email podpis — zkopírujte HTML a vložte do Gmailu.",
-  robots: { index: false, follow: false },
+  title: "Daniel Rakušan — Junior Python Backend Developer",
+  description: "Junior Python Backend Developer z Prahy. Python, Django, FastAPI. Ihned k dispozici.",
+  openGraph: {
+    title: "Daniel Rakušan — Junior Python Backend Developer",
+    description: "Junior Python Backend Developer z Prahy. Ihned k dispozici.",
+    url: "https://www.danielrakusan.cz/podpis",
+  },
 };
 
-// Stránka se negeneruje průběžně — obnoví se jen když backend
-// zavolá /api/revalidate-signature (po změně aktivní varianty).
+// Statická stránka — přegeneruje se když admin změní variantu
 export const revalidate = false;
 
 async function getActiveId(): Promise<number> {
@@ -19,7 +22,6 @@ async function getActiveId(): Promise<number> {
   if (!base) return 1;
   try {
     const res = await fetch(`${base}/api/signature`, {
-      // při ISR revalidaci se tato hodnota načte čerstvě
       cache: "no-store",
       signal: AbortSignal.timeout(6_000),
     });
@@ -27,7 +29,7 @@ async function getActiveId(): Promise<number> {
     const data = await res.json() as { id?: number };
     return data.id ?? 1;
   } catch {
-    return 1; // fallback na variantu 1
+    return 1;
   }
 }
 
@@ -39,7 +41,7 @@ export default async function PodpisPage() {
     <>
       <Navbar />
       <main style={{ minHeight: "100vh", background: "#02020a", paddingTop: "80px" }}>
-        <SignatureDisplay sig={sig} />
+        <BusinessCard sig={sig} />
       </main>
     </>
   );
