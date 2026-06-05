@@ -16,6 +16,7 @@ type Cert = {
   dateEn: string;
   icon: string;
   iconBg: string;
+  courseUrl: string;
 };
 
 const CERTS: Cert[] = [
@@ -29,6 +30,7 @@ const CERTS: Cert[] = [
     dateEn: "April 2026",
     icon: "🐍",
     iconBg: "rgba(34,211,238,.12)",
+    courseUrl: "https://www.itnetwork.cz/python/django/zaklady",
   },
   {
     file: "Certifikat_Objektove_orientovane_programovani_v_Pythonu.pdf",
@@ -40,6 +42,7 @@ const CERTS: Cert[] = [
     dateEn: "February 2026",
     icon: "📦",
     iconBg: "rgba(34,211,238,.12)",
+    courseUrl: "https://www.itnetwork.cz/python/oop",
   },
   {
     file: "Certifikat_Zakladni_konstrukce_jazyka_Python.pdf",
@@ -51,6 +54,7 @@ const CERTS: Cert[] = [
     dateEn: "February 2026",
     icon: "⚡",
     iconBg: "rgba(34,211,238,.12)",
+    courseUrl: "https://www.itnetwork.cz/python/zaklady",
   },
   {
     file: "Certifikat_SQLite_databaze_krok_za_krokem.pdf",
@@ -62,6 +66,7 @@ const CERTS: Cert[] = [
     dateEn: "February 2026",
     icon: "🗄️",
     iconBg: "rgba(167,139,250,.12)",
+    courseUrl: "https://www.itnetwork.cz/sqlite",
   },
   {
     file: "Certifikat_Kolekce_v_Pythonu.pdf",
@@ -73,6 +78,7 @@ const CERTS: Cert[] = [
     dateEn: "February 2026",
     icon: "🗂️",
     iconBg: "rgba(34,211,238,.12)",
+    courseUrl: "https://www.itnetwork.cz/python/kolekce",
   },
   {
     file: "Certifikat_Zaklady_React.pdf",
@@ -84,6 +90,7 @@ const CERTS: Cert[] = [
     dateEn: "2026",
     icon: "⚛️",
     iconBg: "rgba(74,222,128,.12)",
+    courseUrl: "https://www.itnetwork.cz/javascript/react/zaklady",
   },
   {
     file: "Certifikat_Zakladni_konstrukce_jazyka_JavaScript.pdf",
@@ -95,6 +102,7 @@ const CERTS: Cert[] = [
     dateEn: "2026",
     icon: "🟨",
     iconBg: "rgba(251,191,36,.12)",
+    courseUrl: "https://www.itnetwork.cz/javascript/zaklady",
   },
   {
     file: "Certifikat_HTML5_od_A_do_Z.pdf",
@@ -106,6 +114,7 @@ const CERTS: Cert[] = [
     dateEn: "2026",
     icon: "🌐",
     iconBg: "rgba(74,222,128,.12)",
+    courseUrl: "https://www.itnetwork.cz/html-css/html5",
   },
   {
     file: "Certifikat_Responzivni_webdesign.pdf",
@@ -117,6 +126,7 @@ const CERTS: Cert[] = [
     dateEn: "2026",
     icon: "📱",
     iconBg: "rgba(74,222,128,.12)",
+    courseUrl: "https://www.itnetwork.cz/html-css/responzivni-webdesign",
   },
   {
     file: "Certifikat_Moderni_webdesign.pdf",
@@ -128,6 +138,7 @@ const CERTS: Cert[] = [
     dateEn: "2026",
     icon: "🎨",
     iconBg: "rgba(167,139,250,.12)",
+    courseUrl: "https://www.itnetwork.cz/html-css/webove-stranky",
   },
 ];
 
@@ -295,6 +306,19 @@ export function Certifications() {
                 >
                   {lang === "cz" ? active.titleCz : active.titleEn}
                 </span>
+
+                {/* Přejít na kurz */}
+                <a
+                  href={active.courseUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono transition-colors duration-150"
+                  style={{ fontSize: ".6rem", color: "var(--green)", letterSpacing: ".04em", textDecoration: "none" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#86efac")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--green)")}
+                >
+                  {lang === "cz" ? "→ přejít na kurz" : "→ go to course"}
+                </a>
 
                 {/* Open in new tab */}
                 <a
