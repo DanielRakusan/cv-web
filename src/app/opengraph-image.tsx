@@ -40,10 +40,10 @@ export default function Image() {
             position: "absolute",
             top: -140,
             left: -60,
-            width: 480,
-            height: 480,
+            width: 520,
+            height: 520,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(34,211,238,.09) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(34,211,238,.10) 0%, transparent 70%)",
           }}
         />
 
@@ -51,12 +51,12 @@ export default function Image() {
         <div
           style={{
             position: "absolute",
-            bottom: -100,
+            bottom: -80,
             right: -60,
-            width: 380,
-            height: 380,
+            width: 420,
+            height: 420,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(167,139,250,.07) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(167,139,250,.09) 0%, transparent 70%)",
           }}
         />
 
@@ -74,10 +74,10 @@ export default function Image() {
           <div
             style={{
               position: "absolute",
-              top: -4,
-              left: -4,
-              width: 22,
-              height: 22,
+              top: -6,
+              left: -6,
+              width: 26,
+              height: 26,
               borderTop: "2.5px solid #22d3ee",
               borderLeft: "2.5px solid #22d3ee",
             }}
@@ -86,10 +86,10 @@ export default function Image() {
           <div
             style={{
               position: "absolute",
-              bottom: -4,
-              right: -4,
-              width: 22,
-              height: 22,
+              bottom: -6,
+              right: -6,
+              width: 26,
+              height: 26,
               borderBottom: "2.5px solid #22d3ee",
               borderRight: "2.5px solid #22d3ee",
             }}
@@ -99,9 +99,9 @@ export default function Image() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={AVATAR_URL}
-            width={220}
-            height={220}
-            style={{ borderRadius: 10, display: "block", objectFit: "cover" }}
+            width={270}
+            height={270}
+            style={{ borderRadius: 12, display: "block", objectFit: "cover" }}
           />
         </div>
 
@@ -112,17 +112,18 @@ export default function Image() {
             flexDirection: "column",
             zIndex: 1,
             flex: 1,
+            justifyContent: "center",
           }}
         >
           {/* Eyebrow */}
           <div
             style={{
               display: "flex",
-              fontSize: 17,
+              fontSize: 15,
               color: "#4ade80",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
-              marginBottom: 22,
+              marginBottom: 16,
               fontFamily: "monospace",
             }}
           >
@@ -133,12 +134,12 @@ export default function Image() {
           <div
             style={{
               display: "flex",
-              fontSize: 72,
+              fontSize: 68,
               fontWeight: 700,
               color: "#fff",
               letterSpacing: "-0.02em",
               lineHeight: "1",
-              marginBottom: 18,
+              marginBottom: 14,
             }}
           >
             Daniel&nbsp;
@@ -149,11 +150,11 @@ export default function Image() {
           <div
             style={{
               display: "flex",
-              fontSize: 22,
+              fontSize: 20,
               color: "#475569",
               letterSpacing: "0.05em",
               fontFamily: "monospace",
-              marginBottom: 32,
+              marginBottom: 24,
             }}
           >
             junior · python · backend · developer
@@ -164,7 +165,7 @@ export default function Image() {
             style={{
               display: "flex",
               gap: 10,
-              marginBottom: 40,
+              marginBottom: 28,
             }}
           >
             {["Python", "Django", "SQLite", "Git", "JavaScript"].map((tech) => (
@@ -172,8 +173,8 @@ export default function Image() {
                 key={tech}
                 style={{
                   display: "flex",
-                  fontSize: 15,
-                  padding: "6px 16px",
+                  fontSize: 14,
+                  padding: "5px 14px",
                   border: "1px solid rgba(34,211,238,.28)",
                   borderRadius: 4,
                   color: "#22d3ee",
@@ -187,21 +188,84 @@ export default function Image() {
             ))}
           </div>
 
+          {/* Availability badge */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 24,
+              marginBottom: 28,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "7px 18px",
+                background: "rgba(74,222,128,.08)",
+                border: "1px solid rgba(74,222,128,.3)",
+                borderRadius: 20,
+              }}
+            >
+              <div
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: "50%",
+                  background: "#4ade80",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 14,
+                  color: "#4ade80",
+                  fontFamily: "monospace",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Ihned k dispozici
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "7px 18px",
+                background: "rgba(34,211,238,.05)",
+                border: "1px solid rgba(34,211,238,.18)",
+                borderRadius: 20,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 14,
+                  color: "#94a3b8",
+                  fontFamily: "monospace",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Praha · remote
+              </span>
+            </div>
+          </div>
+
           {/* Divider + URL */}
           <div
             style={{
               display: "flex",
-              width: 280,
+              width: 320,
               height: 1,
-              background: "rgba(255,255,255,.07)",
-              marginBottom: 22,
+              background: "rgba(255,255,255,.08)",
+              marginBottom: 16,
             }}
           />
           <div
             style={{
               display: "flex",
-              fontSize: 18,
-              color: "#334155",
+              fontSize: 16,
+              color: "#475569",
               fontFamily: "monospace",
               letterSpacing: "0.06em",
             }}
