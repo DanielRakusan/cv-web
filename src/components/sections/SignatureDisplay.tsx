@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { siteConfig } from "@/config/site";
-
-interface SignatureData {
-  id: number;
-  name: string;
-  theme: "light" | "dark";
-  html: string;
-}
+import { useState, useCallback } from "react";
+import type { SignatureVariant } from "@/data/signatures";
 
 const GMAIL_STEPS: [string, string][] = [
   ["Zkopírujte HTML", "Klikněte na zelene tlacitko 'Kopirovat HTML' níže."],
   ["Otevřete Gmail nastavení", "Gmail → ozubené kolo → Zobrazit všechna nastavení."],
-  ["Sekce Podpis", "Záložka Obecné → sekce Podpis → klikněte 'Vytvořit nový'."],
-  ["Vložte HTML kód", "V editoru klikněte na ikonu HTML → vložte zkopírovaný kód → OK."],
-  ["Uložte nastavení", "Sjeďte dolů a klikněte na 'Uložit změny'."],
+  ["Sekce Podpis", "Záložka Obecné → Podpis → 'Vytvořit nový'."],
+  ["Vložte HTML kód", "V editoru klikněte na ikonu HTML → vložte kód → OK."],
+  ["Uložte nastavení", "Sjeďte dolů a klikněte 'Uložit změny'."],
 ];
 
 function wrapForPreview(html: string, dark: boolean) {
@@ -25,41 +18,10 @@ function wrapForPreview(html: string, dark: boolean) {
 </head><body>${html}</body></html>`;
 }
 
-/* ── Fetcher s auto-retry ────────────────────────────────── */
-function useSignature() {
-  const [sig, setSig]       = useState<SignatureData | null>(null);
-  const [status, setStatus] = useState<"loading" | "retrying" | "ok" | "error">("loading");
-  const [attempt, setAttempt] = useState(0);
-
-  const fetch_ = useCallback(async (attempt: number) => {
-    const base = siteConfig.renderApiUrl;
-    if (!base) { setStatus("error"); return; }
-
-    setStatus(attempt === 0 ? "loading" : "retrying");
-    try {
-      const res = await fetch(`${base}/api/signature`, { signal: AbortSignal.timeout(12_000) });
-      if (!res.ok) throw new Error("not ok");
-      const data: SignatureData = await res.json();
-      setSig(data);
-      setStatus("ok");
-    } catch {
-      // Backend spí — zkus znovu za 8s
-      setTimeout(() => setAttempt(a => a + 1), 8_000);
-    }
-  }, []);
-
-  useEffect(() => { fetch_(attempt); }, [attempt, fetch_]);
-
-  return { sig, status, attempt };
-}
-
-/* ── Komponenta ─────────────────────────────────────────── */
-export function SignatureDisplay() {
-  const { sig, status, attempt } = useSignature();
+export function SignatureDisplay({ sig }: { sig: SignatureVariant }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
-    if (!sig) return;
     try { await navigator.clipboard.writeText(sig.html); }
     catch {
       const ta = Object.assign(document.createElement("textarea"), { value: sig.html });
@@ -72,37 +34,7 @@ export function SignatureDisplay() {
     setTimeout(() => setCopied(false), 2500);
   }, [sig]);
 
-  /* ── Loading / retry state ── */
-  if (status !== "ok") {
-    return (
-      <div style={{ maxWidth: 480, margin: "0 auto", padding: "100px 20px", textAlign: "center" }}>
-        <div style={{ fontSize: 48, marginBottom: 20, animation: "spin 2s linear infinite", display: "inline-block" }}>
-          ⚙️
-        </div>
-        <h2 style={{ color: "#fff", fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-          {attempt === 0 ? "Načítám podpis…" : `Backend se probouzí… (pokus ${attempt + 1})`}
-        </h2>
-        <p style={{ color: "#64748b", fontSize: 13, marginBottom: 24 }}>
-          {attempt === 0
-            ? "Připojuji se k backendu."
-            : "Render.com free tier spí. Automaticky zkouším znovu každých 8s."}
-        </p>
-        {/* Progress dots */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
-          {[0, 1, 2].map(i => (
-            <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", opacity: 0.3 + i * 0.35, animation: `pulse ${1 + i * 0.3}s ease-in-out infinite alternate` }} />
-          ))}
-        </div>
-        <style>{`
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-          @keyframes pulse { from { transform: scale(.8); opacity: .4; } to { transform: scale(1.2); opacity: 1; } }
-        `}</style>
-      </div>
-    );
-  }
-
-  /* ── Signature loaded ── */
-  const dark = sig!.theme === "dark";
+  const dark = sig.theme === "dark";
 
   return (
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 20px 80px" }}>
@@ -116,7 +48,7 @@ export function SignatureDisplay() {
           Email podpis
         </h1>
         <p style={{ color: "#475569", fontSize: 14 }}>
-          Varianta <strong style={{ color: "#94a3b8" }}>{sig!.id} — {sig!.name}</strong>
+          Varianta <strong style={{ color: "#94a3b8" }}>{sig.id} — {sig.name}</strong>
         </p>
       </div>
 
@@ -124,7 +56,7 @@ export function SignatureDisplay() {
       <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,.1)", marginBottom: 24 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,.06)", background: "rgba(255,255,255,.02)" }}>
           <span style={{ color: "#64748b", fontSize: 12, fontFamily: "monospace" }}>
-            // varianta {sig!.id} — {sig!.name}
+            // varianta {sig.id} — {sig.name}
           </span>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 4, background: dark ? "rgba(74,222,128,.1)" : "rgba(255,255,255,.06)", color: dark ? "#4ade80" : "#94a3b8", border: `1px solid ${dark ? "rgba(74,222,128,.2)" : "rgba(255,255,255,.08)"}` }}>
             {dark ? "Tmavý" : "Světlý"}
@@ -132,9 +64,9 @@ export function SignatureDisplay() {
         </div>
         <div style={{ background: dark ? "#111" : "#f0f4f8", padding: 16 }}>
           <iframe
-            srcDoc={wrapForPreview(sig!.html, dark)}
+            srcDoc={wrapForPreview(sig.html, dark)}
             style={{ width: "100%", height: 280, border: "none", borderRadius: 8, display: "block" }}
-            title={`Email podpis — varianta ${sig!.id}`}
+            title={`Email podpis — varianta ${sig.id}`}
             sandbox="allow-same-origin"
           />
         </div>
@@ -171,7 +103,7 @@ export function SignatureDisplay() {
         <div style={{ marginTop: 18, padding: "10px 14px", background: "rgba(74,222,128,.05)", borderRadius: 8, border: "1px solid rgba(74,222,128,.12)" }}>
           <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>
             <span style={{ color: "#4ade80", fontWeight: 700 }}>Tip:</span>{" "}
-            Funguje i v Outlook (Soubor → Moznosti → Posta → Podpisy) a Apple Mail (Nastaveni → Podpisy → nový → pravé tlacítko → Upravit jako HTML).
+            Funguje i v Outlook (Soubor → Moznosti → Posta → Podpisy) a Apple Mail (Nastaveni → Podpisy → nový → Upravit jako HTML).
           </p>
         </div>
       </div>
