@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/Navbar";
 import { signatures } from "@/data/signatures";
 import { siteConfig } from "@/config/site";
 import { BusinessCard } from "@/components/sections/BusinessCard";
@@ -17,7 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Statická stránka — přegeneruje se když admin změní variantu
 export const revalidate = false;
 
 async function getActiveId(): Promise<number> {
@@ -41,11 +39,8 @@ export default async function PodpisPage() {
   const sig = signatures.find(s => s.id === activeId) ?? signatures[0];
 
   return (
-    <>
-      <Navbar />
-      <main style={{ minHeight: "100vh", background: "#02020a", paddingTop: "80px" }}>
-        <BusinessCard sig={sig} />
-      </main>
-    </>
+    <main style={{ minHeight: "100vh", background: "#02020a", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 20px" }}>
+      <BusinessCard sig={sig} />
+    </main>
   );
 }
