@@ -336,30 +336,12 @@ export function Certifications() {
 
               {/* Certificate image */}
               <div className="flex-1 overflow-auto flex items-center justify-center p-4" style={{ background: "rgba(255,255,255,.04)" }}>
-                {/*
-                  Certifikáty jsou 2105×1489px. Naměřené bílé okraje:
-                  vlevo 136px, vpravo 137px, nahoře 87px, dole 97px (kde je i nefunkční odkaz).
-                  Negativní marginy posunou obrázek mimo kontejner, overflow:hidden zbytek ořízne.
-                  Všechny % jsou relativní k šířce kontejneru (CSS pravidlo pro margin/width).
-                  width 114.9% = 2105/1832, marginLeft -7.42% = 136/1832,
-                  marginTop -4.75% = 87/1832, marginBottom -5.30% = 97/1832
-                */}
-                <div style={{ width: "100%", overflow: "hidden", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
-                    alt={lang === "cz" ? active.titleCz : active.titleEn}
-                    style={{
-                      display: "block",
-                      width: "114.9%",
-                      maxWidth: "none",
-                      marginLeft: "-7.42%",
-                      marginTop: "-4.75%",
-                      marginBottom: "-5.30%",
-                      height: "auto",
-                    }}
-                  />
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
+                  alt={lang === "cz" ? active.titleCz : active.titleEn}
+                  style={{ maxWidth: "100%", height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }}
+                />
               </div>
             </motion.div>
           </motion.div>
