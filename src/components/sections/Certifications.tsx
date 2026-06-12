@@ -19,6 +19,18 @@ type Cert = {
   courseUrl: string;
 };
 
+const MAIN_BADGE = {
+  image: "/certificates/badge_python_web_apps.png",
+  verifyUrl: "https://www.itnetwork.cz/portfolio/badge/d582efca-af70-4085-a0fd-730cc79cb10e",
+  certId: "d582efca-af70-4085-a0fd-730cc79cb10e",
+  titleCz: "Tvorba www aplikací v jazyku Python",
+  titleEn: "Python Web Application Development",
+  categoryCz: "Akreditovaný rekvalifikační kurz · itnetwork.cz",
+  categoryEn: "Accredited retraining course · itnetwork.cz",
+  dateCz: "Červen 2026",
+  dateEn: "June 2026",
+};
+
 const CERTS: Cert[] = [
   {
     file: "Certifikat_Zaklady_Django_frameworku_pro_Python.pdf",
@@ -147,8 +159,9 @@ export function Certifications() {
   const { lang } = useLanguage();
   const [active, setActive] = useState<Cert | null>(null);
 
-  const label = lang === "cz" ? "Dokončeno · klik pro náhled" : "Completed · click to preview";
+  const label = lang === "cz" ? "Dokončeno" : "Completed";
   const openLabel = lang === "cz" ? "↗ otevřít v nové záložce" : "↗ open in new tab";
+  const verifyLabel = lang === "cz" ? "↗ ověřit certifikát" : "↗ verify certificate";
 
   return (
     <SectionWrapper id="certifikaty">
@@ -156,13 +169,92 @@ export function Certifications() {
         keyword={`// ${t.certifications.sectionLabel.toLowerCase()}`}
         heading={t.certifications.heading}
         sub={lang === "cz"
-          ? "10 dokončených kurzů. Klikni na certifikát pro náhled PDF."
-          : "10 completed courses. Click a certificate to preview the PDF."}
+          ? "Akreditovaný rekvalifikační kurz + 10 dokončených kurzů. Klikni na certifikát pro náhled PDF."
+          : "Accredited retraining course + 10 completed courses. Click a certificate to preview the PDF."}
       />
+
+      {/* Main certificate — accredited course badge */}
+      <motion.a
+        href={MAIN_BADGE.verifyUrl}
+        target="_blank"
+        rel="noreferrer"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="block mx-auto mb-8 rounded-xl border overflow-hidden transition-all duration-200"
+        style={{
+          maxWidth: 280,
+          borderColor: "var(--b1)",
+          background: "var(--s1)",
+          textDecoration: "none",
+        }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = "rgba(74,222,128,.4)";
+          el.style.transform = "translateY(-2px)";
+          el.style.boxShadow = "0 8px 24px rgba(74,222,128,.08)";
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = "var(--b1)";
+          el.style.transform = "translateY(0)";
+          el.style.boxShadow = "none";
+        }}
+      >
+        <div className="px-4 pt-4 pb-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={MAIN_BADGE.image}
+            alt={lang === "cz" ? MAIN_BADGE.titleCz : MAIN_BADGE.titleEn}
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        </div>
+        <div className="flex items-center justify-between gap-3 px-4 py-3 flex-wrap">
+          <div className="min-w-0">
+            <p
+              className="font-mono font-bold leading-snug"
+              style={{ fontSize: ".78rem", color: "var(--txt)", letterSpacing: "-.01em" }}
+            >
+              {lang === "cz" ? MAIN_BADGE.titleCz : MAIN_BADGE.titleEn}
+            </p>
+            <p
+              className="font-mono mt-0.5"
+              style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".04em" }}
+            >
+              {lang === "cz" ? MAIN_BADGE.categoryCz : MAIN_BADGE.categoryEn}
+              {" · "}
+              {lang === "cz" ? MAIN_BADGE.dateCz : MAIN_BADGE.dateEn}
+            </p>
+            <p
+              className="font-mono mt-1"
+              style={{ fontSize: ".55rem", letterSpacing: ".02em", wordBreak: "break-all" }}
+            >
+              <span style={{ color: "var(--dim)" }}>ID: </span>
+              <span style={{ color: "var(--cyan)" }}>{MAIN_BADGE.certId}</span>
+            </p>
+          </div>
+          <span
+            className="font-mono"
+            style={{
+              fontSize: ".55rem",
+              padding: "2px 8px",
+              borderRadius: 3,
+              border: "1px solid rgba(74,222,128,.3)",
+              color: "var(--green)",
+              background: "rgba(74,222,128,.06)",
+              letterSpacing: ".04em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {verifyLabel}
+          </span>
+        </div>
+      </motion.a>
 
       <div
         className="grid gap-3"
-        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))" }}
+        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(210px, 100%), 1fr))" }}
       >
         {CERTS.map((cert, i) => {
           const title = lang === "cz" ? cert.titleCz : cert.titleEn;
@@ -178,7 +270,7 @@ export function Certifications() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: i * 0.05, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="text-left w-full rounded-xl border p-4 transition-all duration-200"
+              className="text-left w-full rounded-xl border overflow-hidden transition-all duration-200"
               style={{
                 borderColor: "var(--b1)",
                 background: "var(--s1)",
@@ -197,6 +289,31 @@ export function Certifications() {
                 el.style.boxShadow = "none";
               }}
             >
+              {/* Certificate preview */}
+              <div
+                className="relative"
+                style={{
+                  background: "rgba(255,255,255,.04)",
+                  borderBottom: "1px solid var(--b0)",
+                  padding: "10px 10px 0",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/certificates/preview/${cert.file.replace(".pdf", ".jpg")}`}
+                  alt={title}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    display: "block",
+                    borderRadius: "4px 4px 0 0",
+                    boxShadow: "0 4px 16px rgba(0,0,0,.4)",
+                  }}
+                />
+              </div>
+
+              <div className="p-4">
               {/* Icon + title row */}
               <div className="flex items-start gap-3 mb-3">
                 <div
@@ -223,7 +340,7 @@ export function Certifications() {
               </div>
 
               {/* Footer row */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span
                   className="font-mono"
                   style={{
@@ -234,16 +351,18 @@ export function Certifications() {
                     color: "var(--green)",
                     background: "rgba(74,222,128,.06)",
                     letterSpacing: ".04em",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   ✓ {label}
                 </span>
                 <span
                   className="font-mono"
-                  style={{ fontSize: ".6rem", color: "var(--dim)" }}
+                  style={{ fontSize: ".6rem", color: "var(--dim)", whiteSpace: "nowrap" }}
                 >
                   {date}
                 </span>
+              </div>
               </div>
             </motion.button>
           );
