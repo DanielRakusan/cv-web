@@ -45,7 +45,7 @@ export function SectionWrapper({ id, children, className = "" }: Props) {
 type SectionHeaderProps = {
   keyword: string;
   heading: string;
-  sub?: string;
+  sub?: ReactNode;
 };
 
 export function SectionHeader({ keyword, heading, sub }: SectionHeaderProps) {

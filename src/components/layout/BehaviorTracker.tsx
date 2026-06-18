@@ -6,8 +6,8 @@ import { siteConfig } from "@/config/site";
 
 // Sekce webu — sledujeme dwell time pro každou
 const SECTION_IDS = [
-  "oMne", "whyMe", "zkusenosti", "projekty",
-  "dovednosti", "certifikaty", "kontakt",
+  "oMne", "journey", "whyMe", "ai", "zkusenosti",
+  "projekty", "dovednosti", "certifikaty", "kontakt",
 ];
 
 export function BehaviorTracker() {

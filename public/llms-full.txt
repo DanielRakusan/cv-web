@@ -44,9 +44,17 @@ Daniel aktivně využívá AI jako součást svého vývojového workflow — ni
 
 ## Certifikáty
 
+- **Python programátor BASIC** — akreditovaný rekvalifikační kurz, Ministerstvo školství, mládeže a tělovýchovy ČR (č.j. MSMT-7415/2024-5, itnetwork.cz). Toto je státem uznávaný certifikát nejvyšší úrovně mezi dosud získanými.
 - **Django Foundations for Python** — Mimo Academy
-- **Python Fundamentals** — certifikát
-- **SQLite Databases Step by Step** — certifikát
+- **Object-Oriented Programming in Python** — itnetwork.cz
+- **Python Fundamentals** — itnetwork.cz
+- **SQLite Databases Step by Step** — itnetwork.cz
+- **HTML5 od A do Z** — itnetwork.cz
+- **Moderní webdesign** — itnetwork.cz
+- **Responzivní webdesign** — itnetwork.cz
+- **Základní konstrukce jazyka JavaScript** — itnetwork.cz
+- **Kolekce v Pythonu** — itnetwork.cz
+- **Základy React** — itnetwork.cz
 
 ## Proč ho najmout
 
@@ -64,7 +72,7 @@ Otevřen také pro hybridní model.
 
 ## Kontakt
 
-- Email: daniel@danielrakusan.cz
+- Email: rakusan.dev@gmail.com
 - GitHub: https://github.com/DanielRakusan
 - LinkedIn: https://linkedin.com/in/daniel-rakusan
 - Web: https://danielrakusan.cz

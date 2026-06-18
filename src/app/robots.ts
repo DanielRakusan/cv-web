@@ -42,6 +42,16 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "Bytespider",
         allow: "/",
       },
+      // OpenAI SearchGPT crawler
+      {
+        userAgent: "OAI-SearchBot",
+        allow: "/",
+      },
+      // Meta AI crawler
+      {
+        userAgent: "meta-externalagent",
+        allow: "/",
+      },
     ],
     sitemap: "https://www.danielrakusan.cz/sitemap.xml",
     host: "https://www.danielrakusan.cz",

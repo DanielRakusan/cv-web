@@ -160,7 +160,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 inLanguage: ["cs", "en"],
                 mainEntity: {
                   "@type": "Person",
-                  "@id": `${SITE_URL}#daniel-rakusan`,
+                  "@id": `${SITE_URL}/#person`,
 
                   // Jméno ve všech variantách
                   name: "Daniel Rakušan",
@@ -194,11 +194,81 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   },
 
                   // Technologie a dovednosti
+                  hasCredential: [
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Python programátor BASIC",
+                      credentialCategory: "certificate",
+                      description: "Akreditovaný rekvalifikační kurz č.j. MSMT-7415/2024-5",
+                      recognizedBy: { "@type": "Organization", name: "Ministerstvo školství, mládeže a tělovýchovy ČR" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Django Foundations for Python",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "Mimo Academy" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Object-Oriented Programming in Python",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Python Fundamentals",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "SQLite Databases Step by Step",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "HTML5 od A do Z",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Moderní webdesign",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Responzivní webdesign",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Základní konstrukce jazyka JavaScript",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Kolekce v Pythonu",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                    {
+                      "@type": "EducationalOccupationalCredential",
+                      name: "Základy React",
+                      credentialCategory: "certificate",
+                      recognizedBy: { "@type": "Organization", name: "itnetwork.cz" },
+                    },
+                  ],
                   knowsAbout: [
                     "Python", "Django", "SQLite", "Git", "GitHub",
                     "Backend Development", "REST API", "OOP",
                     "JavaScript", "HTML", "CSS", "Linux",
                     "IT Support", "Troubleshooting",
+                    "AI-assisted development", "Claude Code", "Prompt engineering",
                   ],
                   hasOccupation: {
                     "@type": "Occupation",
@@ -225,7 +295,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   },
 
                   // Kontakt a profily
-                  email: "daniel@danielrakusan.cz",
+                  email: "rakusan.dev@gmail.com",
                   sameAs: [
                     "https://github.com/DanielRakusan",
                     "https://linkedin.com/in/daniel-rakusan",
@@ -236,14 +306,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "@id": `${SITE_URL}#website`,
+                "@id": `${SITE_URL}/#website`,
                 name: "Daniel Rakušan",
                 alternateName: "Daniel Rakusan",
                 url: SITE_URL,
                 description:
                   "Portfolio a CV junior Python backend developera Daniela Rakušana z Prahy.",
                 inLanguage: ["cs", "en"],
-                author: { "@id": `${SITE_URL}#daniel-rakusan` },
+                author: { "@id": `${SITE_URL}/#person` },
               },
             ]),
           }}

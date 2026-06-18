@@ -48,6 +48,17 @@ export const content = {
       liveDemo: "spusť si je →",
     },
 
+    journey: {
+      sectionLabel: "Pozadí",
+      heading: "Moje cesta k programování",
+      paragraphs: [
+        "U počítačů mě vždycky víc zajímalo, jak věci fungují, než jen to, jak se používají. Nechtěl jsem zůstat u hotového rozhraní. Lákalo mě pochopit, co je pod ním.",
+        "Zlom přišel při hraní hry, kde jsem narazil na rozšíření s malým robotem programovaným v Lua. Ze začátku to byla jen zajímavost. Jenže postupně jsem trávil víc času nastavováním robota než samotným hraním. Zkoušel jsem příkazy, opravoval chyby, měnil jeho chování a sledoval, jak pár řádků kódu dokáže ovlivnit celý výsledek.",
+        "Právě tam se ze zvědavosti stalo programování. Dnes na tenhle zájem navazuji přes Python, AI-assisted development a IT support. Baví mě rozložit problém na menší části, pochopit souvislosti a postupně vytvořit řešení, které opravdu funguje.",
+      ],
+      highlight: "Lua",
+    },
+
     whyMe: {
       sectionLabel: "Proč já",
       heading: "Co přináším",
@@ -248,25 +259,41 @@ export const content = {
 
     aiSection: {
       sectionLabel: "AI & Práce",
-      heading: "Jak pracuji s AI",
+      heading: "Jak používám AI nástroje",
       description:
-        "Každý den pracuji s nástroji jako Claude a ChatGPT. Nejde o nahrazení přemýšlení — jde o rychlejší řešení problémů, výzkum a ladění kódu.",
-      items: [
+        "AI používám jako praktickou součást práce, ne jako náhradu vlastního přemýšlení. Každý nástroj mi pomáhá v jiné části workflow.",
+      tools: [
         {
-          title: "Debuggování",
-          body: "Procházím chybové zprávy s AI asistencí a učím se chápat kořenové příčiny místo kopírování řešení.",
+          id: "claude",
+          name: "Claude",
+          maker: "Anthropic",
+          role: "Hlavní nástroj",
+          usage: "Používám jako hlavní nástroj při práci na projektech. Nejvíc mi sedí u delších úkolů, práce s kódem, úprav napříč soubory a postupného dotahování řešení. Pomáhá mi držet směr projektu, rozdělit větší problém na menší kroky a navrhovat konkrétní změny místo obecných odpovědí. Jeho hlavní výhoda je stabilnější práce s kontextem a schopnost navazovat na předchozí rozhodnutí v projektu.",
+          limit: "Výstup nikdy neberu jako hotové řešení bez kontroly. Větší změny v kódu vždy procházím, testuji a upravuji podle toho, co projekt opravdu potřebuje.",
         },
         {
-          title: "Výzkum",
-          body: "Rychle zjišťuji koncepty, dokumentaci a best practices — věci si pak ověřuji v praxi.",
+          id: "chatgpt",
+          name: "ChatGPT",
+          maker: "OpenAI",
+          role: "Učení & vysvětlování",
+          usage: "Vysvětlování, učení, rychlý rozbor problémů a formulace textů. Pomáhá mi pochopit věci krok za krokem.",
+          limit: "U delších projektů je potřeba víc hlídat kontext.",
         },
         {
-          title: "Refactoring",
-          body: "Požádám AI o zpětnou vazbu ke kódu, porovnám přístupy a pochopím kompromisy.",
+          id: "gemini",
+          name: "Gemini",
+          maker: "Google",
+          role: "Dlouhý kontext",
+          usage: "Dlouhé dokumenty, větší množství textu a orientace v rozsáhlejších materiálech.",
+          limit: "Velký kontext neznamená automaticky správný závěr — důležité výstupy ověřuji.",
         },
         {
-          title: "Psaní",
-          body: "E-maily, PR popisy a dokumentace — AI mi slouží jako rychlý editor, ne jako autor.",
+          id: "wispr",
+          name: "Wispr Flow",
+          maker: "Wispr",
+          role: "Hlasové diktování",
+          usage: "Diktování promptů místo psaní. Rychle zachytím první myšlenku hlasem a potom ji upravím do přesnějšího zadání.",
+          limit: "",
         },
       ],
     },
@@ -341,7 +368,7 @@ export const content = {
       tagline: "Technical thinking, backend logic.",
       pitch: "Technical thinking, backend logic, and a constant drive to improve things.",
       description:
-        "Currently building Python, SQL, and personal projects with a focus on functionality, simplicity, and modern workflow.",
+        "Currently building personal projects in Python and SQL, with a focus on functionality, simplicity, and modern workflows.",
       pills: [
         { label: "Python", color: "cyan" },
         { label: "SQLite · SQL", color: "cyan" },
@@ -359,13 +386,24 @@ export const content = {
       liveDemo: "Run them →",
     },
 
+    journey: {
+      sectionLabel: "Background",
+      heading: "My path to programming",
+      paragraphs: [
+        "I've always been more interested in how computers work than just how to use them. I didn't want to stay at the surface of a finished interface — I wanted to understand what lay beneath it.",
+        "The turning point came while playing a game where I discovered an extension with a small robot programmed in Lua. At first it was just a curiosity. But gradually I spent more time configuring the robot than actually playing. I tried commands, fixed bugs, changed its behavior and watched how a few lines of code could change the entire outcome.",
+        "That's where curiosity turned into programming. Today I build on that curiosity through Python and AI-assisted development. I enjoy breaking problems into smaller pieces, seeing how the parts connect, and gradually building something that actually works.",
+      ],
+      highlight: "Lua",
+    },
+
     whyMe: {
       sectionLabel: "Why me",
       heading: "What I bring",
       cards: [
         {
           title: "Backend direction",
-          body: "Focused on Python, SQL, and backend logic. Concepts like models, views, HTTP, and database queries are making more and more sense as part of the whole picture.",
+          body: "Focused on Python, SQL, and backend logic. Concepts like models, views, HTTP, and database queries are starting to click into place as part of the bigger picture.",
         },
         {
           title: "Technical mindset",
@@ -373,22 +411,22 @@ export const content = {
         },
         {
           title: "Personal projects",
-          body: "I build things I learn from. Personal Python projects, experiments, GitHub as a log of progress.",
+          body: "I build things I learn from. Personal Python projects, experiments, GitHub as a record of progress.",
         },
         {
           title: "AI workflow",
-          body: "I use AI naturally as part of working — faster concept understanding, code review, research. Part of a modern development approach.",
+          body: "I use AI naturally as part of my workflow — faster concept pickup, code review, research. Part of how modern development works.",
         },
       ],
     },
 
     highlights: {
       sectionLabel: "Highlights",
-      heading: "What holds true",
+      heading: "At a glance",
       items: [
         "Python, SQLite, and OOP — backend foundation I actively work with in personal projects",
-        "Interest in Django, REST principles, HTTP, and JSON — backend concepts I'm gradually connecting",
-        "Technical background: long-term engagement with computers, systems, Windows, macOS, and their management",
+        "Interest in Django, REST principles, HTTP, and JSON — backend concepts I'm gradually piecing together",
+        "Technical background: years of hands-on experience with computers, systems, Windows, macOS, and IT environments",
         "Git and GitHub — version control, progress documentation, personal repositories",
         "AI as a natural part of the workflow for learning, understanding new concepts, and code review",
         "Looking for a junior Python/backend role in Prague — immediately available",
@@ -429,7 +467,7 @@ export const content = {
             "Building personal Python projects with a backend focus — Django, OOP architecture, SQLite databases.",
             "Gradually applying backend concepts: HTTP flow, database models, templates, and URL routing.",
             "Developing a systematic approach to debugging — analysing errors, finding patterns, moving forward.",
-            "AI as a natural part of the workflow — faster concept understanding, code review, refactoring.",
+            "AI as a natural part of the workflow — faster understanding of new concepts, code review, refactoring.",
           ],
         },
         {
@@ -452,7 +490,7 @@ export const content = {
           tags: ["Customer service", "Installation", "Reliability"],
           bullets: [
             "Customer-facing roles and technical installation work.",
-            "Long-term employment continuity and reliability across different environments.",
+            "Consistent track record of reliability across different work environments.",
           ],
         },
       ],
@@ -533,51 +571,67 @@ export const content = {
       sectionLabel: "AI & Learning",
       heading: "AI as part of the workflow",
       description:
-        "I naturally use AI as part of development and learning — faster understanding of new concepts, code review, research. It helps me grow faster and more effectively as a junior developer.",
+        "I use AI naturally as part of development and learning — for faster concept pickup, code review, and research. It helps me learn and improve faster as a junior developer.",
       builtWith: "This portfolio was built with Claude",
       builtDetail:
-        "Design, logic, structure — designed by me, implemented in collaboration with Claude. The portfolio as a practical example of AI-assisted development.",
+        "Design, logic, structure — designed by me, implemented in collaboration with Claude. A real-world example of AI-assisted development in practice.",
       skills: [
         {
           label: "Debugging with AI",
-          body: "When I hit an error, I ask AI for context and cause. The result is better understanding — not just a fixed bug.",
+          body: "When I hit an error, I use AI to help me understand the root cause. The goal is understanding — not just a fixed bug.",
         },
         {
           label: "Learning new concepts",
-          body: "I ask AI to explain a topic with examples, then implement it myself and verify. AI works as a fast, patient teacher.",
+          body: "I ask AI to explain something with examples, then build it myself to make sure it sticks. AI acts as a fast, patient teacher.",
         },
         {
           label: "Code review",
-          body: "I write a solution, ask AI to review it. I compare approaches and look for a better way — the result is better understanding.",
+          body: "I write a solution, then ask AI to review it. I compare approaches and look for a better way — and usually come away with a better understanding.",
         },
         {
           label: "Research",
-          body: "AI speeds up orientation in new topics and documentation. Part of an everyday development process.",
+          body: "AI speeds up how I navigate new topics and documentation. Part of my everyday workflow.",
         },
       ],
     },
 
     aiSection: {
       sectionLabel: "AI & Work",
-      heading: "How I work with AI",
+      heading: "How I use AI tools",
       description:
-        "I use tools like Claude and ChatGPT daily. It's not about replacing thinking — it's about solving problems faster, researching efficiently, and debugging smarter.",
-      items: [
+        "I use AI as a practical part of my work, not as a replacement for my own thinking. Each tool helps me with a different part of my workflow.",
+      tools: [
         {
-          title: "Debugging",
-          body: "I walk through error messages with AI assistance and learn to understand root causes instead of just copying fixes.",
+          id: "claude",
+          name: "Claude",
+          maker: "Anthropic",
+          role: "Primary tool",
+          usage: "My primary tool for project work. Works best on longer tasks — coding tasks, cross-file edits, and incremental problem-solving. It helps me keep the project on track, break bigger problems into smaller steps, and suggest concrete changes instead of generic answers. The main advantage is how well it maintains context and builds on earlier decisions.",
+          limit: "I never treat the output as a finished solution. I always review larger code changes, test them, and adjust based on what the project actually needs.",
         },
         {
-          title: "Research",
-          body: "Quickly surface concepts, documentation, and best practices — then verify things by actually building.",
+          id: "chatgpt",
+          name: "ChatGPT",
+          maker: "OpenAI",
+          role: "Learning & explanation",
+          usage: "Explaining, learning, quick breakdowns, and writing help. Helps me understand things step by step.",
+          limit: "Context can get fuzzy on longer tasks.",
         },
         {
-          title: "Refactoring",
-          body: "Ask AI for code feedback, compare approaches, and understand the trade-offs.",
+          id: "gemini",
+          name: "Gemini",
+          maker: "Google",
+          role: "Long context",
+          usage: "Long documents and large amounts of text.",
+          limit: "A large context window doesn't guarantee accurate output — I always verify.",
         },
         {
-          title: "Writing",
-          body: "Emails, PR descriptions, documentation — AI is a fast editor, not the author.",
+          id: "wispr",
+          name: "Wispr Flow",
+          maker: "Wispr",
+          role: "Voice dictation",
+          usage: "Dictating prompts instead of typing. I quickly capture the first idea by voice, then refine it into a precise prompt.",
+          limit: "",
         },
       ],
     },

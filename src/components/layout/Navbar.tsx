@@ -376,12 +376,12 @@ export function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   const navLinks = [
-    { href: "#oMne",        label: lang === "cz" ? "proč já"    : "why me"    },
-    { href: "#dovednosti",  label: lang === "cz" ? "dovednosti" : "skills"    },
-    { href: "#zkusenosti",  label: lang === "cz" ? "zkušenosti" : "experience"},
-    { href: "#certifikaty", label: lang === "cz" ? "certifikáty": "certs"     },
-    { href: "#projekty",    label: lang === "cz" ? "projekty"   : "projects"  },
-    { href: "#kontakt",     label: lang === "cz" ? "kontakt"    : "contact"   },
+    { href: "#oMne",        label: lang === "cz" ? "proč já"    : "why me"     },
+    { href: "#ai",          label: "AI"                                         },
+    { href: "#dovednosti",  label: lang === "cz" ? "dovednosti" : "skills"     },
+    { href: "#zkusenosti",  label: lang === "cz" ? "zkušenosti" : "experience" },
+    { href: "#certifikaty", label: lang === "cz" ? "certifikáty": "certs"      },
+    { href: "#projekty",    label: lang === "cz" ? "projekty"   : "projects"   },
   ];
 
   return (
@@ -413,14 +413,30 @@ export function Navbar() {
               key={l.href}
               href={l.href}
               className="font-mono transition-colors duration-150"
-              style={{ fontSize: ".65rem", color: "var(--sub)", textDecoration: "none", letterSpacing: ".05em" }}
+              style={{ fontSize: ".65rem", color: "var(--sub)", textDecoration: "none", letterSpacing: ".05em", display: "flex", alignItems: "center", gap: "0.25rem" }}
               onMouseEnter={e => (e.currentTarget.style.color = "var(--cyan)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--sub)")}
             >
+              {l.href === "#ai" && (
+                <svg viewBox="0 0 16 16" fill="currentColor" style={{ width: 9, height: 9, flexShrink: 0, animation: "ai-sparkle 2.4s ease-in-out infinite" }}>
+                  <path d="M8 0 C8.4 4.8 11.2 7.6 16 8 C11.2 8.4 8.4 11.2 8 16 C7.6 11.2 4.8 8.4 0 8 C4.8 7.6 7.6 4.8 8 0Z"/>
+                </svg>
+              )}
               {l.label}
+              {l.href === "#ai" && (
+                <svg viewBox="0 0 16 16" fill="currentColor" style={{ width: 6, height: 6, flexShrink: 0, opacity: 0.6, animation: "ai-sparkle 2.4s ease-in-out infinite .9s" }}>
+                  <path d="M8 0 C8.4 4.8 11.2 7.6 16 8 C11.2 8.4 8.4 11.2 8 16 C7.6 11.2 4.8 8.4 0 8 C4.8 7.6 7.6 4.8 8 0Z"/>
+                </svg>
+              )}
             </a>
           ))}
         </nav>
+        <style>{`
+          @keyframes ai-sparkle {
+            0%, 100% { opacity: .45; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+          }
+        `}</style>
 
         {/* Right: e-vizitka + lang switch + CTA + hamburger */}
         <div className="flex items-center gap-3">

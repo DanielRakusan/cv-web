@@ -182,8 +182,8 @@ export function Certifications() {
         keyword={`// ${t.certifications.sectionLabel.toLowerCase()}`}
         heading={t.certifications.heading}
         sub={lang === "cz"
-          ? "Akreditovaný rekvalifikační kurz + 10 dokončených kurzů. Klikni na certifikát pro náhled PDF."
-          : "Accredited retraining course + 10 completed courses. Click a certificate to preview the PDF."}
+          ? <><span style={{ color: "var(--cyan)", fontWeight: 600 }}>Akreditovaný</span>{" rekvalifikační kurz + 10 dokončených kurzů. Klikni na certifikát pro náhled PDF."}</>
+          : <><span style={{ color: "var(--cyan)", fontWeight: 600 }}>Accredited</span>{" retraining course + 10 completed courses. Click a certificate to preview the PDF."}</>}
       />
 
       {/* Main certificate pair — digital badge + official MŠMT certificate */}
@@ -227,7 +227,9 @@ export function Certifications() {
                 {lang === "cz" ? MAIN_BADGE.titleCz : MAIN_BADGE.titleEn}
               </p>
               <p className="font-mono mt-0.5" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".04em" }}>
-                {lang === "cz" ? MAIN_BADGE.categoryCz : MAIN_BADGE.categoryEn}
+                {lang === "cz"
+                  ? <><span style={{ color: "var(--cyan)" }}>Akreditovaný</span>{" rekvalifikační kurz · itnetwork.cz"}</>
+                  : <><span style={{ color: "var(--cyan)" }}>Accredited</span>{" retraining course · itnetwork.cz"}</>}
                 {" · "}{lang === "cz" ? MAIN_BADGE.dateCz : MAIN_BADGE.dateEn}
               </p>
               <p className="font-mono mt-1" style={{ fontSize: ".55rem", letterSpacing: ".02em", wordBreak: "break-all" }}>
@@ -279,7 +281,9 @@ export function Certifications() {
               {lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn}
             </p>
             <p className="font-mono mt-0.5" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".04em", lineHeight: 1.5 }}>
-              {lang === "cz" ? OFFICIAL_CERT.categoryCz : OFFICIAL_CERT.categoryEn}
+              {lang === "cz"
+                ? <><span style={{ color: "var(--cyan)" }}>Akreditováno</span>{" Ministerstvem školství ČR · č.j. MSMT-7415/2024-5"}</>
+                : <><span style={{ color: "var(--cyan)" }}>Accredited</span>{" by Czech Ministry of Education · č.j. MSMT-7415/2024-5"}</>}
             </p>
             <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
               <span className="font-mono" style={{ fontSize: ".55rem", padding: "2px 8px", borderRadius: 3, border: "1px solid rgba(34,211,238,.3)", color: "var(--cyan)", background: "rgba(34,211,238,.06)", letterSpacing: ".04em", whiteSpace: "nowrap" }}>

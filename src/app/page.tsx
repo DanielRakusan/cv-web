@@ -8,15 +8,13 @@ import { WhyMe } from "@/components/sections/WhyMe";
 import { Skills } from "@/components/sections/Skills";
 import { Experience } from "@/components/sections/Experience";
 import { AISection } from "@/components/sections/AISection";
+import { Journey } from "@/components/sections/Journey";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
 
 // Lazy-loaded sekce — JS chunky se načtou odděleně, nezablokují
 // initial render Hero/WhyMe/Experience a sníží TBT.
 import { TerminalClient } from "@/components/sections/TerminalClient";
-const VibeCoding = dynamic(() =>
-  import("@/components/sections/VibeCoding").then(m => ({ default: m.VibeCoding }))
-);
 const Certifications = dynamic(() =>
   import("@/components/sections/Certifications").then(m => ({ default: m.Certifications }))
 );
@@ -54,9 +52,17 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
         skills: "Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, AI-assisted development, Claude Code, Prompt engineering",
       },
       hasCredential: [
+        { "@type": "EducationalOccupationalCredential", name: "Python programátor BASIC", credentialCategory: "certificate", description: "Akreditovaný rekvalifikační kurz č.j. MSMT-7415/2024-5", recognizedBy: { "@type": "Organization", name: "Ministerstvo školství, mládeže a tělovýchovy ČR" } },
         { "@type": "EducationalOccupationalCredential", name: "Django Foundations for Python", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "Mimo Academy" } },
-        { "@type": "EducationalOccupationalCredential", name: "Python Fundamentals", credentialCategory: "certificate" },
-        { "@type": "EducationalOccupationalCredential", name: "SQLite Databases Step by Step", credentialCategory: "certificate" },
+        { "@type": "EducationalOccupationalCredential", name: "Object-Oriented Programming in Python", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Python Fundamentals", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "SQLite Databases Step by Step", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "HTML5 od A do Z", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Moderní webdesign", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Responzivní webdesign", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Základní konstrukce jazyka JavaScript", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Kolekce v Pythonu", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
+        { "@type": "EducationalOccupationalCredential", name: "Základy React", credentialCategory: "certificate", recognizedBy: { "@type": "Organization", name: "itnetwork.cz" } },
       ],
       knowsAbout: [
         "Python", "Django", "SQLite", "SQL", "Git", "JavaScript", "HTML", "CSS", "OOP", "Backend development",
@@ -220,6 +226,9 @@ export default async function Page() {
           <Hero profile={profile} />
           <SectionDivider />
 
+          <Journey />
+          <SectionDivider />
+
           <WhyMe />
           <SectionDivider />
 
@@ -255,9 +264,6 @@ export default async function Page() {
           <SectionDivider />
 
           <Skills />
-          <SectionDivider />
-
-          <VibeCoding />
           <SectionDivider />
 
           <Certifications />
