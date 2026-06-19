@@ -113,7 +113,7 @@ function LuaTerminal() {
       </div>
 
       {/* Code */}
-      <div style={{ padding: ".75rem 1rem 1rem", fontSize: ".64rem", lineHeight: 1.65, overflowX: "auto" }}>
+      <div style={{ padding: ".75rem 1rem 1rem", fontSize: ".64rem", lineHeight: 1.65, overflowX: "auto", whiteSpace: "pre" }}>
         {LUA_LINES.map((line, i) => (
           <LuaLine key={i} line={line} />
         ))}
