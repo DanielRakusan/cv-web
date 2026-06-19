@@ -5,11 +5,27 @@ import { LanguageContext, type LanguageContextValue } from "@/hooks/useLanguage"
 import type { Lang } from "@/content/content";
 
 const WIPE_MS = 750;
+const STORAGE_KEY = "portfolio-lang";
 
-function detectLang(): Lang {
-  if (typeof window === "undefined") return "cz";
+function isLang(value: string | null): value is Lang {
+  return value === "cz" || value === "en";
+}
+
+function detectHashLang(): Lang | null {
+  if (typeof window === "undefined") return null;
   const hash = window.location.hash.toLowerCase();
-  return hash === "#/en" ? "en" : "cz";
+  if (hash === "#/en" || hash.startsWith("#/en/")) return "en";
+  if (hash === "#/cz" || hash.startsWith("#/cz/")) return "cz";
+  return null;
+}
+
+function detectLang(fallback: Lang = "cz"): Lang {
+  if (typeof window === "undefined") return fallback;
+  const hashLang = detectHashLang();
+  if (hashLang) return hashLang;
+
+  const storedLang = window.localStorage.getItem(STORAGE_KEY);
+  return isLang(storedLang) ? storedLang : fallback;
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -18,10 +34,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setLangState(detectLang());
-    const onHashChange = () => setLangState(detectLang());
+    const initialLang = detectLang();
+    document.documentElement.lang = initialLang === "cz" ? "cs" : "en";
+    const initialTimer = window.setTimeout(() => setLangState(initialLang), 0);
+
+    const onHashChange = () => {
+      const hashLang = detectHashLang();
+      if (!hashLang) return;
+
+      setLangState(hashLang);
+      window.localStorage.setItem(STORAGE_KEY, hashLang);
+      document.documentElement.lang = hashLang === "cz" ? "cs" : "en";
+    };
     window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
+    return () => {
+      window.clearTimeout(initialTimer);
+      window.removeEventListener("hashchange", onHashChange);
+    };
   }, []);
 
   const setLang: LanguageContextValue["setLang"] = (l) => {
@@ -29,6 +58,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (timer.current) clearTimeout(timer.current);
 
     setLangState(l);
+    window.localStorage.setItem(STORAGE_KEY, l);
     window.history.replaceState({}, "", l === "cz" ? "#/cz" : "#/en");
     document.documentElement.lang = l === "cz" ? "cs" : "en";
 

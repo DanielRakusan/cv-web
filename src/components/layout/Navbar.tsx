@@ -377,11 +377,11 @@ export function Navbar() {
 
   const navLinks = [
     { href: "#oMne",        label: lang === "cz" ? "proč já"    : "why me"     },
-    { href: "#ai",          label: "AI"                                         },
     { href: "#dovednosti",  label: lang === "cz" ? "dovednosti" : "skills"     },
+    { href: "#ai",          label: "AI"                                         },
     { href: "#zkusenosti",  label: lang === "cz" ? "zkušenosti" : "experience" },
-    { href: "#certifikaty", label: lang === "cz" ? "certifikáty": "certs"      },
     { href: "#projekty",    label: lang === "cz" ? "projekty"   : "projects"   },
+    { href: "#certifikaty", label: lang === "cz" ? "certifikáty": "certificates"},
   ];
 
   return (

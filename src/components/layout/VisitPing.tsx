@@ -4,7 +4,12 @@ import { useEffect } from "react";
 import { siteConfig } from "@/config/site";
 
 function getLang() {
-  return window.location.hash === "#/en" ? "en" : "cz";
+  const hash = window.location.hash.toLowerCase();
+  if (hash === "#/en" || hash.startsWith("#/en/")) return "en";
+  if (hash === "#/cz" || hash.startsWith("#/cz/")) return "cz";
+
+  const storedLang = window.localStorage.getItem("portfolio-lang");
+  return storedLang === "en" ? "en" : "cz";
 }
 
 // Modul-level throttle — zabrání dvěma ping requestům do 10 sekund.
