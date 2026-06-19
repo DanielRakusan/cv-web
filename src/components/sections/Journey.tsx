@@ -43,7 +43,10 @@ function LuaLine({ line }: { line: typeof LUA_LINES[0] }) {
     <div><span style={{ color: C.comment }}>{line.s}</span></div>
   );
   if (line.t === "indent") return (
-    <div><span style={{ color: C.text }}>{line.s}</span></div>
+    <div>
+      <span style={{ color: C.text }}>{line.s}</span>
+      {line.num && <span style={{ color: C.num }}>{line.num}</span>}
+    </div>
   );
   if (line.t === "indent2") return (
     <div>
