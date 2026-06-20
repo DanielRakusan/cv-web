@@ -1,34 +1,34 @@
 # Daniel Rakušan — Junior Python Backend Developer
 
-> Portfolio a živé Python demo — danielrakusan.cz
+> Portfolio and live Python demo — danielrakusan.cz
 
-Daniel Rakušan je junior Python backend developer z Prahy (Česká republika), hledající první pozici v IT. Přechod z IT podpory do vývoje softwaru. Aktivně staví projekty v Pythonu, Djangu, FastAPI a SQLite.
+Daniel Rakušan is a junior Python backend developer based in Prague, Czech Republic, looking for his first IT role. He transitioned from IT support into software development and is actively building projects in Python, Django, FastAPI, and SQLite.
 
-## Kontakt
+## Contact
 - Email: rakusan.dev@gmail.com
 - GitHub: https://github.com/DanielRakusan
 - LinkedIn: https://linkedin.com/in/daniel-rakusan
-- Web: https://danielrakusan.cz
+- Website: https://danielrakusan.cz
 
-## Technologie
+## Tech Stack
 Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, Next.js, PostgreSQL, REST API, WebSocket, Web Push API
 
 ## AI-Assisted Development
-Aktivně využívá Claude Code a AI-assisted workflow jako součást každodenního vývoje. Zkušenosti s prompt engineeringem, code review přes AI a automatizovanými git workflow.
+Actively uses Claude Code and an AI-assisted workflow as part of everyday development. Experienced with prompt engineering, AI-driven code review, and automated git workflows.
 
-## Certifikáty
-- **Python programátor BASIC** — akreditovaný rekvalifikační kurz, Ministerstvo školství ČR (č.j. MSMT-7415/2024-5)
+## Certifications
+- **Python programátor BASIC** — state-accredited retraining course, Ministry of Education CR (ref. MSMT-7415/2024-5)
 - Django Foundations for Python — Mimo Academy
 - Object-Oriented Programming in Python — itnetwork.cz
 - Python Fundamentals — itnetwork.cz
 - SQLite Databases Step by Step — itnetwork.cz
-- + 6 dalších certifikátů (HTML5, JavaScript, webdesign, React)
+- + 6 more certificates (HTML5, JavaScript, web design, React)
 
-## Projekty (živé demo)
-Interaktivní Python projekty spustitelné přímo v prohlížeči na https://danielrakusan.cz — skutečný Python backend běžící na Render.com, výstup streamovaný přes WebSocket.
+## Projects (Live Demo)
+Interactive Python projects runnable directly in the browser at https://danielrakusan.cz — a real Python backend running on Render.com, with output streamed via WebSocket.
 
-## Dostupnost
-Ihned k dispozici / Available now. Praha nebo remote.
+## Availability
+Available immediately. Prague or remote.
 
-## Jazyky
-Čeština (rodilý mluvčí), Angličtina (pracovní úroveň)
+## Languages
+Czech (native), English (professional working proficiency)

@@ -315,7 +315,7 @@ export function Certifications() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: i * 0.05, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="text-left w-full rounded-xl border overflow-hidden transition-all duration-200"
+              className="text-left w-full rounded-xl border overflow-hidden transition-all duration-200 flex flex-col"
               style={{
                 borderColor: "var(--b1)",
                 background: "var(--s1)",
@@ -358,7 +358,7 @@ export function Certifications() {
                 />
               </div>
 
-              <div className="p-4">
+              <div className="p-4 flex flex-col flex-1">
               {/* Icon + title row */}
               <div className="flex items-start gap-3 mb-3">
                 <div
@@ -384,7 +384,8 @@ export function Certifications() {
                 </div>
               </div>
 
-              {/* Footer row */}
+              {/* Footer row — flex-1 spacer pushes it to bottom */}
+              <div className="flex-1" />
               <div className="flex items-center justify-between gap-2">
                 <span
                   className="font-mono"
