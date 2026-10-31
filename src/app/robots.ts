@@ -8,49 +8,33 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/_next/"],
       },
-      // Bing / MSN crawlery — explicitně vítány
+      // Bing / MSN + AI crawlery (trénink i vyhledávání/citace) — explicitně vítány
       {
-        userAgent: "bingbot",
+        userAgent: [
+          "bingbot",
+          "msnbot",
+          "GPTBot",
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "Claude-SearchBot",
+          "Claude-User",
+          "anthropic-ai",
+          "Google-Extended",
+          "GoogleOther",
+          "PerplexityBot",
+          "Perplexity-User",
+          "Applebot",
+          "Applebot-Extended",
+          "Amazonbot",
+          "CCBot",
+          "cohere-ai",
+          "DuckAssistBot",
+          "meta-externalagent",
+          "Bytespider",
+        ],
         allow: "/",
-      },
-      {
-        userAgent: "msnbot",
-        allow: "/",
-      },
-      // AI crawlery — explicitně vítány (indexují pro AI odpovědi)
-      {
-        userAgent: "GPTBot",
-        allow: "/",
-      },
-      {
-        userAgent: "ClaudeBot",
-        allow: "/",
-      },
-      {
-        userAgent: "GoogleExtendedBot",
-        allow: "/",
-      },
-      {
-        userAgent: "PerplexityBot",
-        allow: "/",
-      },
-      {
-        userAgent: "anthropic-ai",
-        allow: "/",
-      },
-      {
-        userAgent: "Bytespider",
-        allow: "/",
-      },
-      // OpenAI SearchGPT crawler
-      {
-        userAgent: "OAI-SearchBot",
-        allow: "/",
-      },
-      // Meta AI crawler
-      {
-        userAgent: "meta-externalagent",
-        allow: "/",
+        disallow: ["/api/"],
       },
     ],
     sitemap: "https://www.danielrakusan.cz/sitemap.xml",

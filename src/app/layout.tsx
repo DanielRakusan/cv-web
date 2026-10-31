@@ -33,20 +33,20 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "Daniel Rakušan — Junior Python Developer",
+    default: "Daniel Rakušan — Junior AI & Python Developer",
     template: "%s | Daniel Rakušan",
   },
 
   description:
-    "Daniel Rakušan — junior Python developer z Prahy. Python, Django, SQLite, AI-assisted development. Živé Python projekty ke spuštění přímo v prohlížeči. Ihned k dispozici.",
+    "Daniel Rakušan, junior AI & Python developer z Prahy. Python, Django, SQLite a lokální AI modely. Živé Python demo v prohlížeči. Ihned k dispozici.",
 
   keywords: [
     "Daniel Rakušan",
     "Daniel Rakusan",
-    "junior Python developer",
+    "junior AI & Python developer",
     "Python developer Praha",
     "Python developer Prague",
-    "junior Python developer Prague",
+    "junior AI & Python developer Prague",
     "backend developer Praha",
     "backend developer Prague",
     "Python Django developer",
@@ -80,24 +80,24 @@ export const metadata: Metadata = {
     alternateLocale: "en_US",
     url: SITE_URL,
     siteName: "Daniel Rakušan",
-    title: "Daniel Rakušan — Junior Python Developer",
+    title: "Daniel Rakušan — Junior AI & Python Developer",
     description:
-      "Daniel Rakusan — junior Python developer from Prague. Python, Django, SQLite. Looking for first dev role. Available now.",
+      "Daniel Rakusan — junior AI & Python developer from Prague. Python, Django, SQLite. Looking for first dev role. Available now.",
     images: [
       {
         url: `${SITE_URL}/opengraph-image`,
         width: 1200,
         height: 630,
-        alt: "Daniel Rakušan — Junior Python Developer",
+        alt: "Daniel Rakušan — Junior AI & Python Developer",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Daniel Rakušan — Junior Python Developer",
+    title: "Daniel Rakušan — Junior AI & Python Developer",
     description:
-      "Daniel Rakusan — junior Python developer from Prague. Python, Django, SQLite. Available now.",
+      "Daniel Rakusan — junior AI & Python developer from Prague. Python, Django, SQLite. Available now.",
   },
 
   alternates: {
@@ -153,10 +153,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {
                 "@context": "https://schema.org",
                 "@type": "ProfilePage",
-                name: "Daniel Rakušan — Junior Python Developer",
+                name: "Daniel Rakušan — Junior AI & Python Developer",
                 url: SITE_URL,
                 description:
-                  "Osobní portfolio a CV Daniela Rakušana, junior Python backend developera z Prahy. Python, Django, SQLite.",
+                  "Osobní portfolio a CV Daniela Rakušana, junior AI & Python developera z Prahy. Python, Django, SQLite.",
                 inLanguage: ["cs", "en"],
                 mainEntity: {
                   "@type": "Person",
@@ -176,9 +176,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   image: "https://github.com/DanielRakusan.png",
 
                   // Role
-                  jobTitle: "Junior Python Backend Developer",
+                  jobTitle: "Junior AI & Python Developer",
                   description:
-                    "Junior Python backend developer z Prahy / Prague. IT background, vlastní projekty v Pythonu, Djangu a SQLite. Hledám první pozici v IT. Looking for first dev role.",
+                    "Junior AI & Python developer z Prahy / Prague. IT background, vlastní projekty v Pythonu, Djangu a SQLite. Hledám první pozici v IT. Looking for first dev role.",
 
                   // Poloha
                   nationality: "CZ",
@@ -289,9 +289,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   // Hledám práci
                   seeks: {
                     "@type": "Demand",
-                    name: "Junior Python Backend Developer position",
+                    name: "Junior AI & Python Developer position",
                     description:
-                      "Hledám první pozici junior Python / backend developera v Praze nebo remote. Looking for a junior Python backend developer role in Prague or remote.",
+                      "Hledám první pozici, primárně v Praze, ale jsem otevřený i jiným místům. Looking for my first role, primarily in Prague, but open to other locations.",
                   },
 
                   // Kontakt a profily
@@ -311,7 +311,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 alternateName: "Daniel Rakusan",
                 url: SITE_URL,
                 description:
-                  "Portfolio a CV junior Python backend developera Daniela Rakušana z Prahy.",
+                  "Portfolio a CV junior AI & Python developera Daniela Rakušana z Prahy.",
                 inLanguage: ["cs", "en"],
                 author: { "@id": `${SITE_URL}/#person` },
               },

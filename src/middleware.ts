@@ -75,6 +75,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Content negotiation pro AI agenty: Accept: text/markdown → čisté markdown shrnutí
+  // (rewrite se vrací až po crawl-pingu níže, aby se i tyto requesty hlásily backendu)
+  const wantsMarkdown =
+    pathname === "/" && (req.headers.get("accept") ?? "").includes("text/markdown");
+
   const ua = req.headers.get("user-agent") ?? "";
   const crawlerMatch = detectCrawler(ua);
 
@@ -108,7 +113,9 @@ export function middleware(req: NextRequest) {
     });
   }
 
-  return NextResponse.next();
+  return wantsMarkdown
+    ? NextResponse.rewrite(new URL("/markdown", req.url))
+    : NextResponse.next();
 }
 
 export const config = {
