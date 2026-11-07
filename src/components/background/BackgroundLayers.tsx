@@ -1,9 +1,9 @@
-import { StarField } from "./StarField";
+import { NeuralField } from "./NeuralField";
 
 export function BackgroundLayers() {
   return (
     <>
-      <StarField />
+      <NeuralField />
 
       {/* Jemná mřížka */}
       <div
