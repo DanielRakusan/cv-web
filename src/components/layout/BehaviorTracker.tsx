@@ -6,7 +6,7 @@ import { siteConfig } from "@/config/site";
 
 // Sekce webu — sledujeme dwell time pro každou
 const SECTION_IDS = [
-  "oMne", "journey", "whyMe", "ai", "zkusenosti",
+  "oMne", "journey", "whyMe", "ai", "localAI", "zkusenosti",
   "projekty", "dovednosti", "certifikaty", "kontakt",
 ];
 

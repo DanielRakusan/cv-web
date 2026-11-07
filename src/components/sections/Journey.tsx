@@ -81,8 +81,9 @@ function LuaLine({ line }: { line: typeof LUA_LINES[0] }) {
 function LuaTerminal() {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 24 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      className="min-w-0"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
       style={{
@@ -145,7 +146,7 @@ export function Journey() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         {/* Left — text */}
-        <div>
+        <div className="min-w-0">
           {paragraphs.map((text, i) => (
             <motion.p
               key={i}

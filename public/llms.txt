@@ -1,14 +1,14 @@
-# Daniel Rakušan — Junior Python Backend Developer
+# Daniel Rakušan — Junior AI & Python Developer
 
-> Portfolio and live Python demo — danielrakusan.cz
+> Portfolio and live Python demo — www.danielrakusan.cz
 
-Daniel Rakušan is a junior Python backend developer based in Prague, Czech Republic, looking for his first IT role. He transitioned from IT support into software development and is actively building projects in Python, Django, FastAPI, and SQLite.
+Daniel Rakušan is a junior AI & Python developer based in Prague, Czech Republic, looking for his first IT role. He transitioned from IT support into software development and is actively building projects in Python, Django, FastAPI, and SQLite.
 
 ## Contact
 - Email: rakusan.dev@gmail.com
 - GitHub: https://github.com/DanielRakusan
 - LinkedIn: https://linkedin.com/in/daniel-rakusan
-- Website: https://danielrakusan.cz
+- Website: https://www.danielrakusan.cz
 
 ## Tech Stack
 Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, Next.js, PostgreSQL, REST API, WebSocket, Web Push API
@@ -25,10 +25,10 @@ Actively uses Claude Code and an AI-assisted workflow as part of everyday develo
 - + 6 more certificates (HTML5, JavaScript, web design, React)
 
 ## Projects (Live Demo)
-Interactive Python projects runnable directly in the browser at https://danielrakusan.cz — a real Python backend running on Render.com, with output streamed via WebSocket.
+Interactive Python projects runnable directly in the browser at https://www.danielrakusan.cz — a real Python backend running on Render.com, with output streamed via WebSocket.
 
 ## Availability
-Available immediately. Prague or remote.
+Available immediately. Primarily looking in Prague, but open to other locations.
 
 ## Languages
 Czech (native), English (professional working proficiency)

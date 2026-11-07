@@ -8,6 +8,7 @@ import { WhyMe } from "@/components/sections/WhyMe";
 import { Skills } from "@/components/sections/Skills";
 import { Experience } from "@/components/sections/Experience";
 import { AISection } from "@/components/sections/AISection";
+import { LocalAI } from "@/components/sections/LocalAI";
 import { Journey } from "@/components/sections/Journey";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
@@ -29,9 +30,9 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
       name: "Daniel Rakušan",
       givenName: "Daniel",
       familyName: "Rakušan",
-      jobTitle: "Junior Python Developer",
+      jobTitle: "Junior AI & Python Developer",
       description:
-        "Junior Python backend developer based in Prague. Transitioning from IT support to software development. Building with Python, Django, SQLite and Git.",
+        "Junior AI & Python developer based in Prague. Transitioning from IT support to software development. Building with Python, Django, SQLite and Git.",
       url: SITE_URL,
       email: "rakusan.dev@gmail.com",
       image: {
@@ -47,7 +48,7 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
       },
       hasOccupation: {
         "@type": "Occupation",
-        name: "Junior Python Developer",
+        name: "Junior AI & Python Developer",
         occupationLocation: { "@type": "City", name: "Praha" },
         skills: "Python, Django, FastAPI, SQLite, SQL, Git, JavaScript, HTML, CSS, AI-assisted development, Claude Code, Prompt engineering",
       },
@@ -82,8 +83,8 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: "Daniel Rakušan — Junior Python Developer",
-      description: "Osobní portfolio a CV Daniela Rakušana — junior Python backend developer z Prahy.",
+      name: "Daniel Rakušan — Junior AI & Python Developer",
+      description: "Osobní portfolio a CV Daniela Rakušana — junior AI & Python developer z Prahy.",
       inLanguage: ["cs", "en"],
       publisher: { "@id": `${SITE_URL}/#person` },
     },
@@ -91,7 +92,7 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
       "@type": "WebPage",
       "@id": `${SITE_URL}/#webpage`,
       url: SITE_URL,
-      name: "Daniel Rakušan — Junior Python Developer",
+      name: "Daniel Rakušan — Junior AI & Python Developer",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       about: { "@id": `${SITE_URL}/#person` },
       inLanguage: ["cs", "en"],
@@ -143,7 +144,7 @@ function buildJsonLd(projects: { id: string; name: string; description: string }
         name: "Je Daniel Rakušan dostupný pro práci?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Ano, Daniel Rakušan je ihned k dispozici pro první pozici junior Python/backend developera. Preferuje Praha nebo remote.",
+          text: "Ano, Daniel Rakušan je ihned k dispozici pro první pozici junior AI/Python developera. Hledá primárně v Praze, je ale otevřený i jiným místům.",
         },
       },
       {
@@ -235,6 +236,9 @@ export default async function Page() {
           <AISection />
           <SectionDivider />
 
+          <LocalAI />
+          <SectionDivider />
+
           <Experience />
           <SectionDivider />
 
@@ -248,9 +252,9 @@ export default async function Page() {
             itemType="https://schema.org/Person"
             style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}
           >
-            <h1 itemProp="name">Daniel Rakušan — Junior Python Backend Developer</h1>
+            <h2 itemProp="name">Daniel Rakušan — Junior AI & Python Developer</h2>
             <p itemProp="description">
-              Junior Python backend developer z Prahy. Přechod z IT podpory do vývoje.
+              Junior AI & Python developer z Prahy. Přechod z IT podpory do vývoje.
               Python, Django, FastAPI, SQLite, Git, AI-assisted development s Claude Code.
               Hledám první pozici. Ihned k dispozici.
             </p>
@@ -258,7 +262,7 @@ export default async function Page() {
             <p>Kontakt: <a itemProp="email" href="mailto:rakusan.dev@gmail.com">rakusan.dev@gmail.com</a></p>
             <a itemProp="sameAs" href="https://github.com/DanielRakusan">GitHub</a>
             <a itemProp="sameAs" href="https://linkedin.com/in/daniel-rakusan">LinkedIn</a>
-            <meta itemProp="jobTitle" content="Junior Python Backend Developer" />
+            <meta itemProp="jobTitle" content="Junior AI & Python Developer" />
             <meta itemProp="nationality" content="CZ" />
           </div>
           <SectionDivider />

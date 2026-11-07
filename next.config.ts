@@ -36,7 +36,15 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/(.*)",
-        headers: securityHeaders,
+        headers: [
+          ...securityHeaders,
+          // Discovery pro AI agenty (RFC 8288)
+          {
+            key: "Link",
+            value:
+              '</llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt", </llms-full.txt>; rel="alternate"; type="text/markdown"; title="Full profile", </sitemap.xml>; rel="sitemap"',
+          },
+        ],
       },
     ];
   },

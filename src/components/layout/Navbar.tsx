@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site";
 // ── Kontaktní data e-vizitky ────────────────────────────────────────
 const CARD = {
   name:     "Daniel Rakušan",
-  role:     "Junior Python Backend Developer",
+  role:     "Junior AI & Python Developer",
   city:     "Praha",
   email:    siteConfig.social.email,
   github:   siteConfig.social.github,
@@ -23,7 +23,7 @@ const VCARD = [
   "VERSION:3.0",
   "N:Rakušan;Daniel;;;",
   `FN:${CARD.name}`,
-  "TITLE:Junior Python Backend Developer",
+  "TITLE:Junior AI & Python Developer",
   `EMAIL;TYPE=INTERNET:${CARD.email}`,
   `URL:${CARD.web}`,
   `X-SOCIALPROFILE;type=github:${CARD.github}`,

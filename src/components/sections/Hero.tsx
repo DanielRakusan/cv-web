@@ -150,7 +150,7 @@ export function Hero({ profile }: HeroProps) {
               className="font-mono"
               style={{ fontSize: "clamp(.65rem, 1.5vw, .8rem)", color: "var(--dim)", letterSpacing: ".04em" }}
             >
-              {t.hero.role.toLowerCase().replace(/ /g, " · ")} · AI-assisted dev
+              {t.hero.role}
             </div>
           </FadeUp>
 

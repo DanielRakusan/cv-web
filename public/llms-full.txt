@@ -1,10 +1,10 @@
-# Daniel Rakušan — Junior Python Backend Developer (Full Profile)
+# Daniel Rakušan — Junior AI & Python Developer (Full Profile)
 
-> Extended profile for AI reading — danielrakusan.cz
+> Extended profile for AI reading — www.danielrakusan.cz
 
 ## About
 
-Daniel Rakušan is a junior Python backend developer based in Prague, Czech Republic. He comes from an IT support background and is actively transitioning into software development. He is not a CS graduate — he learned to code through self-study, hands-on project work, and an AI-assisted development workflow.
+Daniel Rakušan is a junior AI & Python developer based in Prague, Czech Republic. He comes from an IT support background and is actively transitioning into software development. He is not a CS graduate — he learned to code through self-study, hands-on project work, and an AI-assisted development workflow.
 
 He believes the best way to learn programming is to build real things. That's why his portfolio includes a live demo — a Python backend running on Render.com, with output streamed via WebSocket directly in the browser.
 
@@ -56,26 +56,21 @@ Daniel actively uses AI as part of his development workflow — not as a replace
 - **Collections in Python** — itnetwork.cz
 - **React Basics** — itnetwork.cz
 
-## Why Hire Him
+## What he offers
 
-1. **Real projects, not just courses** — he has a live demo you can run right in the browser
-2. **IT background** — understands systems, not just code
-3. **AI-first workflow** — knows how to work with modern AI tools as part of everyday development
-4. **Fast learner** — transitioned from IT support into development through self-study
-5. **Available immediately** — can start right away, Prague or remote
+He has a live demo that runs in the browser. He comes from IT support, so he knows the systems code runs on. He uses AI tools in everyday development and checks their output. He moved from IT support into development through courses and self-study. He can start immediately.
 
 ## Availability
 
 Available immediately.
-Prefers Prague or remote.
-Open to hybrid arrangements as well.
+Primarily looking in Prague, but open to other locations.
 
 ## Contact
 
 - Email: rakusan.dev@gmail.com
 - GitHub: https://github.com/DanielRakusan
 - LinkedIn: https://linkedin.com/in/daniel-rakusan
-- Website: https://danielrakusan.cz
+- Website: https://www.danielrakusan.cz
 
 ## Languages
 
