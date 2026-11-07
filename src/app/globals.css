@@ -43,6 +43,8 @@
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+  background: var(--bg);
   scroll-padding-top: 72px;
 }
 

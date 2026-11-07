@@ -390,10 +390,10 @@ export function Navbar() {
         className="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 transition-all duration-300"
         style={{
           padding: ".85rem 5vw",
-          background: scrolled || menuOpen ? "rgba(2,2,10,.97)" : "rgba(2,2,10,.6)",
+          background: menuOpen ? "rgba(2,2,10,.97)" : scrolled ? "rgba(2,2,10,.7)" : "rgba(2,2,10,.6)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1px solid ${scrolled || menuOpen ? "var(--b0)" : "transparent"}`,
+          borderBottom: `1px solid ${menuOpen ? "var(--b0)" : "transparent"}`,
         }}
       >
         {/* Logo */}
