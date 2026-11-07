@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 const firaCode = Fira_Code({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  // Fira Code je variabilní písmo: jeden požadavek místo tří vah (stabilnější build na Vercelu).
   display: "swap",
 });
 
