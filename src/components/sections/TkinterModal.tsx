@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useContent } from "@/hooks/useContent";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -204,6 +205,7 @@ function FileDialogPanel({ req, onResponse, onUpload }: {
   onResponse: (value: string) => void;
   onUpload: (dialogId: string, filename: string, b64: string) => void;
 }) {
+  const tk = useContent().tkinter;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const accept = req.filetypes
@@ -250,7 +252,7 @@ function FileDialogPanel({ req, onResponse, onUpload }: {
   return (
     <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: 16, background: "#f0f0f0" }}>
       <p style={{ fontFamily: "system-ui", fontSize: 13, color: "#000", margin: 0 }}>
-        {req.title || (req.mode === "save" ? "Uložit soubor" : "Otevřít soubor")}
+        {req.title || (req.mode === "save" ? tk.saveFile : tk.openFile)}
       </p>
       <label
         style={{
@@ -263,7 +265,7 @@ function FileDialogPanel({ req, onResponse, onUpload }: {
       >
         <span style={{ fontSize: "2rem" }}>📁</span>
         <span style={{ fontFamily: "system-ui", fontSize: 12, color: "#555" }}>
-          {req.mode === "save" ? "Vyberte cílový soubor" : "Klikněte pro výběr souboru"}
+          {req.mode === "save" ? tk.chooseTarget : tk.clickToChoose}
         </span>
         {accept && (
           <span style={{ fontFamily: "system-ui", fontSize: 11, color: "#888" }}>
@@ -288,7 +290,7 @@ function FileDialogPanel({ req, onResponse, onUpload }: {
           borderRadius: 3, cursor: "pointer",
         }}
       >
-        Zrušit
+        {tk.cancel}
       </button>
     </div>
   );
@@ -300,6 +302,7 @@ function MessageboxPanel({ req, onResponse }: {
   req: MessageboxRequest;
   onResponse: (value: string) => void;
 }) {
+  const tk = useContent().tkinter;
   const iconMap: Record<string, string> = {
     info: "ℹ️", warning: "⚠️", error: "❌", okcancel: "❓", yesno: "❓", yesnocancel: "❓",
   };
@@ -331,17 +334,17 @@ function MessageboxPanel({ req, onResponse }: {
         )}
         {req.kind === "okcancel" && (
           <>
-            <button type="button" onClick={() => onResponse("cancel")} style={btnStyle}>Zrušit</button>
+            <button type="button" onClick={() => onResponse("cancel")} style={btnStyle}>{tk.cancel}</button>
             <button type="button" onClick={() => onResponse("ok")} style={{ ...btnStyle, fontWeight: 600 }}>OK</button>
           </>
         )}
         {(req.kind === "yesno" || req.kind === "yesnocancel") && (
           <>
             {req.kind === "yesnocancel" && (
-              <button type="button" onClick={() => onResponse("cancel")} style={btnStyle}>Zrušit</button>
+              <button type="button" onClick={() => onResponse("cancel")} style={btnStyle}>{tk.cancel}</button>
             )}
-            <button type="button" onClick={() => onResponse("no")} style={btnStyle}>Ne</button>
-            <button type="button" onClick={() => onResponse("yes")} style={{ ...btnStyle, fontWeight: 600 }}>Ano</button>
+            <button type="button" onClick={() => onResponse("no")} style={btnStyle}>{tk.no}</button>
+            <button type="button" onClick={() => onResponse("yes")} style={{ ...btnStyle, fontWeight: 600 }}>{tk.yes}</button>
           </>
         )}
       </div>

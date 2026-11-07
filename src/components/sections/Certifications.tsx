@@ -3,17 +3,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContent } from "@/hooks/useContent";
-import { useLanguage } from "@/hooks/useLanguage";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
 type Cert = {
   file: string;
-  titleCz: string;
-  titleEn: string;
-  categoryCz: string;
-  categoryEn: string;
-  dateCz: string;
-  dateEn: string;
   icon: string;
   iconBg: string;
   courseUrl: string;
@@ -23,143 +16,71 @@ const MAIN_BADGE = {
   image: "/certificates/badge_python_web_apps.png",
   verifyUrl: "https://www.itnetwork.cz/portfolio/badge/d582efca-af70-4085-a0fd-730cc79cb10e",
   certId: "d582efca-af70-4085-a0fd-730cc79cb10e",
-  titleCz: "Tvorba www aplikací v jazyku Python",
-  titleEn: "Python Web Application Development",
-  categoryCz: "Akreditovaný rekvalifikační kurz · itnetwork.cz",
-  categoryEn: "Accredited retraining course · itnetwork.cz",
-  dateCz: "Červen 2026",
-  dateEn: "June 2026",
 };
 
 const OFFICIAL_CERT = {
   file: "Osvedceni_Python_WWW_aplikace_MSMT.pdf",
   preview1: "/certificates/preview/Osvedceni_Python_WWW_aplikace_MSMT-1.jpg",
   preview2: "/certificates/preview/Osvedceni_Python_WWW_aplikace_MSMT-2.jpg",
-  titleCz: "Úřední osvědčení MŠMT",
-  titleEn: "Official MŠMT Certificate",
-  categoryCz: "Akreditováno Ministerstvem školství ČR · č.j. MSMT-7415/2024-5",
-  categoryEn: "Accredited by Czech Ministry of Education · č.j. MSMT-7415/2024-5",
-  dateCz: "12. 6. 2026",
-  dateEn: "12 June 2026",
 };
 
 const CERTS: Cert[] = [
   {
     file: "Certifikat_Zaklady_Django_frameworku_pro_Python.pdf",
-    titleCz: "Základy Django frameworku",
-    titleEn: "Django Framework Foundations",
-    categoryCz: "Webový framework · Python",
-    categoryEn: "Web framework · Python",
-    dateCz: "Duben 2026",
-    dateEn: "April 2026",
     icon: "🐍",
     iconBg: "rgba(34,211,238,.12)",
     courseUrl: "https://www.itnetwork.cz/python/django/zaklady",
   },
   {
     file: "Certifikat_Objektove_orientovane_programovani_v_Pythonu.pdf",
-    titleCz: "OOP v Pythonu",
-    titleEn: "OOP in Python",
-    categoryCz: "Třídy, struktura a logika",
-    categoryEn: "Classes, structure & logic",
-    dateCz: "Únor 2026",
-    dateEn: "February 2026",
     icon: "📦",
     iconBg: "rgba(34,211,238,.12)",
     courseUrl: "https://www.itnetwork.cz/python/oop",
   },
   {
     file: "Certifikat_Zakladni_konstrukce_jazyka_Python.pdf",
-    titleCz: "Základy jazyka Python",
-    titleEn: "Python Fundamentals",
-    categoryCz: "Základ jazyka · Algoritmy",
-    categoryEn: "Language basics · Algorithms",
-    dateCz: "Únor 2026",
-    dateEn: "February 2026",
     icon: "⚡",
     iconBg: "rgba(34,211,238,.12)",
     courseUrl: "https://www.itnetwork.cz/python/zaklady",
   },
   {
     file: "Certifikat_SQLite_databaze_krok_za_krokem.pdf",
-    titleCz: "SQLite databáze krok za krokem",
-    titleEn: "SQLite Databases Step by Step",
-    categoryCz: "Databáze · SQL",
-    categoryEn: "Databases · SQL",
-    dateCz: "Únor 2026",
-    dateEn: "February 2026",
     icon: "🗄️",
     iconBg: "rgba(167,139,250,.12)",
     courseUrl: "https://www.itnetwork.cz/sqlite",
   },
   {
     file: "Certifikat_Kolekce_v_Pythonu.pdf",
-    titleCz: "Kolekce v Pythonu",
-    titleEn: "Python Collections",
-    categoryCz: "Datové struktury",
-    categoryEn: "Data structures",
-    dateCz: "Únor 2026",
-    dateEn: "February 2026",
     icon: "🗂️",
     iconBg: "rgba(34,211,238,.12)",
     courseUrl: "https://www.itnetwork.cz/python/kolekce",
   },
   {
     file: "Certifikat_Zaklady_React.pdf",
-    titleCz: "Základy React",
-    titleEn: "React Fundamentals",
-    categoryCz: "Frontend framework",
-    categoryEn: "Frontend framework",
-    dateCz: "2026",
-    dateEn: "2026",
     icon: "⚛️",
     iconBg: "rgba(74,222,128,.12)",
     courseUrl: "https://www.itnetwork.cz/javascript/react/zaklady",
   },
   {
     file: "Certifikat_Zakladni_konstrukce_jazyka_JavaScript.pdf",
-    titleCz: "Základy JavaScriptu",
-    titleEn: "JavaScript Fundamentals",
-    categoryCz: "Skriptovací jazyk · Web",
-    categoryEn: "Scripting · Web",
-    dateCz: "2026",
-    dateEn: "2026",
     icon: "🟨",
     iconBg: "rgba(251,191,36,.12)",
     courseUrl: "https://www.itnetwork.cz/javascript/zaklady",
   },
   {
     file: "Certifikat_HTML5_od_A_do_Z.pdf",
-    titleCz: "HTML5 od A do Z",
-    titleEn: "HTML5 from A to Z",
-    categoryCz: "Markup · Webová struktura",
-    categoryEn: "Markup · Web structure",
-    dateCz: "2026",
-    dateEn: "2026",
     icon: "🌐",
     iconBg: "rgba(74,222,128,.12)",
     courseUrl: "https://www.itnetwork.cz/html-css/html5",
   },
   {
     file: "Certifikat_Responzivni_webdesign.pdf",
-    titleCz: "Responzivní webdesign",
-    titleEn: "Responsive Web Design",
-    categoryCz: "CSS · Mobile first",
-    categoryEn: "CSS · Mobile first",
-    dateCz: "2026",
-    dateEn: "2026",
     icon: "📱",
     iconBg: "rgba(74,222,128,.12)",
     courseUrl: "https://www.itnetwork.cz/html-css/responzivni-webdesign",
   },
   {
     file: "Certifikat_Moderni_webdesign.pdf",
-    titleCz: "Moderní webdesign",
-    titleEn: "Modern Web Design",
-    categoryCz: "Design · UX principy",
-    categoryEn: "Design · UX principles",
-    dateCz: "2026",
-    dateEn: "2026",
     icon: "🎨",
     iconBg: "rgba(167,139,250,.12)",
     courseUrl: "https://www.itnetwork.cz/html-css/webove-stranky",
@@ -168,22 +89,21 @@ const CERTS: Cert[] = [
 
 export function Certifications() {
   const t = useContent();
-  const { lang } = useLanguage();
-  const [active, setActive] = useState<Cert | null>(null);
+    const [active, setActive] = useState<Cert | null>(null);
   const [officialCertOpen, setOfficialCertOpen] = useState(false);
 
-  const label = lang === "cz" ? "Dokončeno" : "Completed";
-  const openLabel = lang === "cz" ? "↗ otevřít v nové záložce" : "↗ open in new tab";
-  const verifyLabel = lang === "cz" ? "↗ ověřit certifikát" : "↗ verify certificate";
+  const c = t.certifications;
+  const label = c.completed;
+  const openLabel = c.openTab;
+  const verifyLabel = c.verify;
+  const txt = (file: string) => c.items.find(i => i.file === file);
 
   return (
     <SectionWrapper id="certifikaty">
       <SectionHeader
         keyword={`// ${t.certifications.sectionLabel.toLowerCase()}`}
         heading={t.certifications.heading}
-        sub={lang === "cz"
-          ? <><span style={{ color: "var(--cyan)", fontWeight: 600 }}>Akreditovaný</span>{" rekvalifikační kurz + 10 dokončených kurzů. Klikni na certifikát pro náhled PDF."}</>
-          : <><span style={{ color: "var(--cyan)", fontWeight: 600 }}>Accredited</span>{" retraining course + 10 completed courses. Click a certificate to preview the PDF."}</>}
+        sub={<><span style={{ color: "var(--cyan)", fontWeight: 600 }}>{c.sub.highlight}</span>{c.sub.rest}</>}
       />
 
       {/* Main certificate pair — digital badge + official MŠMT certificate */}
@@ -217,20 +137,18 @@ export function Certifications() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={MAIN_BADGE.image}
-              alt={lang === "cz" ? MAIN_BADGE.titleCz : MAIN_BADGE.titleEn}
+              alt={c.mainBadge.title}
               style={{ width: "100%", maxWidth: 190, height: "auto", display: "block" }}
             />
           </div>
           <div className="flex items-center justify-between gap-3 px-4 py-3 flex-wrap">
             <div className="min-w-0">
               <p className="font-mono font-bold leading-snug" style={{ fontSize: ".78rem", color: "var(--txt)", letterSpacing: "-.01em" }}>
-                {lang === "cz" ? MAIN_BADGE.titleCz : MAIN_BADGE.titleEn}
+                {c.mainBadge.title}
               </p>
               <p className="font-mono mt-0.5" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".04em" }}>
-                {lang === "cz"
-                  ? <><span style={{ color: "var(--cyan)" }}>Akreditovaný</span>{" rekvalifikační kurz · itnetwork.cz"}</>
-                  : <><span style={{ color: "var(--cyan)" }}>Accredited</span>{" retraining course · itnetwork.cz"}</>}
-                {" · "}{lang === "cz" ? MAIN_BADGE.dateCz : MAIN_BADGE.dateEn}
+                <><span style={{ color: "var(--cyan)" }}>{c.mainBadge.highlight}</span>{c.mainBadge.rest}</>
+                {" · "}{c.mainBadge.date}
               </p>
               <p className="font-mono mt-1" style={{ fontSize: ".55rem", letterSpacing: ".02em", wordBreak: "break-all" }}>
                 <span style={{ color: "var(--dim)" }}>ID: </span>
@@ -271,26 +189,24 @@ export function Certifications() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={OFFICIAL_CERT.preview1}
-              alt={lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn}
+              alt={c.official.title}
               loading="lazy"
               style={{ width: "100%", maxHeight: 180, objectFit: "cover", objectPosition: "top center", display: "block", borderRadius: "4px 4px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.4)" }}
             />
           </div>
           <div className="px-4 py-3">
             <p className="font-mono font-bold leading-snug" style={{ fontSize: ".78rem", color: "var(--txt)", letterSpacing: "-.01em" }}>
-              {lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn}
+              {c.official.title}
             </p>
             <p className="font-mono mt-0.5" style={{ fontSize: ".6rem", color: "var(--dim)", letterSpacing: ".04em", lineHeight: 1.5 }}>
-              {lang === "cz"
-                ? <><span style={{ color: "var(--cyan)" }}>Akreditováno</span>{" Ministerstvem školství ČR · č.j. MSMT-7415/2024-5"}</>
-                : <><span style={{ color: "var(--cyan)" }}>Accredited</span>{" by Czech Ministry of Education · č.j. MSMT-7415/2024-5"}</>}
+              <><span style={{ color: "var(--cyan)" }}>{c.official.highlight}</span>{c.official.rest}</>
             </p>
             <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
               <span className="font-mono" style={{ fontSize: ".55rem", padding: "2px 8px", borderRadius: 3, border: "1px solid rgba(34,211,238,.3)", color: "var(--cyan)", background: "rgba(34,211,238,.06)", letterSpacing: ".04em", whiteSpace: "nowrap" }}>
-                {lang === "cz" ? "↗ zobrazit osvědčení" : "↗ view certificate"}
+                {c.view}
               </span>
               <span className="font-mono" style={{ fontSize: ".6rem", color: "var(--dim)", whiteSpace: "nowrap" }}>
-                {lang === "cz" ? OFFICIAL_CERT.dateCz : OFFICIAL_CERT.dateEn}
+                {c.official.date}
               </span>
             </div>
           </div>
@@ -302,9 +218,9 @@ export function Certifications() {
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(210px, 100%), 1fr))" }}
       >
         {CERTS.map((cert, i) => {
-          const title = lang === "cz" ? cert.titleCz : cert.titleEn;
-          const category = lang === "cz" ? cert.categoryCz : cert.categoryEn;
-          const date = lang === "cz" ? cert.dateCz : cert.dateEn;
+          const title = txt(cert.file)?.title ?? "";
+          const category = txt(cert.file)?.category ?? "";
+          const date = txt(cert.file)?.date ?? "";
 
           return (
             <motion.button
@@ -444,7 +360,7 @@ export function Certifications() {
                 <div className="w-3 h-3 rounded-full" style={{ background: "#febc2e", flexShrink: 0 }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: "#28c840", flexShrink: 0 }} />
                 <span className="font-mono flex-1 text-center truncate" style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".04em", minWidth: 0 }}>
-                  {lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn}
+                  {c.official.title}
                 </span>
                 <a
                   href={`/certificates/${OFFICIAL_CERT.file}`}
@@ -455,16 +371,16 @@ export function Certifications() {
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#67e8f9")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--cyan)")}
                 >
-                  <span className="hidden sm:inline">{lang === "cz" ? "↗ stáhnout PDF" : "↗ download PDF"}</span>
+                  <span className="hidden sm:inline">{c.download}</span>
                   <span className="sm:hidden">↗</span>
                 </a>
               </div>
               {/* Pages */}
               <div className="min-h-0 flex-1 overflow-auto p-2 sm:p-4 flex flex-col items-center gap-4" style={{ background: "rgba(255,255,255,.04)", overscrollBehavior: "contain" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={OFFICIAL_CERT.preview1} alt={`${lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn} – strana 1`} style={{ width: "100%", maxWidth: 920, height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }} />
+                <img src={OFFICIAL_CERT.preview1} alt={`${c.official.title} – strana 1`} style={{ width: "100%", maxWidth: 920, height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={OFFICIAL_CERT.preview2} alt={`${lang === "cz" ? OFFICIAL_CERT.titleCz : OFFICIAL_CERT.titleEn} – strana 2`} style={{ width: "100%", maxWidth: 920, height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }} />
+                <img src={OFFICIAL_CERT.preview2} alt={`${c.official.title} – strana 2`} style={{ width: "100%", maxWidth: 920, height: "auto", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }} />
               </div>
             </motion.div>
           </motion.div>
@@ -526,7 +442,7 @@ export function Certifications() {
                   className="font-mono flex-1 text-center truncate"
                   style={{ fontSize: ".65rem", color: "var(--dim)", letterSpacing: ".04em", minWidth: 0 }}
                 >
-                  {lang === "cz" ? active.titleCz : active.titleEn}
+                  {txt(active.file)?.title}
                 </span>
 
                 {/* Přejít na kurz — skryto na mobilu */}
@@ -539,7 +455,7 @@ export function Certifications() {
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#86efac")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--green)")}
                 >
-                  {lang === "cz" ? "→ přejít na kurz" : "→ go to course"}
+                  {c.goCourse}
                 </a>
 
                 {/* Open in new tab */}
@@ -562,7 +478,7 @@ export function Certifications() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`/certificates/preview/${active.file.replace(".pdf", ".jpg")}`}
-                  alt={lang === "cz" ? active.titleCz : active.titleEn}
+                  alt={txt(active.file)?.title}
                   style={{ width: "100%", maxWidth: 820, height: "auto", alignSelf: "flex-start", borderRadius: 6, boxShadow: "0 8px 40px rgba(0,0,0,.5)", display: "block" }}
                 />
               </div>

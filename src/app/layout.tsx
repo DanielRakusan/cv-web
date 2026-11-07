@@ -3,6 +3,7 @@ import { Space_Grotesk, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import { VisitPing } from "@/components/layout/VisitPing";
+import { SkipLink } from "@/components/layout/SkipLink";
 import { BehaviorTracker } from "@/components/layout/BehaviorTracker";
 
 const spaceGrotesk = Space_Grotesk({
@@ -320,12 +321,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
-        <a href="#oMne" className="skip-to-main">
-          Přeskočit na obsah
-        </a>
-
         <LanguageProvider>
+          {/* Skip-to-main — pomáhá screen readerům i Lighthouse skóre */}
+          <SkipLink />
           <VisitPing />
           <BehaviorTracker />
           {children}

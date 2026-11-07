@@ -801,7 +801,7 @@ const activeProject = pendingProject;
             >
               {/* Traffic lights */}
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                <button type="button" onClick={() => setModalOpen(false)} aria-label="Zavřít"
+                <button type="button" onClick={() => setModalOpen(false)} aria-label={t.common.close}
                   className="w-3 h-3 rounded-full hover:opacity-75 transition-opacity"
                   style={{ background: "#ff5f57" }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: "#ffbd2e" }} />
@@ -909,7 +909,7 @@ const activeProject = pendingProject;
                             <button
                               type="button"
                               onClick={() => setTreeCollapsed(true)}
-                              title="Skrýt"
+                              title={t.common.hide}
                               className="font-mono hover:opacity-60 transition-opacity"
                               style={{ fontSize: ".7rem", color: "rgba(255,255,255,0.28)" }}
                             >

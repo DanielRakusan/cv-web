@@ -5,9 +5,9 @@ import { useContent } from "@/hooks/useContent";
 import { SectionWrapper, SectionHeader } from "@/components/ui/SectionWrapper";
 
 // Řádky Lua kódu — ComputerCraft turtle mining robot
-const LUA_LINES = [
-  { t: "comment",  s: "-- robot.lua  •  první pokus" },
-  { t: "comment",  s: "-- Těžební robot v Lua" },
+const luaLines = (c: { comment1: string; comment2: string; done: string }) => [
+  { t: "comment",  s: c.comment1 },
+  { t: "comment",  s: c.comment2 },
   { t: "blank",    s: "" },
   { t: "keyword",  s: "local", rest: " fuel = turtle.getFuelLevel()" },
   { t: "keyword",  s: "local", rest: " steps = 0" },
@@ -25,7 +25,7 @@ const LUA_LINES = [
   { t: "keyword2", s: "  end" },
   { t: "keyword2", s: "end" },
   { t: "blank",    s: "" },
-  { t: "fn",       s: 'print(', str: '"Hotovo! Kroků: "', rest: " .. steps)" },
+  { t: "fn",       s: 'print(', str: c.done, rest: " .. steps)" },
 ];
 
 const C = {
@@ -37,7 +37,7 @@ const C = {
   text:     "var(--text-muted)",
 };
 
-function LuaLine({ line }: { line: typeof LUA_LINES[0] }) {
+function LuaLine({ line }: { line: ReturnType<typeof luaLines>[number] }) {
   if (line.t === "blank") return <div style={{ height: ".7em" }} />;
   if (line.t === "comment") return (
     <div><span style={{ color: C.comment }}>{line.s}</span></div>
@@ -79,6 +79,7 @@ function LuaLine({ line }: { line: typeof LUA_LINES[0] }) {
 }
 
 function LuaTerminal() {
+  const t = useContent();
   return (
     <motion.div
       className="min-w-0"
@@ -115,7 +116,7 @@ function LuaTerminal() {
 
       {/* Code */}
       <div style={{ padding: ".75rem 1rem 1rem", fontSize: ".64rem", lineHeight: 1.65, overflowX: "auto", whiteSpace: "pre" }}>
-        {LUA_LINES.map((line, i) => (
+        {luaLines(t.journey.lua).map((line, i) => (
           <LuaLine key={i} line={line} />
         ))}
         {/* Blinking cursor */}

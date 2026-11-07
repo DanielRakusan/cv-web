@@ -21,6 +21,61 @@ export const content = {
       certifikaty: "Certifikáty",
       projekty: "Projekty",
       kontakt: "Kontakt",
+      short: {
+        oMne: "proč já",
+        dovednosti: "dovednosti",
+        ai: "AI",
+        zkusenosti: "zkušenosti",
+        projekty: "projekty",
+        certifikaty: "certifikáty",
+      },
+    },
+    // Společné popisky, které nejsou součástí konkrétní sekce
+    common: {
+      skipLink: "Přeskočit na obsah",
+      close: "Zavřít",
+      hide: "Skrýt",
+    },
+
+    // Okna dema Tkinter (ukázka souborových dialogů a hlášek)
+    tkinter: {
+      saveFile: "Uložit soubor",
+      openFile: "Otevřít soubor",
+      chooseTarget: "Vyberte cílový soubor",
+      clickToChoose: "Klikněte pro výběr souboru",
+      cancel: "Zrušit",
+      yes: "Ano",
+      no: "Ne",
+    },
+
+    // Stránka 404
+    notFound: {
+      error: ": tuhle stránku had spolknul.",
+      line1: "Stránka neexistuje, ale had existuje.",
+      line2: "Jdi a klikni se jinam.",
+      back: "← zpět na hlavní stránku",
+    },
+
+
+    // Texty e-vizitky (kontaktní okno v záhlaví)
+    vizitka: {
+      contact: "kontakt",
+      city: "Praha",
+      saveContact: "uložit kontakt (.vcf)",
+      saveTitle: "Stáhnout soubor .vcf, otevře se v aplikaci Kontakty",
+      scan: "naskenuj → ulož",
+      scanBig: "naskenuj → ulož kontakt",
+      close: "Zavřít",
+      closeCard: "Zavřít vizitku",
+      zoomQr: "Zvětšit QR kód",
+      copyMail: "Zkopírovat e-mail",
+      copied: "Zkopírováno",
+      qrDialog: "QR kód vizitky",
+      openCard: "Otevřít e-vizitku",
+      openContact: "Otevřít kontakt",
+      mainNav: "Hlavní navigace",
+      openMenu: "Otevřít menu",
+      closeMenu: "Zavřít menu",
     },
 
     hero: {
@@ -51,6 +106,11 @@ export const content = {
     journey: {
       sectionLabel: "Pozadí",
       heading: "Moje cesta k programování",
+      lua: {
+        comment1: "-- robot.lua  •  první pokus",
+        comment2: "-- Těžební robot v Lua",
+        done: '"Hotovo! Kroků: "',
+      },
       paragraphs: [
         "U počítačů mě vždycky víc zajímalo, jak věci fungují, než jen to, jak se používají. Nechtěl jsem zůstat u hotového rozhraní, chtěl jsem pochopit, co je pod ním.",
         "Zlom přišel při hraní hry, kde jsem narazil na rozšíření s malým robotem programovaným v Lua. Ze začátku to byla jen zajímavost. Jenže postupně jsem trávil víc času nastavováním robota než samotným hraním. Zkoušel jsem příkazy, opravoval chyby, měnil jeho chování a sledoval, jak pár řádků kódu dokáže ovlivnit celý výsledek.",
@@ -161,26 +221,75 @@ export const content = {
       sectionLabel: "Certifikáty",
       heading: "Dokončené kurzy",
       completed: "Dokončeno",
+      openTab: "↗ otevřít v nové záložce",
+      verify: "↗ ověřit certifikát",
+      view: "↗ zobrazit osvědčení",
+      download: "↗ stáhnout PDF",
+      goCourse: "→ přejít na kurz",
+      page: "strana",
+      sub: { highlight: "Akreditovaný", rest: " rekvalifikační kurz + 10 dokončených kurzů. Klikni na certifikát pro náhled PDF." },
+      mainBadge: { title: "Tvorba www aplikací v jazyku Python", highlight: "Akreditovaný", rest: " rekvalifikační kurz · itnetwork.cz", date: "Červen 2026" },
+      official: { title: "Úřední osvědčení MŠMT", highlight: "Akreditováno", rest: " Ministerstvem školství ČR · č.j. MSMT-7415/2024-5", date: "12. 6. 2026" },
       items: [
         {
-          title: "Django Foundations for Python",
+          file: "Certifikat_Zaklady_Django_frameworku_pro_Python.pdf",
+          title: "Základy Django frameworku",
+          category: "Webový framework · Python",
           date: "Duben 2026",
-          category: "Webový framework",
         },
         {
-          title: "Object-Oriented Programming in Python",
+          file: "Certifikat_Objektove_orientovane_programovani_v_Pythonu.pdf",
+          title: "OOP v Pythonu",
+          category: "Třídy, struktura a logika",
           date: "Únor 2026",
-          category: "Třídy, struktura a logika aplikací",
         },
         {
-          title: "Python Fundamentals",
+          file: "Certifikat_Zakladni_konstrukce_jazyka_Python.pdf",
+          title: "Základy jazyka Python",
+          category: "Základ jazyka · Algoritmy",
           date: "Únor 2026",
-          category: "Jazyk a řešení problémů",
         },
         {
-          title: "SQLite Databases Step by Step",
+          file: "Certifikat_SQLite_databaze_krok_za_krokem.pdf",
+          title: "SQLite databáze krok za krokem",
+          category: "Databáze · SQL",
           date: "Únor 2026",
-          category: "Databázový základ",
+        },
+        {
+          file: "Certifikat_Kolekce_v_Pythonu.pdf",
+          title: "Kolekce v Pythonu",
+          category: "Datové struktury",
+          date: "Únor 2026",
+        },
+        {
+          file: "Certifikat_Zaklady_React.pdf",
+          title: "Základy React",
+          category: "Frontend framework",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Zakladni_konstrukce_jazyka_JavaScript.pdf",
+          title: "Základy JavaScriptu",
+          category: "Skriptovací jazyk · Web",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_HTML5_od_A_do_Z.pdf",
+          title: "HTML5 od A do Z",
+          category: "Markup · Webová struktura",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Responzivni_webdesign.pdf",
+          title: "Responzivní webdesign",
+          category: "CSS · Mobile first",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Moderni_webdesign.pdf",
+          title: "Moderní webdesign",
+          category: "Design · UX principy",
+          date: "2026",
         },
       ],
     },
@@ -339,7 +448,7 @@ export const content = {
     },
 
     footer: {
-      built: "Postaveno v Next.js · Nasazeno na Vercel",
+      built: 'built_with = "Next.js"  # nasazeno na Vercelu',
       available: "Ihned k dispozici",
       lastUpdated: "Naposledy aktualizováno:",
     },
@@ -372,6 +481,61 @@ export const content = {
       certifikaty: "Certifications",
       projekty: "Projects",
       kontakt: "Contact",
+      short: {
+        oMne: "why me",
+        dovednosti: "skills",
+        ai: "AI",
+        zkusenosti: "experience",
+        projekty: "projects",
+        certifikaty: "certificates",
+      },
+    },
+    // Shared labels that don't belong to a specific section
+    common: {
+      skipLink: "Skip to content",
+      close: "Close",
+      hide: "Hide",
+    },
+
+    // Tkinter demo windows (file dialogs and message boxes)
+    tkinter: {
+      saveFile: "Save file",
+      openFile: "Open file",
+      chooseTarget: "Choose a target file",
+      clickToChoose: "Click to choose a file",
+      cancel: "Cancel",
+      yes: "Yes",
+      no: "No",
+    },
+
+    // 404 page
+    notFound: {
+      error: ": the snake swallowed this page.",
+      line1: "This page doesn't exist, but the snake does.",
+      line2: "Go on, click somewhere else.",
+      back: "← back to the main page",
+    },
+
+
+    // Business card texts (contact window in the header)
+    vizitka: {
+      contact: "contact",
+      city: "Prague",
+      saveContact: "save contact (.vcf)",
+      saveTitle: "Download the .vcf file, it opens in your Contacts app",
+      scan: "scan → save",
+      scanBig: "scan → save contact",
+      close: "Close",
+      closeCard: "Close business card",
+      zoomQr: "Enlarge QR code",
+      copyMail: "Copy email",
+      copied: "Copied",
+      qrDialog: "Business card QR code",
+      openCard: "Open business card",
+      openContact: "Open contact",
+      mainNav: "Main navigation",
+      openMenu: "Open menu",
+      closeMenu: "Close menu",
     },
 
     hero: {
@@ -402,6 +566,11 @@ export const content = {
     journey: {
       sectionLabel: "Background",
       heading: "My path to programming",
+      lua: {
+        comment1: "-- robot.lua  •  first attempt",
+        comment2: "-- Mining robot in Lua",
+        done: '"Done! Steps: "',
+      },
       paragraphs: [
         "I've always been more interested in how computers work than just how to use them. I didn't want to stay at the surface of a finished interface. I wanted to understand what lay beneath it.",
         "The turning point came while playing a game where I discovered an extension with a small robot programmed in Lua. At first it was just a curiosity. But gradually I spent more time configuring the robot than actually playing. I tried commands, fixed bugs, changed its behavior and watched how a few lines of code could change the entire outcome.",
@@ -512,26 +681,75 @@ export const content = {
       sectionLabel: "Certifications",
       heading: "Completed courses",
       completed: "Completed",
+      openTab: "↗ open in new tab",
+      verify: "↗ verify certificate",
+      view: "↗ view certificate",
+      download: "↗ download PDF",
+      goCourse: "→ go to course",
+      page: "page",
+      sub: { highlight: "Accredited", rest: " retraining course + 10 completed courses. Click a certificate to preview the PDF." },
+      mainBadge: { title: "Python Web Application Development", highlight: "Accredited", rest: " retraining course · itnetwork.cz", date: "June 2026" },
+      official: { title: "Official MŠMT Certificate", highlight: "Accredited", rest: " by the Czech Ministry of Education · ref. no. MSMT-7415/2024-5", date: "12 June 2026" },
       items: [
         {
-          title: "Django Foundations for Python",
+          file: "Certifikat_Zaklady_Django_frameworku_pro_Python.pdf",
+          title: "Django Framework Foundations",
+          category: "Web framework · Python",
           date: "April 2026",
-          category: "Web framework",
         },
         {
-          title: "Object-Oriented Programming in Python",
+          file: "Certifikat_Objektove_orientovane_programovani_v_Pythonu.pdf",
+          title: "OOP in Python",
+          category: "Classes, structure & logic",
           date: "February 2026",
-          category: "Classes, structure, and application logic",
         },
         {
+          file: "Certifikat_Zakladni_konstrukce_jazyka_Python.pdf",
           title: "Python Fundamentals",
+          category: "Language basics · Algorithms",
           date: "February 2026",
-          category: "Language and problem-solving",
         },
         {
+          file: "Certifikat_SQLite_databaze_krok_za_krokem.pdf",
           title: "SQLite Databases Step by Step",
+          category: "Databases · SQL",
           date: "February 2026",
-          category: "Database foundation",
+        },
+        {
+          file: "Certifikat_Kolekce_v_Pythonu.pdf",
+          title: "Python Collections",
+          category: "Data structures",
+          date: "February 2026",
+        },
+        {
+          file: "Certifikat_Zaklady_React.pdf",
+          title: "React Fundamentals",
+          category: "Frontend framework",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Zakladni_konstrukce_jazyka_JavaScript.pdf",
+          title: "JavaScript Fundamentals",
+          category: "Scripting · Web",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_HTML5_od_A_do_Z.pdf",
+          title: "HTML5 from A to Z",
+          category: "Markup · Web structure",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Responzivni_webdesign.pdf",
+          title: "Responsive Web Design",
+          category: "CSS · Mobile first",
+          date: "2026",
+        },
+        {
+          file: "Certifikat_Moderni_webdesign.pdf",
+          title: "Modern Web Design",
+          category: "Design · UX principles",
+          date: "2026",
         },
       ],
     },
@@ -690,7 +908,7 @@ export const content = {
     },
 
     footer: {
-      built: "Built with Next.js · Deployed on Vercel",
+      built: 'built_with = "Next.js"  # deployed on Vercel',
       available: "Immediately available",
       lastUpdated: "Last updated:",
     },

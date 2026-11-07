@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useContent } from "@/hooks/useContent";
 
 /* ── Animovaný had na canvasu ────────────────────────────────────── */
 function SnakeCanvas() {
@@ -117,6 +118,7 @@ function SnakeCanvas() {
 
 /* ── Stránka 404 ─────────────────────────────────────────────────── */
 export default function NotFound() {
+  const t = useContent();
   return (
     <main
       style={{
@@ -170,7 +172,7 @@ export default function NotFound() {
         }}
       >
         <span style={{ color: "#f87171" }}>FileNotFoundError</span>
-        {": tuhle stránku had spolknul."}
+        {t.notFound.error}
       </p>
 
       <p
@@ -182,9 +184,9 @@ export default function NotFound() {
           lineHeight: 1.6,
         }}
       >
-        Stránka neexistuje, ale had existuje.
+        {t.notFound.line1}
         <br />
-        Jdi a klikni se jinam.
+        {t.notFound.line2}
       </p>
 
       <Link
@@ -209,7 +211,7 @@ export default function NotFound() {
           (e.currentTarget as HTMLAnchorElement).style.background  = "rgba(74,222,128,0.05)";
         }}
       >
-        ← zpět na hlavní stránku
+        {t.notFound.back}
       </Link>
     </main>
   );
